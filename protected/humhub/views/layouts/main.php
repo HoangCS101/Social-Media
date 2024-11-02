@@ -8,14 +8,11 @@ use humhub\widgets\NotificationArea;
 use humhub\widgets\SiteLogo;
 use humhub\widgets\TopMenu;
 use humhub\widgets\TopMenuRightStack;
-use humhub\assets\BootstrapCssAsset;
-use humhub\assets\CssAsset;
 
 /* @var $this View */
 /* @var $content string */
 
 AppAsset::register($this);
-CssAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
