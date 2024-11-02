@@ -30,6 +30,7 @@ class CssAsset extends AssetBundle
     /**
      * @inheritdoc
      */
-    public $css = ['fonts.min.css', 'main.min.css'];
+    public $css = ['main.min.css'];
+    //  public $css = ['fonts.min.css', 'main.min.css'];
     // public $js = ['js/bootstrap.bundle.js'];
 }

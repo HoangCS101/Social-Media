@@ -81,7 +81,7 @@ class AppAsset extends WebStaticAssetBundle
         /**
          * JS
          */
-        JsAsset::class,
+        // JsAsset::class,
 
         /**
          * Polyfills
