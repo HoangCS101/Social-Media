@@ -7,10 +7,13 @@ use yii\helpers\Html;
 /* @var $options [] */
 
 ?>
+
 <?= Html::beginTag('div', $options) ?>
 <a href="#" id="icon-notifications" data-action-click='toggle'
-   aria-label="<?= Yii::t('NotificationModule.base', 'Open the notification dropdown menu') ?>" data-toggle="dropdown">
-    <i class="fa fa-bell"></i>
+    aria-label="<?= Yii::t('NotificationModule.base', 'Open the notification dropdown menu') ?>" data-toggle="dropdown">
+   <div style="height:10px;with:10px;">
+
+   </div>
 </a>
 
 <span id="badge-notifications" style="display:none;" class="label label-danger label-notifications"></span>
@@ -21,7 +24,7 @@ use yii\helpers\Html;
         <div class="arrow"></div><?= Yii::t('NotificationModule.base', 'Notifications'); ?>
         <div class="dropdown-header-link">
             <a id="mark-seen-link" data-action-click='markAsSeen'
-               data-action-url="<?= Url::to(['/notification/list/mark-as-seen']); ?>">
+                data-action-url="<?= Url::to(['/notification/list/mark-as-seen']); ?>">
                 <?= Yii::t('NotificationModule.base', 'Mark all as seen'); ?>
             </a>
         </div>
