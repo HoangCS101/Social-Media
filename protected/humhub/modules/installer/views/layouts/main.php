@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use humhub\assets\AppAsset;
+use humhub\assets\BootstrapCssAsset;
 use humhub\widgets\PoweredBy;
 use yii\web\View;
 
