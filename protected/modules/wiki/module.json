@@ -1,0 +1,31 @@
+{
+    "id": "wiki",
+    "name": "Wiki",
+    "description": "Create and edit pages with this powerful tool. Build a collaborative knowledge base, view and share information with your colleagues.",
+    "keywords": ["wiki"],
+    "version": "2.3.6",
+    "humhub": {
+        "minVersion": "1.16.2"
+    },
+    "homepage": "https://github.com/humhub/wiki",
+    "authors": [
+        {
+            "name": "Andreas Strobel"
+        },
+        {
+            "name": "Lucas Bartholemy"
+        },
+        {
+            "name": "Julian Harrer"
+        }
+    ],
+    "screenshots": [
+        "assets/screenshot1.png",
+        "assets/screenshot2.png",
+        "assets/screenshot3.png",
+        "assets/screenshot4.png",
+        "assets/screenshot5.png",
+        "assets/screenshot6.png",
+        "assets/screenshot7.png"
+    ]
+}
