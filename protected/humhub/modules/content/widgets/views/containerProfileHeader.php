@@ -42,70 +42,66 @@ $profileImageHeight = $container->getProfileImage()->height();
 ?>
 
 <?= Html::beginTag('div', $options) ?>
+    <div class="panel-profile-header top-header" style="height: auto">
+        <div class="image-upload-container profile-banner-image-container top-header-thumb" style="height: 150px">
+            <!-- profile image output-->
+            <?= $container->getProfileBannerImage()->render('width:100%', ['class' => 'img-profile-header-background']) ?>
 
-<div class="panel-profile-header">
-
-    <div class="image-upload-container profile-banner-image-container">
-        <!-- profile image output-->
-        <?= $container->getProfileBannerImage()->render('width:100%', ['class' => 'img-profile-header-background']) ?>
-
-        <!-- show user name and title -->
-
-        <div class="img-profile-data">
-            <h1 class="<?= $classPrefix ?>"><?= Button::asLink($title)->link($container->getUrl()) ?></h1>
-            <h2 class="<?= $classPrefix ?>"><?= $subTitle ?></h2>
+            <!-- <?php if ($canEdit) : ?> -->
+                <div class="image-upload-loader" style="padding:<?= $bannerProgressBarPadding ?>">
+                    <?= $bannerUpload->progress() ?>
+                </div>
+                <?= $this->render('containerProfileImageMenu', [
+                    'upload' => $bannerUpload,
+                    'hasImage' => $container->getProfileBannerImage()->hasImage(),
+                    'cropUrl' => $coverCropUrl,
+                    'deleteUrl' => $coverDeleteUrl,
+                    'dropZone' => '.profile-banner-image-container .customize-button',
+                    'confirmBody' => Yii::t('SpaceModule.base', 'Do you really want to delete your title image?'),
+                ]) ?>
+            <!-- <?php endif; ?> -->
+            <!-- <?php if ($canEdit) : ?>
+                
+            <?php endif; ?> -->
         </div>
+        
+        <?= $this->render($headerControlView, [
+            'container' => $container,
+        ]) ?>
 
-
-        <?php if ($canEdit) : ?>
-            <div class="image-upload-loader" style="padding:<?= $bannerProgressBarPadding ?>">
-                <?= $bannerUpload->progress() ?>
+        <div class="top-header-author image-upload-container"
+            style="width: <?= $profileImageWidth ?>px; height: auto">
+            <div class="author-thumb">
+                <?php if ($container->getProfileImage()->hasImage()) : ?>
+                    <a data-ui-gallery="spaceHeader" href="<?= $container->profileImage->getUrl('_org') ?>">
+                        <?= $container->getProfileImage()->render($profileImageWidth - 28, ['class' => 'img-profile-header-background profile-user-photo', 'link' => false, 'showSelfOnlineStatus' => true]) ?>
+                    </a>
+                <?php else : ?>
+                    <?= $container->getProfileImage()->render($profileImageHeight - 28, ['class' => 'img img-profile-header-background profile-user-photo']) ?>
+                <?php endif; ?>
+                
+                <?php if ($canEdit) : ?>
+                    <div class="image-upload-loader" style="padding-top: 50px;">
+                        <?= $profileImageUpload->progress() ?>
+                    </div>
+                <?php endif; ?>
+                <?php if($canEdit):?>
+                    <?= $this->render('containerProfileImageMenu', [
+                        'upload' => $profileImageUpload,
+                        'hasImage' => $container->getProfileImage()->hasImage(),
+                        'deleteUrl' => $imageDeleteUrl,
+                        'cropUrl' => $imageCropUrl,
+                        'dropZone' => '.profile-user-photo-container',
+                        'confirmBody' => Yii::t('SpaceModule.base', 'Do you really want to delete your profile image?'),
+                    ]) ?>
+                <?php endif; ?>
             </div>
-        <?php endif; ?>
-
-        <?php if ($canEdit) : ?>
-            <?= $this->render('containerProfileImageMenu', [
-                'upload' => $bannerUpload,
-                'hasImage' => $container->getProfileBannerImage()->hasImage(),
-                'cropUrl' => $coverCropUrl,
-                'deleteUrl' => $coverDeleteUrl,
-                'dropZone' => '.profile-banner-image-container',
-                'confirmBody' => Yii::t('SpaceModule.base', 'Do you really want to delete your title image?'),
-            ]) ?>
-        <?php endif; ?>
-    </div>
-
-    <div class="image-upload-container profile-user-photo-container"
-         style="width: <?= $profileImageWidth ?>px; height: <?= $profileImageHeight ?>px;">
-
-        <?php if ($container->getProfileImage()->hasImage()) : ?>
-            <a data-ui-gallery="spaceHeader" href="<?= $container->profileImage->getUrl('_org') ?>">
-                <?= $container->getProfileImage()->render($profileImageWidth - 10, ['class' => 'img-profile-header-background profile-user-photo', 'link' => false, 'showSelfOnlineStatus' => true]) ?>
-            </a>
-        <?php else : ?>
-            <?= $container->getProfileImage()->render($profileImageHeight - 10, ['class' => 'img-profile-header-background profile-user-photo']) ?>
-        <?php endif; ?>
-
-        <?php if ($canEdit) : ?>
-            <div class="image-upload-loader" style="padding-top: 60px;">
-                <?= $profileImageUpload->progress() ?>
+            
+            
+            <div class="author-content">
+                <a class="h3 <?= $classPrefix ?> author-name"><?= Button::asLink($title)->link($container->getUrl()) ?></a>
+                <div class="<?= $classPrefix ?> country"><?= $subTitle ?></div>
             </div>
-
-            <?= $this->render('containerProfileImageMenu', [
-                'upload' => $profileImageUpload,
-                'hasImage' => $container->getProfileImage()->hasImage(),
-                'deleteUrl' => $imageDeleteUrl,
-                'cropUrl' => $imageCropUrl,
-                'dropZone' => '.profile-user-photo-container',
-                'confirmBody' => Yii::t('SpaceModule.base', 'Do you really want to delete your profile image?'),
-            ]) ?>
-        <?php endif; ?>
-
+        </div>
     </div>
-</div>
-
-<?= $this->render($headerControlView, [
-    'container' => $container,
-]) ?>
-
 <?= Html::endTag('div') ?>
