@@ -1,0 +1,39 @@
+{
+    "id": "cfiles",
+    "name": "Files",
+    "description": "Streamline file management across your network and enhance efficiency.",
+    "keywords": [
+        "files",
+        "docs",
+        "structure",
+        "organisation",
+        "sharing"
+    ],
+    "version": "0.16.6",
+    "humhub": {
+        "minVersion": "1.14"
+    },
+    "homepage": "https://github.com/humhub/cfiles",
+    "authors": [
+        {
+            "name": "Sebastian Stumpf"
+        },
+        {
+            "name": "Lucas Bartholemy"
+        },
+        {
+            "name": "Julian Harrer"
+        }
+
+    ],
+    "screenshots": [
+        "assets/screenshot1.png",
+        "assets/screenshot2.png",
+        "assets/screenshot3.png",
+        "assets/screenshot4.png",
+        "assets/screenshot5.png",
+        "assets/screenshot6.png",
+        "assets/screenshot7.png",
+        "assets/screenshot8.png"
+    ]
+}

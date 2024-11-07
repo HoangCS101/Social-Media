@@ -1,0 +1,12 @@
+{
+    "id": "tasks",
+    "name": "Tasks",
+    "description": "Intuitive task management tool with many basic and advanced features.",
+    "keywords": ["task", "todo"],
+    "version": "1.8.5",
+    "homepage": "https://github.com/humhub/tasks",
+    "humhub": {
+        "minVersion": "1.14"
+    },
+    "screenshots": ["resources/screen1.jpg", "resources/screen2.jpg", "resources/screen3.jpg", "resources/screen4.jpg", "resources/screen5.jpg", "resources/screen6.jpg", "resources/screen7.jpg", "resources/screen8.jpg", "resources/screen9.jpg", "resources/screen10.jpg", "resources/screen11.jpg", "resources/screen12.jpg", "resources/screen13.jpg"]
+}
