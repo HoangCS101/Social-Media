@@ -8,4 +8,4 @@ use humhub\modules\ui\view\components\View;
 
 ?>
 
-<?= ContainerProfileHeader::widget(['container' => $user]) ?>
+<?= ContainerProfileHeader::widget(['container' => $user]) ?> 
