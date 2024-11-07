@@ -18,7 +18,7 @@ use humhub\modules\user\widgets\UserTags;
     <?= WallCreateContentFormContainer::widget(['contentContainer' => $user]); ?>
 </div>
 
-<?= StreamViewer::widget(['contentContainer' => $user]); ?>
+<?= StreamViewer::widget(['contentContainer' => $user]); ?> 
 
 <?php $this->beginBlock('sidebar'); ?>
 <?=

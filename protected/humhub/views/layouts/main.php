@@ -33,7 +33,7 @@ CssAsset::register($this);
     <?php $this->beginBody() ?>
 
     <!-- start: first top navigation bar -->
-    <header class="header" id="site-header">
+    <!-- <header class="header" id="site-header">
 
         <div class="page-title">
             <h6>Profile Page</h6>
@@ -588,7 +588,22 @@ CssAsset::register($this);
             </div>
         </div>
 
-    </header>
+    </header> -->
+    <div id="topbar-first" class="topbar">
+            <div class="container">
+                <div class="topbar-brand hidden-xs">
+                    <?= SiteLogo::widget() ?>
+                </div>
+
+                <div class="topbar-actions pull-right">
+                    <?= AccountTopMenu::widget() ?>
+                </div>
+
+                <div class="notifications pull-right">
+                    <?= NotificationArea::widget() ?>
+                </div>
+            </div>
+        </div>
     <!-- end: first top navigation bar -->
 
     <!-- start: second top navigation bar -->
