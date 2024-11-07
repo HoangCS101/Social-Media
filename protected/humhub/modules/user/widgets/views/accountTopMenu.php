@@ -26,37 +26,37 @@ $userModel = Yii::$app->user->identity;
 ?>
 
 <?php if (Yii::$app->user->isGuest): ?>
-    <?php if (!empty($entries)) : ?>
+    <?php if (!empty($entries)): ?>
         <?= $entries[0]->render() ?>
     <?php endif; ?>
 <?php else: ?>
     <?= Html::beginTag('ul', $options) ?>
-    <li class="dropdown account">
-        <a href="#" id="account-dropdown-link" class="dropdown-toggle" data-toggle="dropdown"
-           aria-label="<?= Yii::t('base', 'Profile dropdown') ?>">
-
+    <li class="dropdown account pt-[10px] ">
+        <a href="#" id="account-dropdown-link" class="py-0 my-auto" data-toggle="dropdown"
+            aria-label="<?= Yii::t('base', 'Profile dropdown') ?>">
+                <?= Image::widget([
+                    'user' => $userModel,
+                    'link' => false,
+                    'width' => 40,
+                    'htmlOptions' => ['id' => 'user-account-image'],
+                    'showSelfOnlineStatus' => true,
+                ]) ?>
             <?php if ($this->context->showUserName): ?>
-                <div class="user-title pull-left hidden-xs">
-                    <strong><?= Html::encode($userModel->displayName); ?></strong><br/><span
+                <div class="user-title pull-right hidden-xs text-white pl-2">
+                    <strong><?= Html::encode($userModel->displayName); ?></strong><br /><span
                         class="truncate"><?= Html::encode($userModel->displayNameSub); ?></span>
                 </div>
             <?php endif; ?>
 
-            <?= Image::widget([
-                'user' => $userModel,
-                'link' => false,
-                'width' => 32,
-                'htmlOptions' => ['id' => 'user-account-image'],
-                'showSelfOnlineStatus' => true,
-            ]) ?>
 
-            <b class="caret"></b>
         </a>
-        <ul class="dropdown-menu pull-right">
+        <ul class="dropdown-menu pull-right w-[300px] mt-2">
             <?php foreach ($entries as $entry): ?>
-                <?php if (!($entry instanceof DropdownDivider)) : ?><li><?php endif; ?>
-                <?= $entry->render() ?>
-                <?php if (!($entry instanceof DropdownDivider)) : ?></li><?php endif; ?>
+                <?php if (!($entry instanceof DropdownDivider)): ?>
+                    <li class="text-black"><?php endif; ?>
+                    <?= $entry->render() ?>
+                    <?php if (!($entry instanceof DropdownDivider)): ?>
+                    </li><?php endif; ?>
             <?php endforeach; ?>
             <?= FooterMenu::widget(['location' => FooterMenu::LOCATION_ACCOUNT_MENU]); ?>
         </ul>

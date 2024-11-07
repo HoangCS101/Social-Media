@@ -7,21 +7,27 @@ use yii\helpers\Html;
 /* @var $options [] */
 
 ?>
+
 <?= Html::beginTag('div', $options) ?>
-<a href="#" id="icon-notifications" data-action-click='toggle'
-   aria-label="<?= Yii::t('NotificationModule.base', 'Open the notification dropdown menu') ?>" data-toggle="dropdown">
+<a class="" href="#" id="icon-notifications" data-action-click='toggle' x
+    aria-label="<?= Yii::t('NotificationModule.base', 'Open the notification dropdown menu') ?>" data-toggle="dropdown">
+    <div class="text-white">
     <i class="fa fa-bell"></i>
+    </div>
 </a>
 
-<span id="badge-notifications" style="display:none;" class="label label-danger label-notifications"></span>
+<span id="badge-notifications" style="display:none;" class="label label-danger label-notifications relative top-[-10px] rounded-[50%] w-4 h-4"></span>
 
+<div class="p-2">
+
+</div>
 <!-- container for ajax response -->
-<ul id="dropdown-notifications" class="dropdown-menu">
+<ul id="dropdown-notifications" class="dropdown-menu w-[360px] top-[50px] left-[-100px] z-[1000]">
     <li class="dropdown-header">
         <div class="arrow"></div><?= Yii::t('NotificationModule.base', 'Notifications'); ?>
         <div class="dropdown-header-link">
             <a id="mark-seen-link" data-action-click='markAsSeen'
-               data-action-url="<?= Url::to(['/notification/list/mark-as-seen']); ?>">
+                data-action-url="<?= Url::to(['/notification/list/mark-as-seen']); ?>">
                 <?= Yii::t('NotificationModule.base', 'Mark all as seen'); ?>
             </a>
         </div>
