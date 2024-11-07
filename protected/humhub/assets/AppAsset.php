@@ -22,6 +22,8 @@ use yii\web\YiiAsset;
 use yii\widgets\ActiveFormAsset;
 
 use humhub\assets\BootstrapCssAsset;
+use humhub\assets\CssAsset;
+use humhub\assets\JsAsset;
 
 /**
  * AppAsset includes HumHub core assets to the main layout.
@@ -74,6 +76,12 @@ class AppAsset extends WebStaticAssetBundle
         BlueimpGalleryStyleAsset::class,
 
         BootstrapCssAsset::class,
+        CssAsset::class,
+
+        /**
+         * JS
+         */
+        // JsAsset::class,
 
         /**
          * Polyfills

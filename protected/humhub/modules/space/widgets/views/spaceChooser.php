@@ -20,7 +20,7 @@ use yii\helpers\Url;
 ?>
 
 <li class="dropdown">
-    <a href="#" id="space-menu" class="dropdown-toggle" data-toggle="dropdown">
+    <a href="#" id="space-menu" class="" data-toggle="dropdown">
         <!-- start: Show space image and name if chosen -->
         <?php if ($currentSpace) : ?>
             <?= Image::widget(['space' => $currentSpace, 'width' => 32, 'htmlOptions' => ['class' => 'current-space-image']]); ?>
@@ -32,7 +32,6 @@ use yii\helpers\Url;
         <?php endif; ?>
         <!-- end: Show space image and name if chosen -->
     </a>
-
     <ul class="dropdown-menu" id="space-menu-dropdown">
         <li>
             <form action="" class="dropdown-controls">
