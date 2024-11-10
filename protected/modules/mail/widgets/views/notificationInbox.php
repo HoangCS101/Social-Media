@@ -19,7 +19,7 @@ $canStartConversation = Yii::$app->user->can(StartConversation::class);
         <i class="fa fa-envelope"></i>
     </a>
     <span id="badge-messages" style="display:none;" class="label label-danger label-notification"></span>
-    <ul id="dropdown-messages" class="dropdown-menu mail-inbox-messages max-w-[400px] left-[-140px] top-[50px] ">
+    <ul id="dropdown-messages" class="dropdown-menu mail-inbox-messages max-w-[350px] left-[-140px] top-[50px] p-0">
         <li class="dropdown-header">
             <div class="arrow"></div>
             <?= Yii::t('MailModule.base', 'Conversations') ?>
@@ -32,7 +32,7 @@ $canStartConversation = Yii::$app->user->can(StartConversation::class);
         </ul>
         <li>
             <div class="dropdown-footer">
-                <a class="btn btn-default col-md-12" href="<?= Url::toMessenger() ?>">
+                <a class="btn btn-default col-md-12 py-4" href="<?= Url::toMessenger() ?>">
                     <?= Yii::t('MailModule.widgets_views_mailNotification', 'Show all messages') ?>
                 </a>
             </div>
