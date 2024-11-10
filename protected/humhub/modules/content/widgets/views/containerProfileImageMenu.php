@@ -25,24 +25,24 @@ if (!isset($confirmBody)) {
 }
 ?>
 
-<div class="image-upload-buttons">
+<div class="image-upload-buttons z-10 relative">
 
     <?= $upload->button([
-        'cssButtonClass' => 'btn btn-info btn-sm profile-image-upload',
+        'cssButtonClass' => 'btn btn-info btn-sm text-white text-sm px-3 py-2 rounded profile-image-upload',
         'tooltip' => false,
         'dropZone' => $dropZone,
         'options' => ['class' => 'profile-upload-input']]) ?>
 
     <?= ModalButton::info()->style($editButtonStyle)->sm()
         ->load($cropUrl)->icon('edit')
-        ->cssClass('profile-image-edit profile-image-crop') ?>
+        ->cssClass('text-white text-sm px-3 py-2 rounded profile-image-edit profile-image-crop') ?>
 
     <?= Button::danger()
         ->icon('remove')
         ->action('delete', $deleteUrl)
         ->style($editButtonStyle)->sm()
         ->loader(false)
-        ->cssClass('profile-image-edit profile-image-delete')
+        ->cssClass('text-white text-sm px-3 py-2 rounded profile-image-edit profile-image-delete')
         ->confirm(
             Yii::t('SpaceModule.base', '<strong>Confirm</strong> image deletion'),
             $confirmBody,
