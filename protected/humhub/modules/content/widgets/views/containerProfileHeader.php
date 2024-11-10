@@ -42,48 +42,108 @@ $profileImageHeight = $container->getProfileImage()->height();
 ?>
 
 <?= Html::beginTag('div', $options) ?>
-    <div class="panel-profile-header top-header" style="height: auto">
-        <div class="image-upload-container profile-banner-image-container top-header-thumb" style="height: 150px">
-            <!-- profile image output-->
-            <?= $container->getProfileBannerImage()->render('width:100%', ['class' => 'img-profile-header-background']) ?>
 
-            <!-- <?php if ($canEdit) : ?> -->
-                <div class="image-upload-loader" style="padding:<?= $bannerProgressBarPadding ?>">
+    <div class="top-header">
+        <div class="image-upload-container profile-banner-image-container top-header-thumb">
+            <?= $container->getProfileBannerImage()->render('width:100%; height: 420px', ['class' => 'img-profile-header-background']) ?>
+
+            <?php if ($canEdit) : ?>
+                <div class="image-upload-loader">
                     <?= $bannerUpload->progress() ?>
                 </div>
+            <?php endif; ?>
+
+            <?php if ($canEdit) : ?>
                 <?= $this->render('containerProfileImageMenu', [
                     'upload' => $bannerUpload,
                     'hasImage' => $container->getProfileBannerImage()->hasImage(),
                     'cropUrl' => $coverCropUrl,
                     'deleteUrl' => $coverDeleteUrl,
-                    'dropZone' => '.profile-banner-image-container .customize-button',
+                    'dropZone' => '.profile-banner-image-container',
                     'confirmBody' => Yii::t('SpaceModule.base', 'Do you really want to delete your title image?'),
                 ]) ?>
-            <!-- <?php endif; ?> -->
-            <!-- <?php if ($canEdit) : ?>
-                
-            <?php endif; ?> -->
+            <?php endif; ?>
         </div>
-        
-        <?= $this->render($headerControlView, [
-            'container' => $container,
-        ]) ?>
+        <div class="profile-section">
+            <!-- <div class="row">
+                <div class="col col-lg-5 ml-auto col-md-5 col-sm-12 col-12">
+                    <ul class="profile-menu">
+                        <li>
+                            <a href="07-ProfilePage-Photos.html">Photos</a>
+                        </li>
+                        <li>
+                            <a href="09-ProfilePage-Videos.html">Videos</a>
+                        </li>
+                        <li>
+                            <div class="more">
+                                <svg class="olymp-three-dots-icon"><use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use></svg>
+                                <ul class="more-dropdown more-with-triangle">
+                                    <li>
+                                        <a href="#">Report Profile</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Block Profile</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div> -->
+            <?= $this->render($headerControlView, [
+                'container' => $container,
+            ]) ?>
 
-        <div class="top-header-author image-upload-container"
-            style="width: <?= $profileImageWidth ?>px; height: auto">
-            <div class="author-thumb">
+            <!-- <div class="control-block-button">
+                <a href="35-YourAccount-FriendsRequests.html" class="btn btn-control bg-blue">
+                    <svg class="olymp-happy-face-icon"><use xlink:href="svg-icons/sprites/icons.svg#olymp-happy-face-icon"></use></svg>
+                </a>
+
+                <a href="#" class="btn btn-control bg-purple">
+                    <svg class="olymp-chat---messages-icon"><use xlink:href="svg-icons/sprites/icons.svg#olymp-chat---messages-icon"></use></svg>
+                </a>
+
+                <div class="btn btn-control bg-primary more">
+                    <svg class="olymp-settings-icon"><use xlink:href="svg-icons/sprites/icons.svg#olymp-settings-icon"></use></svg>
+
+                    <ul class="more-dropdown more-with-triangle triangle-bottom-right">
+                        <li>
+                            
+                            <?php if ($canEdit) : ?>
+                                <div class="image-upload-loader" style="padding:<?= $bannerProgressBarPadding ?>">
+                                    <?= $bannerUpload->progress() ?>
+                                </div>
+                            <?php endif; ?>
+
+                            <?php if ($canEdit) : ?>
+                                <?= $this->render('containerProfileImageMenu', [
+                                    'upload' => $bannerUpload,
+                                    'hasImage' => $container->getProfileBannerImage()->hasImage(),
+                                    'cropUrl' => $coverCropUrl,
+                                    'deleteUrl' => $coverDeleteUrl,
+                                    'dropZone' => '.profile-banner-image-container',
+                                    'confirmBody' => Yii::t('SpaceModule.base', 'Do you really want to delete your title image?'),
+                                ]) ?>
+                            <?php endif; ?>
+                        </li>
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#update-header-photo">Update Header Photo</a>
+                        </li>
+                        <li>
+                            <a href="29-YourAccount-AccountSettings.html">Account Settings</a>
+                        </li>
+                    </ul>
+                </div>
+            </div> -->
+        </div>
+        <div class="top-header-author">
+            <div class="author-thumb image-upload-container profile-user-photo-container">
                 <?php if ($container->getProfileImage()->hasImage()) : ?>
                     <a data-ui-gallery="spaceHeader" href="<?= $container->profileImage->getUrl('_org') ?>">
                         <?= $container->getProfileImage()->render($profileImageWidth - 28, ['class' => 'img-profile-header-background profile-user-photo', 'link' => false, 'showSelfOnlineStatus' => true]) ?>
                     </a>
                 <?php else : ?>
                     <?= $container->getProfileImage()->render($profileImageHeight - 28, ['class' => 'img img-profile-header-background profile-user-photo']) ?>
-                <?php endif; ?>
-                
-                <?php if ($canEdit) : ?>
-                    <div class="image-upload-loader" style="padding-top: 50px;">
-                        <?= $profileImageUpload->progress() ?>
-                    </div>
                 <?php endif; ?>
                 <?php if($canEdit):?>
                     <?= $this->render('containerProfileImageMenu', [
@@ -96,10 +156,8 @@ $profileImageHeight = $container->getProfileImage()->height();
                     ]) ?>
                 <?php endif; ?>
             </div>
-            
-            
             <div class="author-content">
-                <a class="h3 <?= $classPrefix ?> author-name"><?= Button::asLink($title)->link($container->getUrl()) ?></a>
+                <?= Button::asLink($title)->link($container->getUrl())->cssClass('h4 author-name') ?>
                 <div class="<?= $classPrefix ?> country"><?= $subTitle ?></div>
             </div>
         </div>
