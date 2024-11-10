@@ -13,9 +13,10 @@
 /** @var string $content */
 
 ?>
-<li class="<?php if ($isNew) : ?>new<?php endif; ?>" data-notification-id="<?= $record->id ?>">
+
+<li class="<?php if ($isNew) : ?>new<?php endif; ?>" data-notification-id="<?= $record->id ?> py-[20px">
     <a href="<?= $url; ?>">
-        <div class="media">
+        <div class="media py-[10px]">
 
             <!-- show module image -->
             <img class="media-object img-rounded pull-left"

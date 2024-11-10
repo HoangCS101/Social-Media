@@ -31,8 +31,8 @@ AppAsset::register($this);
     <?php $this->beginBody() ?>
     <header class="header z-[1000] p-0" id="site-header">
         <div class="container mx-auto z-10">
-            <div class="page-title p-0">
-                <?= SiteLogo::widget() ?>
+            <div class="page-title ">
+                    <?= SiteLogo::widget() ?>
             </div>
             <div class="header-content-wrapper min-h-[70px] ">
                 <form class="search-bar w-search notification-list friend-requests ">
@@ -53,7 +53,7 @@ AppAsset::register($this);
 
                 </div>
             </div>
-            <!-- <div class="w-full bg-purple-dark-opacity h-10"> -->   
+            <!-- <div class="w-full bg-purple-dark-opacity h-10"> -->
         </div>
         <div id="topbar-second" class="topbar bg-[#515365] z-1">
             <div class="container">
