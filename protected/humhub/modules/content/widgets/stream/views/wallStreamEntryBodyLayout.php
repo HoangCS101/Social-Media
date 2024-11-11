@@ -16,8 +16,8 @@ use humhub\modules\ui\view\components\View;
 ?>
 
 <div class="panel panel-default wall_<?= $model->getUniqueId() ?>">
-    <div class="panel-body">
-        <div class="media wall-entry-header">
+    <article class="hentry post">
+        <div class="post__author author vcard inline-items">
             <?= $header ?>
         </div>
 
@@ -32,9 +32,30 @@ use humhub\modules\ui\view\components\View;
                 <?= $content ?>
             </div>
 
-            <div class="wall-entry-footer">
+            <div class="post-additional-info inline-items">
                 <?= $footer ?>
             </div>
         </div>
-    </div>
+        <div class="control-block-button post-control-button">
+
+            <a href="#" class="btn btn-control">
+                <svg class="olymp-like-post-icon">
+                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-like-post-icon"></use>
+                </svg>
+            </a>
+
+            <a href="#" class="btn btn-control">
+                <svg class="olymp-comments-post-icon">
+                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-comments-post-icon"></use>
+                </svg>
+            </a>
+
+            <a href="#" class="btn btn-control">
+                <svg class="olymp-share-icon">
+                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-share-icon"></use>
+                </svg>
+            </a>
+
+        </div>
+    </article>
 </div>

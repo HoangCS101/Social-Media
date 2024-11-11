@@ -11,6 +11,10 @@ humhub\modules\like\assets\LikeAsset::register($this);
 
         <?= Html::a(Yii::t('LikeModule.base', 'Like'), Yii::$app->user->loginUrl, ['data-target' => '#globalModal']); ?>
     <?php else: ?>
+        <a href="#" class="post-add-icon inline-items">
+            <i class="fa fa-heart"></i>
+            <span>49</span>
+        </a>
         <a href="#" data-action-click="like.toggleLike" data-action-url="<?= $likeUrl ?>"
            class="like likeAnchor<?= !$canLike ? ' disabled' : '' ?>"
            style="<?= (!$currentUserLiked) ? '' : 'display:none' ?>">
