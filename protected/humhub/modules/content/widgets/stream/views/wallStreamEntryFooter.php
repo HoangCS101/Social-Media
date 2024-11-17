@@ -8,15 +8,16 @@ use humhub\modules\ui\view\components\View;
 /* @var $this View */
 /* @var $model ContentActiveRecord */
 /* @var $renderOptions WallStreamEntryOptions */
-
+// debug_print_backtrace();
 ?>
 
 <?php if (!$renderOptions->isAddonsDisabled()) : ?>
-    <a href="#" class="post-add-icon inline-items">
-        <i class="fa fa-heart"></i>
-        <span>49</span>
-    </a>
-    <ul class="friends-harmonic">
+
+    <div class="stream-entry-addons clearfix">
+        <?= WallEntryAddons::widget(['object' => $model, 'renderOptions' => $renderOptions]) ?>
+    </div>
+
+    <!-- <ul class="friends-harmonic">
         <li>
             <a href="#">
                 <img src="img/friend-harmonic9.jpg" alt="friend">
@@ -42,8 +43,6 @@ use humhub\modules\ui\view\components\View;
                 <img src="img/friend-harmonic11.jpg" alt="friend">
             </a>
         </li>
-    </ul>
-    <div class="stream-entry-addons clearfix">
-        <?= WallEntryAddons::widget(['object' => $model, 'renderOptions' => $renderOptions]) ?>
-    </div>
+    </ul> -->
+
 <?php endif; ?>

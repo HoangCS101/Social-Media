@@ -36,7 +36,7 @@ use humhub\modules\ui\view\components\View;
                 <?= $footer ?>
             </div>
         </div>
-        <div class="control-block-button post-control-button">
+        <!-- <div class="control-block-button post-control-button">
 
             <a href="#" class="btn btn-control">
                 <svg class="olymp-like-post-icon">
@@ -56,6 +56,6 @@ use humhub\modules\ui\view\components\View;
                 </svg>
             </a>
 
-        </div>
+        </div> -->
     </article>
 </div>
