@@ -26,6 +26,8 @@ use humhub\modules\content\assets\ContainerHeaderAsset;
 use humhub\modules\content\components\ContentContainerActiveRecord;
 use humhub\modules\file\widgets\Upload;
 use humhub\modules\ui\view\components\View;
+use humhub\modules\user\widgets\ProfileLeftNavigation;
+use humhub\modules\user\widgets\ProfileRightNavigation;
 use humhub\widgets\Button;
 use yii\helpers\Html;
 
@@ -90,9 +92,18 @@ $profileImageHeight = $container->getProfileImage()->height();
                     </ul>
                 </div>
             </div> -->
-            <?= $this->render($headerControlView, [
+            <!-- <?= $this->render($headerControlView, [
                 'container' => $container,
-            ]) ?>
+            ]) ?> -->
+            <div class="row">
+            <div class="col col-lg-5 col-md-5 col-sm-12 col-12">
+                <?= ProfileLeftNavigation::widget(['user' => $container]); ?>
+            </div>
+            <div class="col col-lg-5 ml-auto col-md-5 col-sm-12 col-12">
+                <?= ProfileRightNavigation::widget(['user' => $container]); ?>
+            </div>
+            </div>
+            
 
             <!-- <div class="control-block-button">
                 <a href="35-YourAccount-FriendsRequests.html" class="btn btn-control bg-blue">
