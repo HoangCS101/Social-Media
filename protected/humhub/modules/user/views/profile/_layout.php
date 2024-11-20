@@ -20,7 +20,7 @@ $categories = $user->profile->getProfileFieldCategories();
     </div>
     <div class="row profile-content">
         <div class="col-md-3 layout-nav-container">
-            <!-- <?= ProfileMenu::widget(['user' => $user]); ?> -->
+            <?= ProfileMenu::widget(['user' => $user]); ?>
             <div class="ui-block">
 				<div class="ui-block-title">
 					<h6 class="title">Profile Intro</h6>
