@@ -22,11 +22,8 @@ humhub.module('like', function (module, require, $) {
     };
 
     var _updateCounter = function ($element, count) {
-        if (count) {
-            $element.find(".likeCount").html('(' + count + ')').show();
-        } else {
-            $element.find(".likeCount").hide();
-        }
+
+        $element.find(".likeCount").html(count).show();
 
     };
 

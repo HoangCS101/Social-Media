@@ -49,9 +49,9 @@ $container = $model->content->container;
     <?= $headImage ?>
 </div>
 
-<div class="wall-entry-header-info media-body">
+<div class="author-date">
 
-    <div class="media-heading">
+    <a class="h6 post__author-name fn" href="#">
         <?= $title ?>
 
         <?php if ($renderOptions->isShowContainerInformationInTitle($model)) : ?>
@@ -60,9 +60,10 @@ $container = $model->content->container;
                 <?= Html::containerLink($model->content->container) ?>
             </span>
         <?php endif; ?>
-    </div>
+    </a>
 
-    <div class="media-subheading">
+    <div class="post__date">
+
         <?php if ($renderOptions->isShowAuthorInformationInSubHeadLine($model)) : ?>
             <?= Html::containerLink($model->content->createdBy, ['class' => 'wall-entry-container-link']) ?>
         <?php endif ?>

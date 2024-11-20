@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @link https://www.humhub.org/
  * @copyright Copyright (c) 2021 HumHub GmbH & Co. KG
@@ -17,24 +18,34 @@ use yii\web\View;
 
 CardsAsset::register($this);
 ?>
-<div class="panel panel-default">
+<div class="main-header">
+    <div class="content-bg-wrap bg-group"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col col-lg-8 m-auto col-md-8 col-sm-12 col-12">
+                <div class="panel panel-default">
 
-    <div class="panel-heading">
-        <?= Yii::t('SpaceModule.base', '<strong>Spaces</strong>'); ?>
+                    <div class="panel-heading">
+                        <?= Yii::t('SpaceModule.base', '<strong>Spaces</strong>'); ?>
+                    </div>
+
+                    <div class="panel-body">
+                        <?= SpaceDirectoryFilters::widget(); ?>
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div class="panel-body">
-        <?= SpaceDirectoryFilters::widget(); ?>
-    </div>
-
 </div>
+
 
 <div class="row cards">
     <?php if (!$spaces->exists()): ?>
         <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <strong><?= Yii::t('SpaceModule.base', 'No results found!'); ?></strong><br/>
+                    <strong><?= Yii::t('SpaceModule.base', 'No results found!'); ?></strong><br />
                     <?= Yii::t('SpaceModule.base', 'Try other keywords or remove filters.'); ?>
                 </div>
             </div>
