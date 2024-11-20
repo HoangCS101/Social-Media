@@ -3718,6 +3718,8 @@ div.nested-comments-root div.comment-container {
     margin-bottom: 0;
 }
 
+.bg-group{background-image:url(../img/bg-group.png)}
+
 #wall-stream-filter-nav {
     font-size: 12px;
     margin-bottom: 10px;
