@@ -23,6 +23,8 @@ class ContainerProfileHeader extends JsWidget
 
     public $canEdit = false;
 
+    public $isUser = true;
+
     public $imageUploadUrl;
 
     public $coverUploadUrl;
@@ -115,6 +117,7 @@ class ContainerProfileHeader extends JsWidget
             'imageUploadName' => $this->imageUploadName,
             'coverUploadName' => $this->coverUploadName,
             'headerControlView' => $this->headerControlView,
+            'isUser' => $this->isUser,
         ]);
     }
 
