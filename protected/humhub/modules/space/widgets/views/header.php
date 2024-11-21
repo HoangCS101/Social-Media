@@ -10,4 +10,4 @@ use humhub\modules\ui\view\components\View;
 
 ?>
 
-<?= ContainerProfileHeader::widget(['container' => $space]) ?>
+<?= ContainerProfileHeader::widget(['container' => $space, 'isUser' => false]) ?>

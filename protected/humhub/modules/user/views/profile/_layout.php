@@ -20,71 +20,34 @@ $categories = $user->profile->getProfileFieldCategories();
     </div>
     <div class="row profile-content">
         <div class="col-md-3 layout-nav-container">
-            <?= ProfileMenu::widget(['user' => $user]); ?>
             <div class="ui-block">
 				<div class="ui-block-title">
 					<h6 class="title">Profile Intro</h6>
 				</div>
-				<div class="panel-body">
-                    <!-- <?php $firstClass = "active" ?>
-                    <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
-                        <?php foreach ($categories as $category): ?>
-                            <li class="<?= $firstClass ?>">
-                                <a href="#profile-category-<?= $category->id; ?>"
-                                data-toggle="tab"><?= Html::encode(Yii::t($category->getTranslationCategory(), $category->title)) ?></a>
-                            </li>
-                            <?php
-                            $firstClass = "";
-                        endforeach;
-                        ?>
-                    </ul>
-                    <?php $firstClass = "active" ?> -->
+				<div class="ui-block-content">
                     <div class="tab-content">
                         <?php foreach ($categories as $category): ?>
-                            <div class="tab-pane <?php
-                            echo $firstClass;
-                            $firstClass = "";
-                            ?>" id="profile-category-<?= $category->id ?>">
-                                <ul class="widget w-personal-info item-block">
-                                    <?php foreach ($user->profile->getProfileFields($category) as $field) : ?>
-                                        <!-- <div class="form-group"> -->
-                                            <li>
-											    <?= Html::tag('span', Html::encode(Yii::t($field->getTranslationCategory(), $field->title)).':', ['class' => 'font-bold']) ?>
-												<?php if (strtolower($field->title) == 'about'): ?>
-														<span><?= RichText::output($field->getUserValue($user, true)) ?></span>
-												<?php else: ?>
-													
-														<?php if ($field->field_type_class == MarkdownEditor::class): ?>
-															<span
-															style="min-height: 0 !important;padding-top:0;">
-																<?= RichText::output($field->getUserValue($user, true)) ?>
-														</span>
-														<?php else: ?>
-															<span><?= $field->getUserValue($user, false) ?></span>
-														<?php endif; ?>
-												<?php endif; ?>
-											</li>
-                                            
-                                        <!-- </div> -->
-                                    <?php endforeach; ?>
-								</ul>
-								<div class="widget w-socials">
-									<h6 class="title font-bold">Other Social Networks:</h6>
-									<a href="#" class="social-item bg-facebook text-white">
-										<i class="fab fa-facebook-f" aria-hidden="true"></i>
-										Facebook
-									</a>
-									<a href="#" class="social-item bg-twitter text-white">
-										<i class="fab fa-twitter" aria-hidden="true"></i>
-										Twitter
-									</a>
-									<a href="#" class="social-item bg-dribbble text-white">
-										<i class="fab fa-dribbble" aria-hidden="true"></i>
-										Dribbble
-									</a>
-								</div>
-                            </div>
-							
+							<ul class="widget w-personal-info">
+								<?php foreach ($user->profile->getProfileFields($category) as $field) : ?>
+										<li>
+											<?= Html::tag('span', Html::encode(Yii::t($field->getTranslationCategory(), $field->title)), ['class' => 'title']) ?>
+											<?php if (strtolower($field->title) == 'about'): ?>
+													<span class="text"><?= RichText::output($field->getUserValue($user, true)) ?></span>
+											<?php else: ?>
+												
+													<?php if ($field->field_type_class == MarkdownEditor::class): ?>
+														<span
+														class="text">
+															<?= RichText::output($field->getUserValue($user, true)) ?>
+													</span>
+													<?php else: ?>
+														<span class="text"><?= $field->getUserValue($user, false) ?></span>
+													<?php endif; ?>
+											<?php endif; ?>
+										</li>
+										
+								<?php endforeach; ?>
+							</ul>
                         <?php endforeach; ?>
                     </div>
 

@@ -15,6 +15,7 @@
 /* @var $headerControlView string */
 /* @var $coverUploadName string */
 /* @var $imageUploadName string */
+/* @var $isUser bool */
 
 /* @var $container ContentContainerActiveRecord */
 
@@ -28,6 +29,8 @@ use humhub\modules\file\widgets\Upload;
 use humhub\modules\ui\view\components\View;
 use humhub\modules\user\widgets\ProfileLeftNavigation;
 use humhub\modules\user\widgets\ProfileRightNavigation;
+use humhub\modules\space\widgets\SpaceLeftNavigation;
+use humhub\modules\space\widgets\SpaceRightNavigation;
 use humhub\widgets\Button;
 use yii\helpers\Html;
 
@@ -67,42 +70,28 @@ $profileImageHeight = $container->getProfileImage()->height();
             <?php endif; ?>
         </div>
         <div class="profile-section">
-            <!-- <div class="row">
-                <div class="col col-lg-5 ml-auto col-md-5 col-sm-12 col-12">
-                    <ul class="profile-menu">
-                        <li>
-                            <a href="07-ProfilePage-Photos.html">Photos</a>
-                        </li>
-                        <li>
-                            <a href="09-ProfilePage-Videos.html">Videos</a>
-                        </li>
-                        <li>
-                            <div class="more">
-                                <svg class="olymp-three-dots-icon"><use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use></svg>
-                                <ul class="more-dropdown more-with-triangle">
-                                    <li>
-                                        <a href="#">Report Profile</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Block Profile</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div> -->
             <!-- <?= $this->render($headerControlView, [
                 'container' => $container,
             ]) ?> -->
-            <div class="row">
-            <div class="col col-lg-5 col-md-5 col-sm-12 col-12">
-                <?= ProfileLeftNavigation::widget(['user' => $container]); ?>
-            </div>
-            <div class="col col-lg-5 ml-auto col-md-5 col-sm-12 col-12">
-                <?= ProfileRightNavigation::widget(['user' => $container]); ?>
-            </div>
-            </div>
+            <?php if($isUser) : ?>
+                <div class="row">
+                    <div class="col col-lg-5 col-md-5 col-sm-12 col-12">
+                        <?= ProfileLeftNavigation::widget(['user' => $container]); ?>
+                    </div>
+                    <div class="col col-lg-5 ml-auto col-md-5 col-sm-12 col-12">
+                        <?= ProfileRightNavigation::widget(['user' => $container]); ?>
+                    </div>
+                </div>
+            <?php else : ?>
+                <div class="row">
+                    <div class="col col-lg-5 col-md-5 col-sm-12 col-12">
+                        <?= SpaceLeftNavigation::widget(['space' => $container]); ?>
+                    </div>
+                    <div class="col col-lg-5 ml-auto col-md-5 col-sm-12 col-12">
+                        <?= SpaceRightNavigation::widget(['space' => $container]); ?>
+                    </div>
+                </div>
+            <?php endif; ?>
             
 
             <!-- <div class="control-block-button">

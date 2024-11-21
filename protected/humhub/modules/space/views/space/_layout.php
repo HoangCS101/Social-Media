@@ -18,7 +18,7 @@ use humhub\widgets\FooterMenu;
 $context = $this->context;
 $space = $context->contentContainer;
 
-?>
+?> 
 <div class="container space-layout-container">
     <div class="row">
         <div class="col-md-12">

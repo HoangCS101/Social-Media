@@ -14,7 +14,7 @@ $categories = $user->profile->getProfileFieldCategories();
 <div class="panel panel-default">
     <div
         class="panel-heading"><?= Yii::t('UserModule.profile', '<strong>About</strong> this user') ?></div>
-    <div class="panel-body">
+    <div class="ui-block-content">
         <?php $firstClass = "active" ?>
         <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
             <?php foreach ($categories as $category): ?>
@@ -34,7 +34,7 @@ $categories = $user->profile->getProfileFieldCategories();
                 echo $firstClass;
                 $firstClass = "";
                 ?>" id="profile-category-<?= $category->id ?>">
-                    <form class="form-horizontal" role="form">
+                    <!-- <form class="form-horizontal" role="form">
                         <?php foreach ($user->profile->getProfileFields($category) as $field) : ?>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">
@@ -59,7 +59,29 @@ $categories = $user->profile->getProfileFieldCategories();
                                 <?php endif; ?>
                             </div>
                         <?php endforeach; ?>
-                    </form>
+                    </form> -->
+                    
+                    <ul class="widget w-personal-info">
+                        <?php foreach ($user->profile->getProfileFields($category) as $field) : ?>
+                            <li>
+                                <?= Html::tag('span', Html::encode(Yii::t($field->getTranslationCategory(), $field->title)), ['class' => 'title']) ?>
+                                <?php if (strtolower($field->title) == 'about'): ?>
+                                        <span class="text"><?= RichText::output($field->getUserValue($user, true)) ?></span>
+                                <?php else: ?>
+                                    
+                                        <?php if ($field->field_type_class == MarkdownEditor::class): ?>
+                                            <span
+                                            class="text">
+                                                <?= RichText::output($field->getUserValue($user, true)) ?>
+                                        </span>
+                                        <?php else: ?>
+                                            <span><?= $field->getUserValue($user, false) ?></span>
+                                        <?php endif; ?>
+                                <?php endif; ?>
+                            </li>
+                                
+                        <?php endforeach; ?>
+                    </ul>
                 </div>
             <?php endforeach; ?>
         </div>
