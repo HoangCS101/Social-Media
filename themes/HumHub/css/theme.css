@@ -3718,7 +3718,9 @@ div.nested-comments-root div.comment-container {
     margin-bottom: 0;
 }
 
-.bg-group{background-image:url(../img/bg-group.png)}
+.bg-group {
+    background-image: url(../img/bg-group.png)
+}
 
 #wall-stream-filter-nav {
     font-size: 12px;
@@ -6561,7 +6563,7 @@ a.label-warning:hover {
     border: none;
     border-radius: 8px;
     box-shadow: 0 0 8px #b2b2b2;
-    top: 115%;
+    top: 0%;
 }
 
 #dropdown-search.dropdown-menu .dropdown-header {
@@ -7409,7 +7411,7 @@ ul.tag_input li img {
     cursor: pointer;
     line-height: 8px;
 }
-.header .page-title
-{
+
+.header .page-title {
     padding: 16px 32px 0 0;
 }

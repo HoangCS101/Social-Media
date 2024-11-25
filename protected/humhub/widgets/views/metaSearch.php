@@ -27,21 +27,29 @@ SearchAsset::register($this);
         ->action('menu')
         ->options(['data-toggle' => 'dropdown'])
         ->cssClass('dropdown-toggle') ?>
-    <div id="dropdown-search" class="dropdown-menu">
-        <div class="dropdown-header">
+    
+
+    <div id="dropdown-search" class="dropdown-menu  h-[40px]" 
+        style="display: flex; 
+            top: 0; left: 0; 
+            right: auto; 
+            width: 400px;
+            flex-direction: column">
+        <div class="dropdown-header" style="display: none">
             <div class="arrow"></div>
             <?= Yii::t('base', 'Search') ?>
             <?= Icon::get('close', ['id' => 'dropdown-search-close']) ?>
         </div>
-        <div class="dropdown-search-form">
+        <div class="dropdown-search-form  h-[40px]">
             <?= Button::defaultType()
                 ->icon('search')
                 ->action('search')
                 ->cssClass('dropdown-search-button')
                 ->loader(false) ?>
             <?= Html::input('text', 'keyword', '', [
-                'class' => 'dropdown-search-keyword form-control',
-                'autocomplete' => 'off'
+                'class' => 'dropdown-search-keyword form-control h-[40px]',
+                'autocomplete' => 'off',
+                'placeholder' => 'Search here ...'
             ]) ?>
         </div>
         <ul class="dropdown-search-list">
@@ -50,4 +58,8 @@ SearchAsset::register($this);
             <?php endforeach; ?>
         </ul>
     </div>
+
+
 <?= Html::endTag('li') ?>
+
+

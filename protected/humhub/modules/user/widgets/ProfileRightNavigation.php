@@ -69,11 +69,13 @@ class ProfileRightNavigation extends ProfileHeaderNavigation
         $this->addEntry(new MenuLink([
             'label' => Yii::t('UserModule.profile', 'Settings'),
             // 'icon' => 'about',
-            'url' => $this->user->createUrl('/user/profile/people'),
+            'url' => $this->user->createUrl('/user/profile/settings'),
             'sortOrder' => 300,
             'isActive' => MenuLink::isActiveState('user', 'profile', 'settings'),
             'isVisible' => $this->user->permissionManager->can(ViewAboutPage::class),
         ]));
+
+        
 
         parent::init();
     }

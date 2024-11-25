@@ -25,6 +25,11 @@ AppAsset::register($this);
     <script src="https://cdn.tailwindcss.com"></script>
     <?php $this->head() ?>
     <?= $this->render('head') ?>
+    <style>
+        .dropdown-toggle::after {
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
@@ -34,15 +39,23 @@ AppAsset::register($this);
             <div class="page-title ">
                     <?= SiteLogo::widget() ?>
             </div>
-            <div class="header-content-wrapper min-h-[70px] ">
-                <form class="search-bar w-search notification-list friend-requests ">
+            <div class="header-content-wrapper min-h-[70px] flex justify-between">
+                <div class="control-block flex h-inherit">
+                    <ul class="nav w-[400px] h-inherit" id="search-menu-nav" style="">
+                        <?= TopMenuRightStack::widget() ?>
+                    </ul>
+
+                    <a href="#" class="link-find-friend">Find Friends</a>
+
+                </div>
+                
+                <!-- <form class="search-bar w-search notification-list friend-requests ">
                     <div class="form-group with-button">
                         <input class="form-control js-user-search" placeholder="Search here people or pages..."
                             type="text">
                     </div>
-                </form>
-                <a href="#" class="link-find-friend">Find Friends</a>
-                <div class="control-block">
+                </form> -->
+                <div class="control-block flex">
                     <div class="control-icon more has-items z-[9999]">
                         <?= NotificationArea::widget() ?>
                     </div>
@@ -55,20 +68,6 @@ AppAsset::register($this);
             </div>
             <!-- <div class="w-full bg-purple-dark-opacity h-10"> -->
         </div>
-        <div id="topbar-second" class="topbar bg-[#515365] z-1">
-            <div class="container">
-                <ul class="nav" id="top-menu-nav">
-
-                    <?= Chooser::widget() ?>
-
-                    <?= TopMenu::widget() ?>
-                </ul>
-
-                <ul class="nav pull-right" id="search-menu-nav">
-                    <?= TopMenuRightStack::widget() ?>
-                </ul>
-            </div>
-        </div>
     </header>
 
     <div class="z-[1]">
@@ -76,6 +75,30 @@ AppAsset::register($this);
     </div>
 
     <?php $this->endBody() ?>
+
+    <script>
+        document.addEventListener('click', function (event) {
+            console.log("oke")
+            const dropdown = document.querySelector('.dropdown-menu');
+            const searchList = document.querySelector('.dropdown-search-list');
+            
+            // Kiểm tra nếu nhấp bên ngoài phần tử `.dropdown-menu`
+            // if (dropdown && searchList) {
+                // if (!dropdown.contains(event.target)) {
+                    searchList.style.display = 'none'; // Đóng danh sách
+                // }
+            // }
+        });
+
+        // Mở lại danh sách khi nhấn vào input
+        document.querySelector('.dropdown-search-keyword').addEventListener('focus', function () {
+            const searchList = document.querySelector('.dropdown-search-list');
+            if (searchList) {
+                searchList.style.display = 'block'; // Hiển thị lại danh sách
+            }
+        });
+    </script>
+
 </body>
 
 </html>
