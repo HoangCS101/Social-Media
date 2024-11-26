@@ -75,31 +75,29 @@ AppAsset::register($this);
     </div>
 
     <?php $this->endBody() ?>
-
-    <script>
-        document.addEventListener('click', function (event) {
-            console.log("oke")
-            const dropdown = document.querySelector('.dropdown-menu');
-            const searchList = document.querySelector('.dropdown-search-list');
-            
-            // Kiểm tra nếu nhấp bên ngoài phần tử `.dropdown-menu`
-            // if (dropdown && searchList) {
-                // if (!dropdown.contains(event.target)) {
-                    searchList.style.display = 'none'; // Đóng danh sách
-                // }
-            // }
-        });
-
-        // Mở lại danh sách khi nhấn vào input
-        document.querySelector('.dropdown-search-keyword').addEventListener('focus', function () {
-            const searchList = document.querySelector('.dropdown-search-list');
-            if (searchList) {
-                searchList.style.display = 'block'; // Hiển thị lại danh sách
-            }
-        });
-    </script>
-
 </body>
 
 </html>
 <?php $this->endPage() ?>
+<script>
+    document.addEventListener('click', function (event) {
+        console.log("oke")
+        const dropdown = document.querySelector('.dropdown-menu');
+        const searchList = document.querySelector('.dropdown-search-list');
+        
+        // Kiểm tra nếu nhấp bên ngoài phần tử `.dropdown-menu`
+        // if (dropdown && searchList) {
+            // if (!dropdown.contains(event.target)) {
+                searchList.style.display = 'none'; // Đóng danh sách
+            // }
+        // }
+    });
+
+    // Mở lại danh sách khi nhấn vào input
+    document.querySelector('.dropdown-search-keyword').addEventListener('focus', function () {
+        const searchList = document.querySelector('.dropdown-search-list');
+        if (searchList) {
+            searchList.style.display = 'block'; // Hiển thị lại danh sách
+        }
+    });
+</script>

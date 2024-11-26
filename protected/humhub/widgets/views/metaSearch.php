@@ -19,6 +19,12 @@ use yii\web\View;
 /* @var MetaSearchProviderInterface[] $providers */
 
 SearchAsset::register($this);
+
+$isAllHiddenEmpty = empty($providers) || array_reduce($providers, function ($carry, $provider) {
+    return $carry && $provider->getIsHiddenWhenEmpty();
+}, true);
+?>
+
 ?>
 <?= Html::beginTag('li', $options) ?>
     <?= Link::asLink('')
@@ -52,7 +58,7 @@ SearchAsset::register($this);
                 'placeholder' => 'Search here ...'
             ]) ?>
         </div>
-        <ul class="dropdown-search-list">
+        <ul class="dropdown-search-list" style="display: <?= $isAllHiddenEmpty ? 'none !important' : 'block' ?>;">
             <?php foreach ($providers as $provider) : ?>
                 <?= MetaSearchProviderWidget::widget(['provider' => $provider]) ?>
             <?php endforeach; ?>
@@ -61,5 +67,13 @@ SearchAsset::register($this);
 
 
 <?= Html::endTag('li') ?>
+<script>
 
+    document.addEventListener('DOMContentLoaded', function () {
+        const dropdownSearch = document.getElementById('#dropdown-search');
+        const dropdownSearchList = document.querySelector('.dropdown-search-list');
 
+        
+    });
+
+</script>
