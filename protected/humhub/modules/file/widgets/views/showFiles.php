@@ -30,18 +30,18 @@ foreach ($files as $file) {
 }
 
 $fullWidthColumnClass = 'col-media col-xs-12 col-sm-12 col-md-12';
-$nonFluidColumnClass = 'col-media col-xs-3 col-sm-3 col-md-4';
-$fluidColumnClass = 'col-media col-xs-3 col-sm-3 col-md-2';
+$nonFluidColumnClass = 'col-media col-xs-12 col-sm-6 col-md-6';
+$fluidColumnClass = 'col-media col-xs-12 col-sm-6 col-md-6';
 
 $galleryColumnClass = ThemeHelper::isFluid() ? $fluidColumnClass : $nonFluidColumnClass;
 ?>
 
 <?php if (count($files) > 0): ?>
     <!-- hideOnEdit mandatory since 1.2 -->
-    <div class="hideOnEdit">
+    <div class="hideOnEdit w-full">
         <!-- Show Images as Thumbnails -->
         <?php if ($showPreview): ?>
-            <div class="post-files clearfix" id="post-files-<?= $object->getUniqueId() ?>">
+            <div class="post-files clearfix w-full" id="post-files-<?= $object->getUniqueId() ?>">
                 <?php if (!empty($audios)): ?>
                     <div class="<?= $fullWidthColumnClass ?>">
                         <?= JPlayerPlaylistWidget::widget(['playlist' => $audios]) ?>
