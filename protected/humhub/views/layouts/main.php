@@ -29,7 +29,25 @@ AppAsset::register($this);
         .dropdown-toggle::after {
             display: none;
         }
+
+        .more-photos span,
+        .post .more-photos span,
+        .post .post__author-name {
+            font-weight: 200;
+            opacity: 0.8;
+        }
+
+        .post__date a {
+            font-size: 14px;
+        }
+
+        .post .author-date {
+            font-size: 16px;
+            color: black;
+            /* hoặc bất kỳ kiểu nào bạn muốn áp dụng */
+        }
     </style>
+
 </head>
 
 <body>
@@ -37,7 +55,7 @@ AppAsset::register($this);
     <header class="header z-[1000] p-0" id="site-header">
         <div class="container mx-auto z-10">
             <div class="page-title ">
-                    <?= SiteLogo::widget() ?>
+                <?= SiteLogo::widget() ?>
             </div>
             <div class="header-content-wrapper min-h-[70px] flex justify-between">
                 <div class="control-block flex h-inherit">

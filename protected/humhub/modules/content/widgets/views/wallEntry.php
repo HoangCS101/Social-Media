@@ -87,7 +87,7 @@ use yii\helpers\Url;
 
             <!-- wall-entry-addons class required since 1.2 -->
             <?php if ($renderAddons) : ?>
-                <div class="stream-entry-addons clearfix">
+                <div class="stream-entry-addons clearfix block w-full">
                     <?= WallEntryAddons::widget($addonOptions); ?>
                 </div>
             <?php endif; ?>

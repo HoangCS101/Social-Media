@@ -13,36 +13,8 @@ use humhub\modules\ui\view\components\View;
 
 <?php if (!$renderOptions->isAddonsDisabled()) : ?>
 
-    <div class="stream-entry-addons clearfix">
+    <div class="stream-entry-addons clearfix w-full block">
         <?= WallEntryAddons::widget(['object' => $model, 'renderOptions' => $renderOptions]) ?>
     </div>
-
-    <!-- <ul class="friends-harmonic">
-        <li>
-            <a href="#">
-                <img src="img/friend-harmonic9.jpg" alt="friend">
-            </a>
-        </li>
-        <li>
-            <a href="#">
-                <img src="img/friend-harmonic10.jpg" alt="friend">
-            </a>
-        </li>
-        <li>
-            <a href="#">
-                <img src="img/friend-harmonic7.jpg" alt="friend">
-            </a>
-        </li>
-        <li>
-            <a href="#">
-                <img src="img/friend-harmonic8.jpg" alt="friend">
-            </a>
-        </li>
-        <li>
-            <a href="#">
-                <img src="img/friend-harmonic11.jpg" alt="friend">
-            </a>
-        </li>
-    </ul> -->
 
 <?php endif; ?>

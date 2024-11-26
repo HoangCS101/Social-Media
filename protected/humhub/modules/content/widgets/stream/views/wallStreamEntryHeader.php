@@ -27,9 +27,9 @@ $container = $model->content->container;
 ?>
 
 <div class="stream-entry-icon-list">
-    <?php if ($model->content->isArchived()) : ?>
+    <?php if ($model->content->isArchived()): ?>
         <?= ArchivedIcon::getByModel($model) ?>
-    <?php elseif ($renderOptions->isPinned($model)) : ?>
+    <?php elseif ($renderOptions->isPinned($model)): ?>
         <?= Icon::get('map-pin', ['htmlOptions' => ['class' => 'icon-pin tt', 'title' => Yii::t('ContentModule.base', 'Pinned')]]) ?>
     <?php endif; ?>
     <?= StateBadge::widget(['model' => $model]); ?>
@@ -39,7 +39,7 @@ $container = $model->content->container;
 <div class="stream-entry-loader"></div>
 
 <!-- start: show wall entry options -->
-<?php if (!$renderOptions->isControlsMenuDisabled()) : ?>
+<?php if (!$renderOptions->isControlsMenuDisabled()): ?>
     <?= WallEntryControls::widget(['renderOptions' => $renderOptions, 'object' => $model, 'wallEntryWidget' => $this->context]) ?>
 <?php endif; ?>
 <!-- end: show wall entry options -->
@@ -49,45 +49,44 @@ $container = $model->content->container;
     <?= $headImage ?>
 </div>
 
-<div class="author-date">
+<div class="author-date ">
 
     <a class="h6 post__author-name fn" href="#">
         <?= $title ?>
 
-        <?php if ($renderOptions->isShowContainerInformationInTitle($model)) : ?>
-            <span class="viaLink">
+        <?php if ($renderOptions->isShowContainerInformationInTitle($model)): ?>
+            <span class="viaLink text-[30px]">
                 <?= Icon::get('caret-right') ?>
                 <?= Html::containerLink($model->content->container) ?>
             </span>
         <?php endif; ?>
     </a>
 
-    <div class="post__date">
-
-        <?php if ($renderOptions->isShowAuthorInformationInSubHeadLine($model)) : ?>
-            <?= Html::containerLink($model->content->createdBy, ['class' => 'wall-entry-container-link']) ?>
+    <div class="post__date flex flex-wrap font-mono font-thin opacity-50">
+        <?php if ($renderOptions->isShowAuthorInformationInSubHeadLine($model)): ?>
+            <?= Html::containerLink($model->content->createdBy, ['class' => 'wall-entry-container-link ']) ?>
         <?php endif ?>
-        <?php if ($renderOptions->isShowContainerInformationInSubTitle($model)) : ?>
-            <?php if ($renderOptions->isShowAuthorInformationInSubHeadLine($model)) : ?>
+        <?php if ($renderOptions->isShowContainerInformationInSubTitle($model)): ?>
+            <?php if ($renderOptions->isShowAuthorInformationInSubHeadLine($model)): ?>
                 <?= Icon::get('caret-right') ?>
-                <?= Html::containerLink($model->content->container, ['class' => 'wall-entry-container-link']) ?>
-            <?php elseif ($model->content->container instanceof Space) : ?>
-                <?= Html::containerLink($model->content->container, ['class' => 'wall-entry-container-link']) ?>
+                <?= Html::containerLink($model->content->container, ['class' => 'wall-entry-container-link ']) ?>
+            <?php elseif ($model->content->container instanceof Space): ?>
+                <?= Html::containerLink($model->content->container, ['class' => 'wall-entry-container-link ']) ?>
             <?php endif; ?>
         <?php endif; ?>
 
-        <?php if ($renderOptions->isShowAuthorInformationInSubHeadLine($model) || $renderOptions->isShowContainerInformationInSubTitle($model)) : ?>
+        <?php if ($renderOptions->isShowAuthorInformationInSubHeadLine($model) || $renderOptions->isShowContainerInformationInSubTitle($model)): ?>
             &middot;
         <?php endif; ?>
 
-        <a href="<?= $permaLink ?>">
+        <a class=" pl-2" href="<?= $permaLink ?>">
             <?= TimeAgo::widget(['timestamp' => $model->content->created_at, 'titlePrefixInfo' => Yii::t('ContentModule.base', 'Created at:') . ' ']) ?>
         </a>
 
         &middot;
 
-        <div class="wall-entry-icons">
-            <?php if ($model->content->isUpdated()) : ?>
+        <div class="wall-entry-icons pl-2">
+            <?php if ($model->content->isUpdated()): ?>
                 <?= UpdatedIcon::getByDated($model->content->updated_at) ?>
             <?php endif; ?>
 

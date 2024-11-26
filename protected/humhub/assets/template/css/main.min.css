@@ -8555,7 +8555,6 @@ ol ol li {
     border-top: 1px solid #e6ecf5;
     display: -webkit-box;
     display: -ms-flexbox;
-    display: flex;
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
