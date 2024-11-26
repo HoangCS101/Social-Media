@@ -21,33 +21,33 @@ use yii\web\View;
 SearchAsset::register($this);
 ?>
 <?= Html::beginTag('li', $options) ?>
-    <?= Link::asLink('')
-        ->icon('search')
-        ->id('search-menu')
-        ->action('menu')
-        ->options(['data-toggle' => 'dropdown'])
-        ->cssClass('dropdown-toggle') ?>
-    <div id="dropdown-search" class="dropdown-menu">
-        <div class="dropdown-header">
-            <div class="arrow"></div>
-            <?= Yii::t('base', 'Search') ?>
-            <?= Icon::get('close', ['id' => 'dropdown-search-close']) ?>
-        </div>
-        <div class="dropdown-search-form">
-            <?= Button::defaultType()
-                ->icon('search')
-                ->action('search')
-                ->cssClass('dropdown-search-button')
-                ->loader(false) ?>
-            <?= Html::input('text', 'keyword', '', [
-                'class' => 'dropdown-search-keyword form-control',
-                'autocomplete' => 'off'
-            ]) ?>
-        </div>
-        <ul class="dropdown-search-list">
-            <?php foreach ($providers as $provider) : ?>
-                <?= MetaSearchProviderWidget::widget(['provider' => $provider]) ?>
-            <?php endforeach; ?>
-        </ul>
+<?= Link::asLink('')
+    ->icon('search')
+    ->id('search-menu')
+    ->action('menu')
+    ->options(['data-toggle' => 'dropdown'])
+    ->cssClass('dropdown-toggle') ?>
+<div id="dropdown-search" class="dropdown-menu">
+    <div class="dropdown-header">
+        <div class="arrow"></div>
+        <?= Yii::t('base', 'Search') ?>
+        <?= Icon::get('close', ['id' => 'dropdown-search-close']) ?>
     </div>
+    <div class="dropdown-search-form">
+        <?= Button::defaultType()
+            ->icon('search')
+            ->action('search')
+            ->cssClass('dropdown-search-button')
+            ->loader(false) ?>
+        <?= Html::input('text', 'keyword', '', [
+            'class' => 'dropdown-search-keyword form-control',
+            'autocomplete' => 'off'
+        ]) ?>
+    </div>
+    <ul class="dropdown-search-list">
+        <?php foreach ($providers as $provider): ?>
+            <?= MetaSearchProviderWidget::widget(['provider' => $provider]) ?>
+        <?php endforeach; ?>
+    </ul>
+</div>
 <?= Html::endTag('li') ?>
