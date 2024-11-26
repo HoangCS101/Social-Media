@@ -27,12 +27,13 @@ use yii\web\View;
             'linkOptions' => ['data-contentcontainer-id' => $user->contentcontainer_id, 'class' => 'card-image-link'],
             'width' => 94,
             'showSelfOnlineStatus' => true,
-        ]); ?>
+        ]); 
+    ?>
         <?php /*<div class="card-icons">
             <?= PeopleIcons::widget(['user' => $user]); ?>
         </div> */ ?>
     </div>
-    <div class="card-body">
+    <div class="card-body mt-[40px] ">
         <strong class="card-title"><?= Html::containerLink($user); ?></strong>
         <?php if (!empty($user->displayNameSub)) : ?>
             <div><?= Html::encode($user->displayNameSub); ?></div>

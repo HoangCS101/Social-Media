@@ -13,7 +13,7 @@ use humhub\modules\ui\view\components\View;
 
 <?php if (!$renderOptions->isAddonsDisabled()) : ?>
 
-    <div class="stream-entry-addons clearfix">
+    <div class="stream-entry-addons clearfix w-full block">
         <?= WallEntryAddons::widget(['object' => $model, 'renderOptions' => $renderOptions]) ?>
     </div>
 
