@@ -70,9 +70,6 @@ $profileImageHeight = $container->getProfileImage()->height();
             <?php endif; ?>
         </div>
         <div class="profile-section">
-            <!-- <?= $this->render($headerControlView, [
-                'container' => $container,
-            ]) ?> -->
             <?php if($isUser) : ?>
                 <div class="row">
                     <div class="col col-lg-5 col-md-5 col-sm-12 col-12">
@@ -90,6 +87,9 @@ $profileImageHeight = $container->getProfileImage()->height();
                     <div class="col col-lg-5 ml-auto col-md-5 col-sm-12 col-12">
                         <?= SpaceRightNavigation::widget(['space' => $container]); ?>
                     </div>
+                    <?= $this->render($headerControlView, [
+                    'container' => $container,
+                    ]) ?>
                 </div>
             <?php endif; ?>
         </div>

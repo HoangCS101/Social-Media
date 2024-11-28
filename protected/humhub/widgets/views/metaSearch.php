@@ -37,7 +37,7 @@ $isAllHiddenEmpty = empty($providers) || array_reduce($providers, function ($car
 
     <div id="dropdown-search" class="dropdown-menu  h-[40px]" 
         style="display: flex; 
-            top: 0; left: 0; 
+            top: 17%; left: 0; 
             right: auto; 
             width: 400px;
             flex-direction: column">

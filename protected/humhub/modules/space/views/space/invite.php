@@ -18,18 +18,19 @@ if (!FriendshipButton::isVisibleForUser($container)) {
 $controls[] = [FriendshipButton::class, ['user' => $container]];
 $controls[] = [HeaderControlsMenu::class, ['user' => $container]];
 ?>
-<div class="panel-body">
-    <div class="row">
-        <div class="col col-lg-5 col-md-5 col-sm-5 col-5">
-            <?= ProfileHeaderCounterSet::widget(['user' => $container]); ?>
-        </div>
-        <div class="col col-lg-5 ml-auto col-md-5 col-sm-5 col-5">
-            <div class="controls controls-header pull-right">
-                <?= ProfileHeaderControls::widget([
-                    'user' => $container,
-                    'widgets' => $controls
-                ]) ?>
-            </div>
-        </div>
-    </div>
-</div>
+<?= HeaderControls::widget(['widgets' => [
+    [InviteButton::class, ['space' => $container], ['sortOrder' => 10]],
+    [MembershipButton::class, [
+        'space' => $container,
+        'options' => [
+            'becomeMember' => ['mode' => 'link'],
+            'acceptInvite' => ['mode' => 'link']
+        ],
+    ], ['sortOrder' => 20]],
+    [FollowButton::class, [
+        'space' => $container,
+        'followOptions' => ['class' => 'btn btn-primary'],
+        'unfollowOptions' => ['class' => 'btn btn-primary active']
+    ], ['sortOrder' => 30]]
+]]); ?>
+<?= HeaderControlsMenu::widget(['space' => $container]); ?>

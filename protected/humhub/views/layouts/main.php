@@ -58,12 +58,12 @@ AppAsset::register($this);
                 <?= SiteLogo::widget() ?>
             </div>
             <div class="header-content-wrapper min-h-[70px] flex justify-between">
-                <div class="control-block flex h-inherit">
-                    <ul class="nav w-[400px] h-inherit" id="search-menu-nav" style="">
+                <div class="control-block flex min-h-[70px]">
+                    <ul class="nav w-[400px] min-h-[70px]" id="search-menu-nav" style="">
                         <?= TopMenuRightStack::widget() ?>
                     </ul>
 
-                    <a href="#" class="link-find-friend">Find Friends</a>
+                    <!-- <a href="#" class="link-find-friend"></a> -->
 
                 </div>
                 
