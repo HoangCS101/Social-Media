@@ -333,7 +333,7 @@ humhub.module('ui.search', function(module, require, $) {
         this.getProviders().hide();
         this.getList().hide();
         this.getBackdrop().hide();
-        this.getCurrentToggler().hide();
+        // this.getCurrentToggler().hide();
         this.refreshPositionSize();
         // this.hidePanel();
     }
