@@ -331,7 +331,11 @@ humhub.module('ui.search', function(module, require, $) {
     Search.prototype.reset = function () {
         this.getCurrentInput().val('');
         this.getProviders().hide();
-        this.hidePanel();
+        this.getList().hide();
+        this.getBackdrop().hide();
+        this.getCurrentToggler().hide();
+        this.refreshPositionSize();
+        // this.hidePanel();
     }
 
     Search.prototype.refreshPositionSize = function () {
