@@ -8,7 +8,7 @@ humhub.module('ui.search', function(module, require, $) {
 
     Search.prototype.init = function() {
         const that = this;
-
+        that.hasBackdop = false;
         that.selectors = {
             toggler: '#search-menu[data-toggle=dropdown]',
             panel: '#dropdown-search',
@@ -54,11 +54,13 @@ humhub.module('ui.search', function(module, require, $) {
         })
 
         that.getInput().on('focus', function (e) {
-            console.log('fuckkkk')
-            if(that.getInput().val() !== '') {
+            // if(that.getInput().val() !== '') {
                 that.getList().show();
-                that.$.append('<div class="' + that.selectors.backdrop.replace('.', '') + '">');
-            }
+                // if(!that.hasBackdop) {
+                    that.$.append('<div class="' + that.selectors.backdrop.replace('.', '') + '">');
+                    // that.hasBackdop = true;
+                // }
+            // }
         })
 
 
@@ -289,7 +291,12 @@ humhub.module('ui.search', function(module, require, $) {
         }
 
         this.getList().show();
-        that.$.append('<div class="' + that.selectors.backdrop.replace('.', '') + '">');
+        // if(!that.getBackdrop()) {
+        if(!that.hasBackdop) {
+            that.$.append('<div class="' + that.selectors.backdrop.replace('.', '') + '">');
+            that.hasBackdop = true;
+        }
+        // }
 
         this.getProviders().each(function () {
             const provider = $(this);
