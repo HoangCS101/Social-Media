@@ -30,7 +30,7 @@ use humhub\modules\ui\view\components\View;
 use humhub\modules\user\widgets\ProfileLeftNavigation;
 use humhub\modules\user\widgets\ProfileRightNavigation;
 use humhub\modules\space\widgets\SpaceLeftNavigation;
-use humhub\modules\space\widgets\SpaceRightNavigation;
+use humhub\modules\space\widgets\SpaceRightNavigation; 
 use humhub\widgets\Button;
 use yii\helpers\Html;
 
@@ -70,9 +70,6 @@ $profileImageHeight = $container->getProfileImage()->height();
             <?php endif; ?>
         </div>
         <div class="profile-section">
-            <!-- <?= $this->render($headerControlView, [
-                'container' => $container,
-            ]) ?> -->
             <?php if($isUser) : ?>
                 <div class="row">
                     <div class="col col-lg-5 col-md-5 col-sm-12 col-12">
@@ -90,51 +87,11 @@ $profileImageHeight = $container->getProfileImage()->height();
                     <div class="col col-lg-5 ml-auto col-md-5 col-sm-12 col-12">
                         <?= SpaceRightNavigation::widget(['space' => $container]); ?>
                     </div>
+                    <?= $this->render($headerControlView, [
+                    'container' => $container,
+                    ]) ?>
                 </div>
             <?php endif; ?>
-            
-
-            <!-- <div class="control-block-button">
-                <a href="35-YourAccount-FriendsRequests.html" class="btn btn-control bg-blue">
-                    <svg class="olymp-happy-face-icon"><use xlink:href="svg-icons/sprites/icons.svg#olymp-happy-face-icon"></use></svg>
-                </a>
-
-                <a href="#" class="btn btn-control bg-purple">
-                    <svg class="olymp-chat---messages-icon"><use xlink:href="svg-icons/sprites/icons.svg#olymp-chat---messages-icon"></use></svg>
-                </a>
-
-                <div class="btn btn-control bg-primary more">
-                    <svg class="olymp-settings-icon"><use xlink:href="svg-icons/sprites/icons.svg#olymp-settings-icon"></use></svg>
-
-                    <ul class="more-dropdown more-with-triangle triangle-bottom-right">
-                        <li>
-                            
-                            <?php if ($canEdit) : ?>
-                                <div class="image-upload-loader" style="padding:<?= $bannerProgressBarPadding ?>">
-                                    <?= $bannerUpload->progress() ?>
-                                </div>
-                            <?php endif; ?>
-
-                            <?php if ($canEdit) : ?>
-                                <?= $this->render('containerProfileImageMenu', [
-                                    'upload' => $bannerUpload,
-                                    'hasImage' => $container->getProfileBannerImage()->hasImage(),
-                                    'cropUrl' => $coverCropUrl,
-                                    'deleteUrl' => $coverDeleteUrl,
-                                    'dropZone' => '.profile-banner-image-container',
-                                    'confirmBody' => Yii::t('SpaceModule.base', 'Do you really want to delete your title image?'),
-                                ]) ?>
-                            <?php endif; ?>
-                        </li>
-                        <li>
-                            <a href="#" data-toggle="modal" data-target="#update-header-photo">Update Header Photo</a>
-                        </li>
-                        <li>
-                            <a href="29-YourAccount-AccountSettings.html">Account Settings</a>
-                        </li>
-                    </ul>
-                </div>
-            </div> -->
         </div>
         <div class="top-header-author">
             <div class="author-thumb image-upload-container profile-user-photo-container">
