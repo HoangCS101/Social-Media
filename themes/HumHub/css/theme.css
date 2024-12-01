@@ -987,6 +987,7 @@ ul.contextMenu li.selected {
 
 .media .media-body strong {
     color: #000;
+    font-size: 14px;
 }
 
 .media .media-body h5 {
@@ -1100,7 +1101,6 @@ img {
     color: #000;
     background-color: white;
     border: none;
-    padding: 10px;
     border-radius: 4px;
 }
 
@@ -3397,7 +3397,7 @@ div.nested-comments-root div.comment-container {
 }
 
 .activities {
-    max-height: 400px;
+    max-height: 1000px;
     overflow: auto;
 }
 
@@ -3412,8 +3412,8 @@ div.nested-comments-root div.comment-container {
 
 .activities li .media .img-space {
     position: absolute;
-    top: 24px;
-    left: 24px;
+    top: 52px;
+    left: 38px;
 }
 
 .activities li .media .media-body {
@@ -3600,6 +3600,7 @@ div.nested-comments-root div.comment-container {
 
 .wall-entry .wall-entry-body .wall-entry-content {
     margin-bottom: 5px;
+    color: #000;
 }
 
 .wall-entry .wall-entry-body .wall-entry-content .post-short-text {
@@ -4023,10 +4024,10 @@ ul.files li.file-preview-item .file-fileInfo {
 .post-files img {
     vertical-align: top;
     padding: 2px;
-    height: 150px;
     width: 100%;
     object-fit: cover;
     border-radius: 4px;
+    height: auto;
 }
 
 @media (max-width: 650px) {
@@ -4039,6 +4040,7 @@ ul.files li.file-preview-item .file-fileInfo {
     padding: 10px;
     padding-bottom: 1px;
     margin-bottom: 10px !important;
+    display: none;
 }
 
 .post-file-list a,
@@ -4066,6 +4068,7 @@ ul.files li.file-preview-item .file-fileInfo {
 
 .image-upload-container {
     position: relative;
+    height: 300px;
 }
 
 .image-upload-container .image-upload-buttons {

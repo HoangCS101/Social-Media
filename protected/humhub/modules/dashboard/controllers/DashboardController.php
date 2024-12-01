@@ -13,7 +13,8 @@ use humhub\components\Controller;
 use humhub\modules\dashboard\components\actions\DashboardStreamAction;
 use humhub\modules\ui\view\components\View;
 use Yii;
-
+use humhub\modules\user\components\PeopleQuery;
+use humhub\modules\user\models\User;
 class DashboardController extends Controller
 {
     /**
@@ -29,6 +30,8 @@ class DashboardController extends Controller
     {
         $this->appendPageTitle(Yii::t('DashboardModule.base', 'Dashboard'));
         $this->view->setViewContext(static::VIEW_CONTEXT);
+        $users = User::find()->all();
+        $this->view->params['users'] = $users;
         return parent::init();
     }
 

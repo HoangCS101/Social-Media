@@ -15,7 +15,7 @@ use humhub\modules\ui\view\components\View;
 
 ?>
 
-<div class="panel panel-danger panel-invalid">
+<div class="panel panel-danger panel-invalid hidden">
     <div class="panel-heading"><?= Yii::t('AdminModule.base', '<strong>Warning</strong> incomplete setup!'); ?></div>
     <div class="panel-body">
         <ul>

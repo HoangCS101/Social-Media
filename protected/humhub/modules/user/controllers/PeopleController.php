@@ -33,11 +33,10 @@ class PeopleController extends Controller
      */
     public function init()
     {
-        $this->setActionTitles([
-            'index' => Yii::t('UserModule.base', 'People'),
-        ]);
-
-        parent::init();
+            $this->setActionTitles([
+                'index' => Yii::t('UserModule.base', 'People'),
+            ]);
+            parent::init();
     }
 
     /**

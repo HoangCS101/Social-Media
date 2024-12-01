@@ -21,7 +21,7 @@ $this->registerJsVar('fileuploader_error_modal_errormsg', Yii::t('FileModule.bas
         top: 0;
         right: 0;
         margin: 0;
-        opacity: 0;
+        opacity: 0; 
         filter: alpha(opacity=0);
         transform: translate(-300px, 0) scale(4);
         font-size: 23px;
@@ -30,8 +30,8 @@ $this->registerJsVar('fileuploader_error_modal_errormsg', Yii::t('FileModule.bas
     }
 </style>
 <span class="btn btn-default fileinput-button tt" data-toggle="tooltip" data-placement="bottom" title=""
-      data-original-title="<?php echo Yii::t('FileModule.base', 'Upload files'); ?>">
-    <i class="fa fa-cloud-upload"></i>
+      data-original-title="<?php echo Yii::t('FileModule.base', 'Upload files'); ?>">\
+    <i class="fa fa-cloud-upload"> </i>
 
     <input id="fileUploaderButton_<?php echo $uploaderId; ?>" type="file" name="files[]"
            data-url="<?php echo Url::to(['/file/file/upload', 'objectModel' => $objectModel, 'objectId' => $objectId]); ?>"

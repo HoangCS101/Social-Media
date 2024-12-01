@@ -37,6 +37,7 @@ $space = $context->contentContainer;
                 <?= $this->getSidebar() ?>
                 <?= FooterMenu::widget(['location' => FooterMenu::LOCATION_SIDEBAR]); ?>
             </div>
+            
         <?php endif; ?>
     </div>
 
