@@ -19,35 +19,61 @@ use yii\web\View;
 /* @var MetaSearchProviderInterface[] $providers */
 
 SearchAsset::register($this);
+
+$isAllHiddenEmpty = empty($providers) || array_reduce($providers, function ($carry, $provider) {
+    return $carry && $provider->getIsHiddenWhenEmpty();
+}, true);
+?>
+
 ?>
 <?= Html::beginTag('li', $options) ?>
-<?= Link::asLink('')
-    ->icon('search')
-    ->id('search-menu')
-    ->action('menu')
-    ->options(['data-toggle' => 'dropdown'])
-    ->cssClass('dropdown-toggle') ?>
-<div id="dropdown-search" class="dropdown-menu">
-    <div class="dropdown-header">
-        <div class="arrow"></div>
-        <?= Yii::t('base', 'Search') ?>
-        <?= Icon::get('close', ['id' => 'dropdown-search-close']) ?>
+    <?= Link::asLink('')
+        ->icon('search')
+        ->id('search-menu')
+        ->action('menu')
+        ->options(['data-toggle' => 'dropdown'])
+        ->cssClass('dropdown-toggle') ?>
+    
+
+    <div id="dropdown-search" class="dropdown-menu  h-[40px]" 
+        style="display: flex; 
+            top: 17%; left: 0; 
+            right: auto; 
+            width: 400px;
+            flex-direction: column">
+        <div class="dropdown-header" style="display: none">
+            <div class="arrow"></div>
+            <?= Yii::t('base', 'Search') ?>
+            <?= Icon::get('close', ['id' => 'dropdown-search-close']) ?>
+        </div>
+        <div class="dropdown-search-form  h-[40px]">
+            <?= Button::defaultType()
+                ->icon('search')
+                ->action('search')
+                ->cssClass('dropdown-search-button')
+                ->loader(false) ?>
+            <?= Html::input('text', 'keyword', '', [
+                'class' => 'dropdown-search-keyword form-control h-[40px]',
+                'autocomplete' => 'off',
+                'placeholder' => 'Search here ...'
+            ]) ?>
+        </div>
+        <ul class="dropdown-search-list" style="display: <?= $isAllHiddenEmpty ? 'none !important' : 'block' ?>;">
+            <?php foreach ($providers as $provider) : ?>
+                <?= MetaSearchProviderWidget::widget(['provider' => $provider]) ?>
+            <?php endforeach; ?>
+        </ul>
     </div>
-    <div class="dropdown-search-form">
-        <?= Button::defaultType()
-            ->icon('search')
-            ->action('search')
-            ->cssClass('dropdown-search-button')
-            ->loader(false) ?>
-        <?= Html::input('text', 'keyword', '', [
-            'class' => 'dropdown-search-keyword form-control',
-            'autocomplete' => 'off'
-        ]) ?>
-    </div>
-    <ul class="dropdown-search-list">
-        <?php foreach ($providers as $provider): ?>
-            <?= MetaSearchProviderWidget::widget(['provider' => $provider]) ?>
-        <?php endforeach; ?>
-    </ul>
-</div>
+
+
 <?= Html::endTag('li') ?>
+<script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const dropdownSearch = document.getElementById('#dropdown-search');
+        const dropdownSearchList = document.querySelector('.dropdown-search-list');
+
+        
+    });
+
+</script>

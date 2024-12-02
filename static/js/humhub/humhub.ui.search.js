@@ -8,7 +8,7 @@ humhub.module('ui.search', function(module, require, $) {
 
     Search.prototype.init = function() {
         const that = this;
-
+        that.hasBackdop = false;
         that.selectors = {
             toggler: '#search-menu[data-toggle=dropdown]',
             panel: '#dropdown-search',
@@ -31,7 +31,9 @@ humhub.module('ui.search', function(module, require, $) {
                 submit: '[type=submit]'
             }
         }
-
+        
+        that.getMenuToggler().hide();
+        
         $(document).on('pjax:end', function () {
             that.reset();
         });
@@ -45,6 +47,22 @@ humhub.module('ui.search', function(module, require, $) {
             + that.selectors.providerShowAll, function () {
             that.getMenuToggler().dropdown('toggle');
         });
+
+        $(document).on('click', that.selectors.backdrop, function() {
+            that.getList().hide();
+            that.refreshPositionSize();
+        })
+
+        that.getInput().on('focus', function (e) {
+            // if(that.getInput().val() !== '') {
+                that.getList().show();
+                // if(!that.hasBackdop) {
+                    that.$.append('<div class="' + that.selectors.backdrop.replace('.', '') + '">');
+                    // that.hasBackdop = true;
+                // }
+            // }
+        })
+
 
         that.getInput().on('keypress', function (e) {
             if (e.which === 13) {
@@ -71,19 +89,19 @@ humhub.module('ui.search', function(module, require, $) {
             railpadding: {top: 0, right: 0, left: 0, bottom: 0}
         });
 
-        that.$.on('shown.bs.dropdown', function () {
-            that.refreshPositionSize();
-            if (that.getBackdrop().length === 0) {
-                that.$.append('<div class="' + that.selectors.backdrop.replace('.', '') + '">');
-            }
-            if (that.getList().is(':visible')) {
-                // refresh NiceScroll after reopen it with searched results
-                that.getList().hide().show();
-            }
-            if (that.getInput().is(':visible')) {
-                that.getInput().focus();
-            }
-        })
+        // that.$.on('shown.bs.dropdown', function () {
+        //     that.refreshPositionSize();
+        //     if (that.getBackdrop().length === 0) {
+        //         that.$.append('<div class="' + that.selectors.backdrop.replace('.', '') + '">');
+        //     }
+        //     if (that.getList().is(':visible')) {
+        //         // refresh NiceScroll after reopen it with searched results
+        //         that.getList().hide().show();
+        //     }
+        //     if (that.getInput().is(':visible')) {
+        //         that.getInput().focus();
+        //     }
+        // })
 
         that.initAdditionalToggle();
     }
@@ -122,14 +140,15 @@ humhub.module('ui.search', function(module, require, $) {
             return that.switchFocus(e.currentTarget.tagName, e.which);
         });
 
-        that.$.on('hide.bs.dropdown', function (e) {
-            if (input.is(':focus') && input.val().trim() !== '') {
-                e.preventDefault();
-                if (that.getBackdrop().length === 0) {
-                    that.$.append('<div class="' + that.selectors.backdrop.replace('.', '') + '">');
-                }
-            }
-        })
+        // that.$.on('hide.bs.dropdown', function (e) {
+        //     if (input.is(':focus') && input.val().trim() !== '') {
+        //         e.preventDefault();
+        //         that.getList().hide()
+        //         if (that.getBackdrop().length === 0) {
+        //             that.$.append('<div class="' + that.selectors.backdrop.replace('.', '') + '">');
+        //         }
+        //     }
+        // })
     }
 
     Search.prototype.setCurrentToggler = function (toggleElement) {
@@ -272,6 +291,12 @@ humhub.module('ui.search', function(module, require, $) {
         }
 
         this.getList().show();
+        // if(!that.getBackdrop()) {
+        if(!that.hasBackdop) {
+            that.$.append('<div class="' + that.selectors.backdrop.replace('.', '') + '">');
+            that.hasBackdop = true;
+        }
+        // }
 
         this.getProviders().each(function () {
             const provider = $(this);
@@ -331,7 +356,11 @@ humhub.module('ui.search', function(module, require, $) {
     Search.prototype.reset = function () {
         this.getCurrentInput().val('');
         this.getProviders().hide();
-        this.hidePanel();
+        this.getList().hide();
+        this.getBackdrop().hide();
+        // this.getCurrentToggler().hide();
+        this.refreshPositionSize();
+        // this.hidePanel();
     }
 
     Search.prototype.refreshPositionSize = function () {
