@@ -51,11 +51,11 @@ $container = $model->content->container;
 
 <div class="author-date ">
 
-    <a class="h6 post__author-name fn" href="#">
+    <a class="h6 post__author-name fn text-[#515365] " href="#">
         <?= $title ?>
 
         <?php if ($renderOptions->isShowContainerInformationInTitle($model)): ?>
-            <span class="viaLink text-[30px]">
+            <span class="viaLink text-[16px]">
                 <?= Icon::get('caret-right') ?>
                 <?= Html::containerLink($model->content->container) ?>
             </span>
@@ -79,7 +79,7 @@ $container = $model->content->container;
             &middot;
         <?php endif; ?>
 
-        <a class=" pl-2" href="<?= $permaLink ?>">
+        <a class="" href="<?= $permaLink ?>">
             <?= TimeAgo::widget(['timestamp' => $model->content->created_at, 'titlePrefixInfo' => Yii::t('ContentModule.base', 'Created at:') . ' ']) ?>
         </a>
 

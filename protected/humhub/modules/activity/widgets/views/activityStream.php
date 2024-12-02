@@ -17,8 +17,8 @@ ActivityAsset::register($this);
 ?>
 <div class="panel panel-default panel-activities" id="panel-activities">
     <?= PanelMenu::widget(['id' => 'panel-activities']) ?>
-    <div class="panel-heading">
-        <?= Yii::t('ActivityModule.base', '<strong>Latest</strong> activities') ?>
+    <div class="panel-heading py-[16px] pl-5 border-b border-[#e6ecf5]">
+        <?= Yii::t('ActivityModule.base', '<strong class="text-[14px]">Activity Feed</strong>') ?>
     </div>
     <?= Html::beginTag('div', $options) ?>
     <ul id="activityContents" class="media-list activities" data-stream-content></ul>

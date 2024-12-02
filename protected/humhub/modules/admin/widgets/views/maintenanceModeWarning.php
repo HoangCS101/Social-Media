@@ -12,7 +12,7 @@ use yii\helpers\Url;
 
 ?>
 
-<div class="panel panel-danger panel-invalid">
+<div class="panel panel-danger panel-invalid hidden">
     <div class="panel-heading"><?= Yii::t('AdminModule.base', '<strong>Maintenance</strong> Mode'); ?></div>
     <div class="panel-body">
         <p><?= ControllerAccess::getMaintenanceModeWarningText('<br>') ?></p>
