@@ -28,6 +28,8 @@ use yii\web\ForbiddenHttpException;
 use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
 
+use WebSocket\Client;
+
 /**
  * MailController provides messaging actions.
  *
@@ -130,18 +132,41 @@ class MailController extends Controller
         ]);
     }
 
+    protected function sendToWebSocketServer($message)
+    {
+        try {
+            $client = new Client("ws://localhost:8080");
+            $client->send($message);
+            return true;
+        } catch (\Exception $e) {
+            Yii::error("Failed to send message to WebSocket server: " . $e->getMessage());
+            return false;
+        }
+    }
+
     public function actionReply($id)
     {
         $message = $this->getMessage($id, true);
 
         $this->checkMessagePermissions($message);
 
-        // Reply Form
         $replyForm = new ReplyForm(['model' => $message]);
         if ($replyForm->load(Yii::$app->request->post()) && $replyForm->save()) {
+            // Gửi thông báo qua WebSocket server
+            $this->sendToWebSocketServer(json_encode([
+                'type' => 'new_message',
+                'data' => [
+                    'messageId' => $id,
+                    'content' => $replyForm->reply->message,
+                ],
+            ]));
+
             return $this->asJson([
                 'success' => true,
-                'content' => ConversationEntry::widget(['entry' => $replyForm->reply, 'showDateBadge' => $replyForm->reply->isFirstToday()]),
+                'content' => ConversationEntry::widget([
+                    'entry' => $replyForm->reply,
+                    'showDateBadge' => $replyForm->reply->isFirstToday(),
+                ]),
             ]);
         }
 

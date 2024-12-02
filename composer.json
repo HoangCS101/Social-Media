@@ -70,6 +70,7 @@
         "symfony/postmark-mailer": "^5.4",
         "symfony/sendgrid-mailer": "^5.4",
         "symfony/sendinblue-mailer": "^5.4",
+        "textalk/websocket": "^1.6",
         "twig/twig": "^3.4.1",
         "web-token/jwt-checker": ">=1.0 <3.0",
         "web-token/jwt-signature": ">=1.0 <3.0",
