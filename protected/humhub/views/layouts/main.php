@@ -119,7 +119,7 @@ AppAsset::register($this);
     document.querySelector('.dropdown-search-keyword').addEventListener('focus', function () {
         const searchList = document.querySelector('.dropdown-search-list');
         if (searchList) {
-            searchList.style.display = 'block'; // Hiển thị lại danh sách
+            searchList.style.display = 'block'; 
         }
     });
 </script>

@@ -23,7 +23,7 @@ SearchAsset::register($this);
 $isAllHiddenEmpty = empty($providers) || array_reduce($providers, function ($carry, $provider) {
     return $carry && $provider->getIsHiddenWhenEmpty();
 }, true);
-?>
+
 
 ?>
 <?= Html::beginTag('li', $options) ?>
@@ -34,8 +34,7 @@ $isAllHiddenEmpty = empty($providers) || array_reduce($providers, function ($car
         ->options(['data-toggle' => 'dropdown'])
         ->cssClass('dropdown-toggle') ?>
     
-
-    <div id="dropdown-search" class="dropdown-menu  h-[40px]" 
+    <div id="dropdown-search" class="dropdown-menu " 
         style="display: flex; 
             top: 17%; left: 0; 
             right: auto; 
@@ -46,19 +45,19 @@ $isAllHiddenEmpty = empty($providers) || array_reduce($providers, function ($car
             <?= Yii::t('base', 'Search') ?>
             <?= Icon::get('close', ['id' => 'dropdown-search-close']) ?>
         </div>
-        <div class="dropdown-search-form  h-[40px]">
+        <div class="dropdown-search-form p-0 w-[500px] z-[9999]">
             <?= Button::defaultType()
                 ->icon('search')
                 ->action('search')
                 ->cssClass('dropdown-search-button')
                 ->loader(false) ?>
             <?= Html::input('text', 'keyword', '', [
-                'class' => 'dropdown-search-keyword form-control h-[40px]',
+                'class' => 'dropdown-search-keyword form-control',
                 'autocomplete' => 'off',
                 'placeholder' => 'Search here ...'
             ]) ?>
         </div>
-        <ul class="dropdown-search-list" style="display: <?= $isAllHiddenEmpty ? 'none !important' : 'block' ?>;">
+        <ul class="dropdown-search-list z-[10]" style="display: <?= $isAllHiddenEmpty ? 'none !important' : 'block' ?>;">
             <?php foreach ($providers as $provider) : ?>
                 <?= MetaSearchProviderWidget::widget(['provider' => $provider]) ?>
             <?php endforeach; ?>

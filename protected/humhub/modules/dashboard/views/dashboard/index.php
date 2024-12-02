@@ -21,6 +21,7 @@ use humhub\modules\ui\view\components\View;
 ?>
 
 <?= Html::beginContainer() ?>
+
 <div class="container">
     <div class="row">
 
@@ -45,10 +46,10 @@ use humhub\modules\ui\view\components\View;
         <!-- Left Sidebar -->
 
         <aside class="col col-xl-3 order-xl-1 col-lg-6 order-lg-2 col-md-6 col-sm-12 col-12">
-            <div class="ui-block">
+            <div class="ui-block rounded-[20px]">
                 <!-- W-Weather -->
 
-                <div class="widget w-wethear">
+                <div class="widget w-wethear rounded-[20px]">
                     <a href="#" class="more"><svg class="olymp-three-dots-icon">
                             <use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>
                         </svg></a>
@@ -150,7 +151,7 @@ use humhub\modules\ui\view\components\View;
                 <!-- W-Weather -->
             </div>
 
-            <div class="ui-block">
+            <div class="ui-block rounded-[20px]">
 
                 <!-- W-Calendar -->
 
@@ -677,7 +678,8 @@ use humhub\modules\ui\view\components\View;
                 <!-- ... end W-Calendar -->
             </div>
 
-            <div class="ui-block">
+
+            <div class="ui-block rounded-[20px]">
                 <div class="ui-block-title">
                     <h6 class="title">Pages You May Like</h6>
                     <a href="#" class="more"><svg class="olymp-three-dots-icon">
@@ -688,116 +690,38 @@ use humhub\modules\ui\view\components\View;
                 <!-- W-Friend-Pages-Added -->
 
                 <ul class="widget w-friend-pages-added notification-list friend-requests">
+                    <?php
+                    foreach ($spaces as $space) { ?>
+                        <li class="inline-items">
+                            <div class="author-thumb pt-[10px]">
+                                <?php echo $space->getProfileImage()->render(30, ['class' => 'space-avatar', 'id' => 'space-account-image']);
+                                ?>
+                            </div>
+                            <div class="notification-event">
+                                <a href="http://localhost/social-media/index.php?r=space%2Fspace&cguid=<?= $space->guid ?>"
+                                    class="h6 notification-friend"> <?php echo $space->name ?> </a>
+                                <span class="chat-message-item"> <?php echo $space->description ?> </span>
+                            </div>
+                            <span class="notification-icon" data-toggle="tooltip" data-placement="top"
+                                data-original-title="ADD TO YOUR FAVS">
+                                <a href="#">
+                                    <svg class="olymp-star-icon">
+                                        <use xlink:href="svg-icons/sprites/icons.svg#olymp-star-icon"></use>
+                                    </svg>
+                                </a>
+                            </span>
+
+                        </li>
+                        <?php
+                    }
+                    ?>
                     <li class="inline-items">
-                        <div class="author-thumb">
-                            <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/avatar41-sm.jpg" alt="author">
-                        </div>
-                        <div class="notification-event">
-                            <a href="#" class="h6 notification-friend">The Marina Bar</a>
-                            <span class="chat-message-item">Restaurant / Bar</span>
-                        </div>
-                        <span class="notification-icon" data-toggle="tooltip" data-placement="top"
-                            data-original-title="ADD TO YOUR FAVS">
-                            <a href="#">
-                                <svg class="olymp-star-icon">
-                                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-star-icon"></use>
-                                </svg>
-                            </a>
-                        </span>
+                        <a href="http://localhost/social-media/index.php?r=space%2Fspaces" class="text-center opacity-80">
+                            More Spaces
+                        </a>
 
                     </li>
 
-                    <li class="inline-items">
-                        <div class="author-thumb">
-                            <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/avatar42-sm.jpg" alt="author">
-                        </div>
-                        <div class="notification-event">
-                            <a href="#" class="h6 notification-friend">Tapronus Rock</a>
-                            <span class="chat-message-item">Rock Band</span>
-                        </div>
-                        <span class="notification-icon" data-toggle="tooltip" data-placement="top"
-                            data-original-title="ADD TO YOUR FAVS">
-                            <a href="#">
-                                <svg class="olymp-star-icon">
-                                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-star-icon"></use>
-                                </svg>
-                            </a>
-                        </span>
-
-                    </li>
-
-                    <li class="inline-items">
-                        <div class="author-thumb">
-                            <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/avatar43-sm.jpg" alt="author">
-                        </div>
-                        <div class="notification-event">
-                            <a href="#" class="h6 notification-friend">Pixel Digital Design</a>
-                            <span class="chat-message-item">Company</span>
-                        </div>
-                        <span class="notification-icon" data-toggle="tooltip" data-placement="top"
-                            data-original-title="ADD TO YOUR FAVS">
-                            <a href="#">
-                                <svg class="olymp-star-icon">
-                                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-star-icon"></use>
-                                </svg>
-                            </a>
-                        </span>
-                    </li>
-
-                    <li class="inline-items">
-                        <div class="author-thumb">
-                            <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/avatar44-sm.jpg" alt="author">
-                        </div>
-                        <div class="notification-event">
-                            <a href="#" class="h6 notification-friend">Thompson’s Custom Clothing Boutique</a>
-                            <span class="chat-message-item">Clothing Store</span>
-                        </div>
-                        <span class="notification-icon" data-toggle="tooltip" data-placement="top"
-                            data-original-title="ADD TO YOUR FAVS">
-                            <a href="#">
-                                <svg class="olymp-star-icon">
-                                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-star-icon"></use>
-                                </svg>
-                            </a>
-                        </span>
-
-                    </li>
-
-                    <li class="inline-items">
-                        <div class="author-thumb">
-                            <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/avatar45-sm.jpg" alt="author">
-                        </div>
-                        <div class="notification-event">
-                            <a href="#" class="h6 notification-friend">Crimson Agency</a>
-                            <span class="chat-message-item">Company</span>
-                        </div>
-                        <span class="notification-icon" data-toggle="tooltip" data-placement="top"
-                            data-original-title="ADD TO YOUR FAVS">
-                            <a href="#">
-                                <svg class="olymp-star-icon">
-                                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-star-icon"></use>
-                                </svg>
-                            </a>
-                        </span>
-                    </li>
-
-                    <li class="inline-items">
-                        <div class="author-thumb">
-                            <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/avatar46-sm.jpg" alt="author">
-                        </div>
-                        <div class="notification-event">
-                            <a href="#" class="h6 notification-friend">Mannequin Angel</a>
-                            <span class="chat-message-item">Clothing Store</span>
-                        </div>
-                        <span class="notification-icon" data-toggle="tooltip" data-placement="top"
-                            data-original-title="ADD TO YOUR FAVS">
-                            <a href="#">
-                                <svg class="olymp-star-icon">
-                                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-star-icon"></use>
-                                </svg>
-                            </a>
-                        </span>
-                    </li>
                 </ul>
 
                 <!-- .. end W-Friend-Pages-Added -->
@@ -811,7 +735,7 @@ use humhub\modules\ui\view\components\View;
 
         <aside class="col col-xl-3 order-xl-3 col-lg-6 order-lg-3 col-md-6 col-sm-12 col-12">
 
-            <div class="ui-block">
+            <div class="ui-block rounded-[20px]">
 
 
 
@@ -878,7 +802,8 @@ use humhub\modules\ui\view\components\View;
                     ?>
                     <li class="inline-items text-center hover:pointer">
                         <div class="text-[16px] text-black font-semibold items-center ">
-                            <a class="opacity-60 text-[16px] text-black font-bold" href="http://localhost/social-media/index.php?r=user%2Fpeople">More people</a>
+                            <a class="opacity-60 text-[16px] text-black font-bold"
+                                href="http://localhost/social-media/index.php?r=user%2Fpeople">More people</a>
                         </div>
                     </li>
                 </ul>
