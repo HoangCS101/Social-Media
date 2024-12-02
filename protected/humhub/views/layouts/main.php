@@ -89,6 +89,7 @@ AppAsset::register($this);
                 </div>
             </div>
             <!-- <div class="w-full bg-purple-dark-opacity h-10"> -->
+                
         </div>
     </header>
 
