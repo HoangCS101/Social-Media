@@ -6564,7 +6564,6 @@ a.label-warning:hover {
     padding: 0;
     border: none;
     border-radius: 8px;
-    box-shadow: 0 0 8px #b2b2b2;
     top: 17%;
 }
 
@@ -6628,6 +6627,7 @@ a.label-warning:hover {
     border: 0px;
     background-color: #515365;
     border-radius: 0px;
+    color: white;
 }
 #dropdown-search.dropdown-menu .dropdown-search-form .dropdown-search-keyword:focus {
     color: white;
