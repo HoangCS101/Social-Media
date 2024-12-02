@@ -12,7 +12,7 @@ use yii\helpers\Html;
         <?php echo PanelMenu::widget(['id' => 'user-spaces-panel']); ?>
 
         <div class="panel-heading">
-            <?php echo Yii::t('UserModule.base', '<strong>Member</strong> of these Spaces'); ?>
+            <?php echo Yii::t('UserModule.base', 'Member of these Spaces'); ?>
         </div>
 
         <div class="panel-body">
