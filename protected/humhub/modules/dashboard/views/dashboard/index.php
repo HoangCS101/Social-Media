@@ -10,30 +10,34 @@ use humhub\modules\dashboard\widgets\DashboardContent;
 use humhub\modules\dashboard\widgets\Sidebar;
 use humhub\widgets\FooterMenu;
 use humhub\libs\Html;
+use humhub\modules\user\widgets\Image;
+use humhub\modules\content\components\ContentContainerController;
+use humhub\modules\space\models\Space;
+use humhub\modules\space\widgets\Header;
+use humhub\modules\space\widgets\Menu;
+use humhub\modules\space\widgets\SpaceContent;
+use humhub\modules\ui\view\components\View;
 
 ?>
 
 <?= Html::beginContainer() ?>
+
 <div class="container">
     <div class="row">
 
         <!-- Main Content -->
 
         <main class="col col-xl-6 order-xl-2 col-lg-12 order-lg-1 col-md-12 col-sm-12 col-12">
-
             <?= DashboardContent::widget([
                 'contentContainer' => $contentContainer,
                 'showProfilePostForm' => $showProfilePostForm
             ]);
             ?>
 
-            <a id="load-more-button" href="#" class="btn btn-control btn-more" data-load-link="items-to-load.html" data-container="newsfeed-items-grid">
+            <a id="load-more-button" href="#" class="btn btn-control btn-more" data-load-link="items-to-load.html"
+                data-container="newsfeed-items-grid">
                 <i class="fa fa-ellipsis-h"></i> <!-- Or use fa-ellipsis-v for vertical dots -->
             </a>
-
-
-
-
         </main>
 
         <!-- ... end Main Content -->
@@ -42,11 +46,10 @@ use humhub\libs\Html;
         <!-- Left Sidebar -->
 
         <aside class="col col-xl-3 order-xl-1 col-lg-6 order-lg-2 col-md-6 col-sm-12 col-12">
-            <div class="ui-block">
-
+            <div class="ui-block rounded-[20px]">
                 <!-- W-Weather -->
 
-                <div class="widget w-wethear">
+                <div class="widget w-wethear rounded-[20px]">
                     <a href="#" class="more"><svg class="olymp-three-dots-icon">
                             <use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>
                         </svg></a>
@@ -83,7 +86,8 @@ use humhub\libs\Html;
                         <li>
                             <div class="day">mon</div>
                             <svg class="olymp-weather-partly-sunny-icon">
-                                <use xlink:href="svg-icons/sprites/icons-weather.svg#olymp-weather-partly-sunny-icon"></use>
+                                <use xlink:href="svg-icons/sprites/icons-weather.svg#olymp-weather-partly-sunny-icon">
+                                </use>
                             </svg>
                             <div class="temperature-sensor-day">58°</div>
                         </li>
@@ -128,7 +132,8 @@ use humhub\libs\Html;
                             <div class="day">sat</div>
 
                             <svg class="olymp-weather-wind-icon-header">
-                                <use xlink:href="svg-icons/sprites/icons-weather.svg#olymp-weather-wind-icon-header"></use>
+                                <use xlink:href="svg-icons/sprites/icons-weather.svg#olymp-weather-wind-icon-header">
+                                </use>
                             </svg>
 
                             <div class="temperature-sensor-day">65°</div>
@@ -146,7 +151,7 @@ use humhub\libs\Html;
                 <!-- W-Weather -->
             </div>
 
-            <div class="ui-block">
+            <div class="ui-block rounded-[20px]">
 
                 <!-- W-Calendar -->
 
@@ -217,7 +222,8 @@ use humhub\libs\Html;
                         </table>
                         <div class="list">
 
-                            <div id="accordion-1" role="tablist" aria-multiselectable="true" class="day-event" data-month="12" data-day="2">
+                            <div id="accordion-1" role="tablist" aria-multiselectable="true" class="day-event"
+                                data-month="12" data-day="2">
                                 <div class="ui-block-title ui-block-title-small">
                                     <h6 class="title">TODAY’S EVENTS</h6>
                                 </div>
@@ -227,13 +233,17 @@ use humhub\libs\Html;
                                             <span class="circle"></span>
                                             <time datetime="2004-07-24T18:18">9:00am</time>
                                             <a href="#" class="more"><svg class="olymp-three-dots-icon">
-                                                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>
+                                                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon">
+                                                    </use>
                                                 </svg></a>
                                         </div>
                                         <h5 class="mb-0">
-                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne-1" aria-expanded="true" aria-controls="collapseOne-1">
+                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne-1"
+                                                aria-expanded="true" aria-controls="collapseOne-1">
                                                 Breakfast at the Agency<svg class="olymp-dropdown-arrow-icon">
-                                                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-dropdown-arrow-icon"></use>
+                                                    <use
+                                                        xlink:href="svg-icons/sprites/icons.svg#olymp-dropdown-arrow-icon">
+                                                    </use>
                                                 </svg>
                                             </a>
                                         </h5>
@@ -241,11 +251,14 @@ use humhub\libs\Html;
 
                                     <div id="collapseOne-1" class="collapse" role="tabpanel">
                                         <div class="card-body">
-                                            Hi Guys! I propose to go a litle earlier at the agency to have breakfast and talk a little more about the new design project we have been working on. Cheers!
+                                            Hi Guys! I propose to go a litle earlier at the agency to have breakfast and
+                                            talk a little more about the new design project we have been working on.
+                                            Cheers!
                                         </div>
                                         <div class="place inline-items">
                                             <svg class="olymp-add-a-place-icon">
-                                                <use xlink:href="svg-icons/sprites/icons.svg#olymp-add-a-place-icon"></use>
+                                                <use xlink:href="svg-icons/sprites/icons.svg#olymp-add-a-place-icon">
+                                                </use>
                                             </svg>
                                             <span>Daydreamz Agency</span>
                                         </div>
@@ -253,27 +266,32 @@ use humhub\libs\Html;
                                         <ul class="friends-harmonic inline-items">
                                             <li>
                                                 <a href="#">
-                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic5.jpg" alt="friend">
+                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic5.jpg"
+                                                        alt="friend">
                                                 </a>
                                             </li>
                                             <li>
                                                 <a href="#">
-                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic10.jpg" alt="friend">
+                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic10.jpg"
+                                                        alt="friend">
                                                 </a>
                                             </li>
                                             <li>
                                                 <a href="#">
-                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic7.jpg" alt="friend">
+                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic7.jpg"
+                                                        alt="friend">
                                                 </a>
                                             </li>
                                             <li>
                                                 <a href="#">
-                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic8.jpg" alt="friend">
+                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic8.jpg"
+                                                        alt="friend">
                                                 </a>
                                             </li>
                                             <li>
                                                 <a href="#">
-                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic2.jpg" alt="friend">
+                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic2.jpg"
+                                                        alt="friend">
                                                 </a>
                                             </li>
                                             <li class="with-text">
@@ -289,13 +307,18 @@ use humhub\libs\Html;
                                             <span class="circle"></span>
                                             <time datetime="2004-07-24T18:18">9:00am</time>
                                             <a href="#" class="more"><svg class="olymp-three-dots-icon">
-                                                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>
+                                                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon">
+                                                    </use>
                                                 </svg></a>
                                         </div>
                                         <h5 class="mb-0">
-                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo-1" aria-expanded="true" aria-controls="collapseTwo-1">
-                                                Send the new “Olympus” project files to the Agency<svg class="olymp-dropdown-arrow-icon">
-                                                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-dropdown-arrow-icon"></use>
+                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo-1"
+                                                aria-expanded="true" aria-controls="collapseTwo-1">
+                                                Send the new “Olympus” project files to the Agency<svg
+                                                    class="olymp-dropdown-arrow-icon">
+                                                    <use
+                                                        xlink:href="svg-icons/sprites/icons.svg#olymp-dropdown-arrow-icon">
+                                                    </use>
                                                 </svg>
                                             </a>
                                         </h5>
@@ -303,7 +326,9 @@ use humhub\libs\Html;
 
                                     <div id="collapseTwo-1" class="collapse" role="tabpanel">
                                         <div class="card-body">
-                                            Hi Guys! I propose to go a litle earlier at the agency to have breakfast and talk a little more about the new design project we have been working on. Cheers!
+                                            Hi Guys! I propose to go a litle earlier at the agency to have breakfast and
+                                            talk a little more about the new design project we have been working on.
+                                            Cheers!
                                         </div>
                                     </div>
 
@@ -315,11 +340,13 @@ use humhub\libs\Html;
                                             <span class="circle"></span>
                                             <time datetime="2004-07-24T18:18">6:30am</time>
                                             <a href="#" class="more"><svg class="olymp-three-dots-icon">
-                                                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>
+                                                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon">
+                                                    </use>
                                                 </svg></a>
                                         </div>
                                         <h5 class="mb-0">
-                                            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#" aria-expanded="false">
+                                            <a class="collapsed" data-toggle="collapse" data-parent="#accordion"
+                                                href="#" aria-expanded="false">
                                                 Take Querty to the Veterinarian
                                             </a>
                                         </h5>
@@ -335,7 +362,8 @@ use humhub\libs\Html;
                                 <a href="#" class="check-all">Check all your Events</a>
                             </div>
 
-                            <div id="accordion-2" role="tablist" aria-multiselectable="true" class="day-event" data-month="12" data-day="10">
+                            <div id="accordion-2" role="tablist" aria-multiselectable="true" class="day-event"
+                                data-month="12" data-day="10">
                                 <div class="ui-block-title ui-block-title-small">
                                     <h6 class="title">TODAY’S EVENTS</h6>
                                 </div>
@@ -345,13 +373,17 @@ use humhub\libs\Html;
                                             <span class="circle"></span>
                                             <time datetime="2004-07-24T18:18">9:00am</time>
                                             <a href="#" class="more"><svg class="olymp-three-dots-icon">
-                                                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>
+                                                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon">
+                                                    </use>
                                                 </svg></a>
                                         </div>
                                         <h5 class="mb-0">
-                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne-2" aria-expanded="true" aria-controls="collapseOne-2">
+                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne-2"
+                                                aria-expanded="true" aria-controls="collapseOne-2">
                                                 Breakfast at the Agency<svg class="olymp-dropdown-arrow-icon">
-                                                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-dropdown-arrow-icon"></use>
+                                                    <use
+                                                        xlink:href="svg-icons/sprites/icons.svg#olymp-dropdown-arrow-icon">
+                                                    </use>
                                                 </svg>
                                             </a>
                                         </h5>
@@ -359,11 +391,14 @@ use humhub\libs\Html;
 
                                     <div id="collapseOne-2" class="collapse" role="tabpanel">
                                         <div class="card-body">
-                                            Hi Guys! I propose to go a litle earlier at the agency to have breakfast and talk a little more about the new design project we have been working on. Cheers!
+                                            Hi Guys! I propose to go a litle earlier at the agency to have breakfast and
+                                            talk a little more about the new design project we have been working on.
+                                            Cheers!
                                         </div>
                                         <div class="place inline-items">
                                             <svg class="olymp-add-a-place-icon">
-                                                <use xlink:href="svg-icons/sprites/icons.svg#olymp-add-a-place-icon"></use>
+                                                <use xlink:href="svg-icons/sprites/icons.svg#olymp-add-a-place-icon">
+                                                </use>
                                             </svg>
                                             <span>Daydreamz Agency</span>
                                         </div>
@@ -371,27 +406,32 @@ use humhub\libs\Html;
                                         <ul class="friends-harmonic inline-items">
                                             <li>
                                                 <a href="#">
-                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic5.jpg" alt="friend">
+                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic5.jpg"
+                                                        alt="friend">
                                                 </a>
                                             </li>
                                             <li>
                                                 <a href="#">
-                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic10.jpg" alt="friend">
+                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic10.jpg"
+                                                        alt="friend">
                                                 </a>
                                             </li>
                                             <li>
                                                 <a href="#">
-                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic7.jpg" alt="friend">
+                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic7.jpg"
+                                                        alt="friend">
                                                 </a>
                                             </li>
                                             <li>
                                                 <a href="#">
-                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic8.jpg" alt="friend">
+                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic8.jpg"
+                                                        alt="friend">
                                                 </a>
                                             </li>
                                             <li>
                                                 <a href="#">
-                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic2.jpg" alt="friend">
+                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic2.jpg"
+                                                        alt="friend">
                                                 </a>
                                             </li>
                                             <li class="with-text">
@@ -405,7 +445,8 @@ use humhub\libs\Html;
                                 <a href="#" class="check-all">Check all your Events</a>
                             </div>
 
-                            <div id="accordion-3" role="tablist" aria-multiselectable="true" class="day-event" data-month="12" data-day="15">
+                            <div id="accordion-3" role="tablist" aria-multiselectable="true" class="day-event"
+                                data-month="12" data-day="15">
                                 <div class="ui-block-title ui-block-title-small">
                                     <h6 class="title">TODAY’S EVENTS</h6>
                                 </div>
@@ -415,13 +456,17 @@ use humhub\libs\Html;
                                             <span class="circle"></span>
                                             <time datetime="2004-07-24T18:18">9:00am</time>
                                             <a href="#" class="more"><svg class="olymp-three-dots-icon">
-                                                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>
+                                                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon">
+                                                    </use>
                                                 </svg></a>
                                         </div>
                                         <h5 class="mb-0">
-                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne-3" aria-expanded="true" aria-controls="collapseOne-3">
+                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne-3"
+                                                aria-expanded="true" aria-controls="collapseOne-3">
                                                 Breakfast at the Agency<svg class="olymp-dropdown-arrow-icon">
-                                                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-dropdown-arrow-icon"></use>
+                                                    <use
+                                                        xlink:href="svg-icons/sprites/icons.svg#olymp-dropdown-arrow-icon">
+                                                    </use>
                                                 </svg>
                                             </a>
                                         </h5>
@@ -429,12 +474,15 @@ use humhub\libs\Html;
 
                                     <div id="collapseOne-3" class="collapse" role="tabpanel">
                                         <div class="card-body">
-                                            Hi Guys! I propose to go a litle earlier at the agency to have breakfast and talk a little more about the new design project we have been working on. Cheers!
+                                            Hi Guys! I propose to go a litle earlier at the agency to have breakfast and
+                                            talk a little more about the new design project we have been working on.
+                                            Cheers!
                                         </div>
 
                                         <div class="place inline-items">
                                             <svg class="olymp-add-a-place-icon">
-                                                <use xlink:href="svg-icons/sprites/icons.svg#olymp-add-a-place-icon"></use>
+                                                <use xlink:href="svg-icons/sprites/icons.svg#olymp-add-a-place-icon">
+                                                </use>
                                             </svg>
                                             <span>Daydreamz Agency</span>
                                         </div>
@@ -442,27 +490,32 @@ use humhub\libs\Html;
                                         <ul class="friends-harmonic inline-items">
                                             <li>
                                                 <a href="#">
-                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic5.jpg" alt="friend">
+                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic5.jpg"
+                                                        alt="friend">
                                                 </a>
                                             </li>
                                             <li>
                                                 <a href="#">
-                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic10.jpg" alt="friend">
+                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic10.jpg"
+                                                        alt="friend">
                                                 </a>
                                             </li>
                                             <li>
                                                 <a href="#">
-                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic7.jpg" alt="friend">
+                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic7.jpg"
+                                                        alt="friend">
                                                 </a>
                                             </li>
                                             <li>
                                                 <a href="#">
-                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic8.jpg" alt="friend">
+                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic8.jpg"
+                                                        alt="friend">
                                                 </a>
                                             </li>
                                             <li>
                                                 <a href="#">
-                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic2.jpg" alt="friend">
+                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic2.jpg"
+                                                        alt="friend">
                                                 </a>
                                             </li>
                                             <li class="with-text">
@@ -479,13 +532,18 @@ use humhub\libs\Html;
                                             <span class="circle"></span>
                                             <time datetime="2004-07-24T18:18">12:00pm</time>
                                             <a href="#" class="more"><svg class="olymp-three-dots-icon">
-                                                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>
+                                                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon">
+                                                    </use>
                                                 </svg></a>
                                         </div>
                                         <h5 class="mb-0">
-                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo-3" aria-expanded="true" aria-controls="collapseTwo-3">
-                                                Send the new “Olympus” project files to the Agency<svg class="olymp-dropdown-arrow-icon">
-                                                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-dropdown-arrow-icon"></use>
+                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo-3"
+                                                aria-expanded="true" aria-controls="collapseTwo-3">
+                                                Send the new “Olympus” project files to the Agency<svg
+                                                    class="olymp-dropdown-arrow-icon">
+                                                    <use
+                                                        xlink:href="svg-icons/sprites/icons.svg#olymp-dropdown-arrow-icon">
+                                                    </use>
                                                 </svg>
                                             </a>
                                         </h5>
@@ -493,7 +551,9 @@ use humhub\libs\Html;
 
                                     <div id="collapseTwo-3" class="collapse" role="tabpanel">
                                         <div class="card-body">
-                                            Hi Guys! I propose to go a litle earlier at the agency to have breakfast and talk a little more about the new design project we have been working on. Cheers!
+                                            Hi Guys! I propose to go a litle earlier at the agency to have breakfast and
+                                            talk a little more about the new design project we have been working on.
+                                            Cheers!
                                         </div>
                                     </div>
 
@@ -505,11 +565,13 @@ use humhub\libs\Html;
                                             <span class="circle"></span>
                                             <time datetime="2004-07-24T18:18">6:30pm</time>
                                             <a href="#" class="more"><svg class="olymp-three-dots-icon">
-                                                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>
+                                                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon">
+                                                    </use>
                                                 </svg></a>
                                         </div>
                                         <h5 class="mb-0">
-                                            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#" aria-expanded="false">
+                                            <a class="collapsed" data-toggle="collapse" data-parent="#accordion"
+                                                href="#" aria-expanded="false">
                                                 Take Querty to the Veterinarian
                                             </a>
                                         </h5>
@@ -525,7 +587,8 @@ use humhub\libs\Html;
                                 <a href="#" class="check-all">Check all your Events</a>
                             </div>
 
-                            <div id="accordion-4" role="tablist" aria-multiselectable="true" class="day-event" data-month="12" data-day="28">
+                            <div id="accordion-4" role="tablist" aria-multiselectable="true" class="day-event"
+                                data-month="12" data-day="28">
                                 <div class="ui-block-title ui-block-title-small">
                                     <h6 class="title">TODAY’S EVENTS</h6>
                                 </div>
@@ -535,25 +598,33 @@ use humhub\libs\Html;
                                             <span class="circle"></span>
                                             <time datetime="2004-07-24T18:18">9:00am</time>
                                             <a href="#" class="more"><svg class="olymp-three-dots-icon">
-                                                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>
+                                                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon">
+                                                    </use>
                                                 </svg></a>
                                         </div>
                                         <h5 class="mb-0">
-                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne-4" aria-expanded="true" aria-controls="collapseOne-4">
+                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne-4"
+                                                aria-expanded="true" aria-controls="collapseOne-4">
                                                 Breakfast at the Agency<svg class="olymp-dropdown-arrow-icon">
-                                                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-dropdown-arrow-icon"></use>
+                                                    <use
+                                                        xlink:href="svg-icons/sprites/icons.svg#olymp-dropdown-arrow-icon">
+                                                    </use>
                                                 </svg>
                                             </a>
                                         </h5>
                                     </div>
 
-                                    <div id="collapseOne-4" class="collapse" role="tabpanel" aria-labelledby="headingOne-4">
+                                    <div id="collapseOne-4" class="collapse" role="tabpanel"
+                                        aria-labelledby="headingOne-4">
                                         <div class="card-body">
-                                            Hi Guys! I propose to go a litle earlier at the agency to have breakfast and talk a little more about the new design project we have been working on. Cheers!
+                                            Hi Guys! I propose to go a litle earlier at the agency to have breakfast and
+                                            talk a little more about the new design project we have been working on.
+                                            Cheers!
                                         </div>
                                         <div class="place inline-items">
                                             <svg class="olymp-add-a-place-icon">
-                                                <use xlink:href="svg-icons/sprites/icons.svg#olymp-add-a-place-icon"></use>
+                                                <use xlink:href="svg-icons/sprites/icons.svg#olymp-add-a-place-icon">
+                                                </use>
                                             </svg>
                                             <span>Daydreamz Agency</span>
                                         </div>
@@ -561,27 +632,32 @@ use humhub\libs\Html;
                                         <ul class="friends-harmonic inline-items">
                                             <li>
                                                 <a href="#">
-                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic5.jpg" alt="friend">
+                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic5.jpg"
+                                                        alt="friend">
                                                 </a>
                                             </li>
                                             <li>
                                                 <a href="#">
-                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic10.jpg" alt="friend">
+                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic10.jpg"
+                                                        alt="friend">
                                                 </a>
                                             </li>
                                             <li>
                                                 <a href="#">
-                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic7.jpg" alt="friend">
+                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic7.jpg"
+                                                        alt="friend">
                                                 </a>
                                             </li>
                                             <li>
                                                 <a href="#">
-                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic8.jpg" alt="friend">
+                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic8.jpg"
+                                                        alt="friend">
                                                 </a>
                                             </li>
                                             <li>
                                                 <a href="#">
-                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic2.jpg" alt="friend">
+                                                    <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/friend-harmonic2.jpg"
+                                                        alt="friend">
                                                 </a>
                                             </li>
                                             <li class="with-text">
@@ -602,7 +678,8 @@ use humhub\libs\Html;
                 <!-- ... end W-Calendar -->
             </div>
 
-            <div class="ui-block">
+
+            <div class="ui-block rounded-[20px]">
                 <div class="ui-block-title">
                     <h6 class="title">Pages You May Like</h6>
                     <a href="#" class="more"><svg class="olymp-three-dots-icon">
@@ -613,110 +690,38 @@ use humhub\libs\Html;
                 <!-- W-Friend-Pages-Added -->
 
                 <ul class="widget w-friend-pages-added notification-list friend-requests">
+                    <?php
+                    foreach ($spaces as $space) { ?>
+                        <li class="inline-items">
+                            <div class="author-thumb pt-[10px]">
+                                <?php echo $space->getProfileImage()->render(30, ['class' => 'space-avatar', 'id' => 'space-account-image']);
+                                ?>
+                            </div>
+                            <div class="notification-event">
+                                <a href="http://localhost/social-media/index.php?r=space%2Fspace&cguid=<?= $space->guid ?>"
+                                    class="h6 notification-friend"> <?php echo $space->name ?> </a>
+                                <span class="chat-message-item"> <?php echo $space->description ?> </span>
+                            </div>
+                            <span class="notification-icon" data-toggle="tooltip" data-placement="top"
+                                data-original-title="ADD TO YOUR FAVS">
+                                <a href="#">
+                                    <svg class="olymp-star-icon">
+                                        <use xlink:href="svg-icons/sprites/icons.svg#olymp-star-icon"></use>
+                                    </svg>
+                                </a>
+                            </span>
+
+                        </li>
+                        <?php
+                    }
+                    ?>
                     <li class="inline-items">
-                        <div class="author-thumb">
-                            <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/avatar41-sm.jpg" alt="author">
-                        </div>
-                        <div class="notification-event">
-                            <a href="#" class="h6 notification-friend">The Marina Bar</a>
-                            <span class="chat-message-item">Restaurant / Bar</span>
-                        </div>
-                        <span class="notification-icon" data-toggle="tooltip" data-placement="top" data-original-title="ADD TO YOUR FAVS">
-                            <a href="#">
-                                <svg class="olymp-star-icon">
-                                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-star-icon"></use>
-                                </svg>
-                            </a>
-                        </span>
+                        <a href="http://localhost/social-media/index.php?r=space%2Fspaces" class="text-center opacity-80">
+                            More Spaces
+                        </a>
 
                     </li>
 
-                    <li class="inline-items">
-                        <div class="author-thumb">
-                            <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/avatar42-sm.jpg" alt="author">
-                        </div>
-                        <div class="notification-event">
-                            <a href="#" class="h6 notification-friend">Tapronus Rock</a>
-                            <span class="chat-message-item">Rock Band</span>
-                        </div>
-                        <span class="notification-icon" data-toggle="tooltip" data-placement="top" data-original-title="ADD TO YOUR FAVS">
-                            <a href="#">
-                                <svg class="olymp-star-icon">
-                                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-star-icon"></use>
-                                </svg>
-                            </a>
-                        </span>
-
-                    </li>
-
-                    <li class="inline-items">
-                        <div class="author-thumb">
-                            <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/avatar43-sm.jpg" alt="author">
-                        </div>
-                        <div class="notification-event">
-                            <a href="#" class="h6 notification-friend">Pixel Digital Design</a>
-                            <span class="chat-message-item">Company</span>
-                        </div>
-                        <span class="notification-icon" data-toggle="tooltip" data-placement="top" data-original-title="ADD TO YOUR FAVS">
-                            <a href="#">
-                                <svg class="olymp-star-icon">
-                                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-star-icon"></use>
-                                </svg>
-                            </a>
-                        </span>
-                    </li>
-
-                    <li class="inline-items">
-                        <div class="author-thumb">
-                            <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/avatar44-sm.jpg" alt="author">
-                        </div>
-                        <div class="notification-event">
-                            <a href="#" class="h6 notification-friend">Thompson’s Custom Clothing Boutique</a>
-                            <span class="chat-message-item">Clothing Store</span>
-                        </div>
-                        <span class="notification-icon" data-toggle="tooltip" data-placement="top" data-original-title="ADD TO YOUR FAVS">
-                            <a href="#">
-                                <svg class="olymp-star-icon">
-                                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-star-icon"></use>
-                                </svg>
-                            </a>
-                        </span>
-
-                    </li>
-
-                    <li class="inline-items">
-                        <div class="author-thumb">
-                            <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/avatar45-sm.jpg" alt="author">
-                        </div>
-                        <div class="notification-event">
-                            <a href="#" class="h6 notification-friend">Crimson Agency</a>
-                            <span class="chat-message-item">Company</span>
-                        </div>
-                        <span class="notification-icon" data-toggle="tooltip" data-placement="top" data-original-title="ADD TO YOUR FAVS">
-                            <a href="#">
-                                <svg class="olymp-star-icon">
-                                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-star-icon"></use>
-                                </svg>
-                            </a>
-                        </span>
-                    </li>
-
-                    <li class="inline-items">
-                        <div class="author-thumb">
-                            <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/avatar46-sm.jpg" alt="author">
-                        </div>
-                        <div class="notification-event">
-                            <a href="#" class="h6 notification-friend">Mannequin Angel</a>
-                            <span class="chat-message-item">Clothing Store</span>
-                        </div>
-                        <span class="notification-icon" data-toggle="tooltip" data-placement="top" data-original-title="ADD TO YOUR FAVS">
-                            <a href="#">
-                                <svg class="olymp-star-icon">
-                                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-star-icon"></use>
-                                </svg>
-                            </a>
-                        </span>
-                    </li>
                 </ul>
 
                 <!-- .. end W-Friend-Pages-Added -->
@@ -730,9 +735,12 @@ use humhub\libs\Html;
 
         <aside class="col col-xl-3 order-xl-3 col-lg-6 order-lg-3 col-md-6 col-sm-12 col-12">
 
-            <div class="ui-block">
+            <div class="ui-block rounded-[20px]">
+
+
+
                 <div class="ui-block-title">
-                    <h6 class="title">Friend Suggestions</h6>
+                    <h6 class="title text-[14px] text-black">Friend Suggestions</h6>
                     <a href="#" class="more"><svg class="olymp-three-dots-icon">
                             <use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>
                         </svg></a>
@@ -743,63 +751,61 @@ use humhub\libs\Html;
                 <!-- W-Action -->
 
                 <ul class="widget w-friend-pages-added notification-list friend-requests">
-                    <li class="inline-items">
-                        <div class="author-thumb">
-                            <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/avatar38-sm.jpg" alt="author">
-                        </div>
-                        <div class="notification-event">
-                            <a href="#" class="h6 notification-friend">Francine Smith</a>
-                            <span class="chat-message-item">8 Friends in Common</span>
-                        </div>
-                        <span class="notification-icon">
-                            <a href="#" class="accept-request">
-                                <span class="icon-add without-text">
-                                    <svg class="olymp-happy-face-icon">
-                                        <use xlink:href="svg-icons/sprites/icons.svg#olymp-happy-face-icon"></use>
-                                    </svg>
-                                </span>
-                            </a>
-                        </span>
-                    </li>
 
-                    <li class="inline-items">
-                        <div class="author-thumb">
-                            <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/avatar39-sm.jpg" alt="author">
-                        </div>
-                        <div class="notification-event">
-                            <a href="#" class="h6 notification-friend">Hugh Wilson</a>
-                            <span class="chat-message-item">6 Friends in Common</span>
-                        </div>
-                        <span class="notification-icon">
-                            <a href="#" class="accept-request">
-                                <span class="icon-add without-text">
-                                    <svg class="olymp-happy-face-icon">
-                                        <use xlink:href="svg-icons/sprites/icons.svg#olymp-happy-face-icon"></use>
-                                    </svg>
-                                </span>
-                            </a>
-                        </span>
-                    </li>
+                    <?php
+                    function getRandomElements($array, $count = 5)
+                    {
+                        // Kiểm tra nếu số phần tử của mảng nhỏ hơn hoặc bằng số lượng cần lấy
+                        if (count($array) <= $count) {
+                            return $array; // Trả về toàn bộ mảng nếu nhỏ hơn hoặc bằng $count
+                        }
 
-                    <li class="inline-items">
-                        <div class="author-thumb">
-                            <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/avatar40-sm.jpg" alt="author">
-                        </div>
-                        <div class="notification-event">
-                            <a href="#" class="h6 notification-friend">Karen Masters</a>
-                            <span class="chat-message-item">6 Friends in Common</span>
-                        </div>
-                        <span class="notification-icon">
-                            <a href="#" class="accept-request">
-                                <span class="icon-add without-text">
-                                    <svg class="olymp-happy-face-icon">
-                                        <use xlink:href="svg-icons/sprites/icons.svg#olymp-happy-face-icon"></use>
-                                    </svg>
-                                </span>
-                            </a>
-                        </span>
-                    </li>
+                        // Lấy $count phần tử ngẫu nhiên từ mảng
+                        $randomKeys = array_rand($array, $count);
 
+                        // Nếu chỉ chọn 1 phần tử, array_rand() trả về 1 khóa, cần chuyển nó thành mảng
+                        if (!is_array($randomKeys)) {
+                            $randomKeys = [$randomKeys];
+                        }
+
+                        // Trả về các phần tử từ mảng gốc theo các khóa ngẫu nhiên
+                        return array_intersect_key($array, array_flip($randomKeys));
+                    }
+
+                    $result = getRandomElements($this->params['users']);
+                    foreach ($result as $user) { ?>
+                        <li class="inline-items">
+                            <div class="author-thumb mt-[10px]">
+                                <?php echo Image::widget([
+                                    'user' => $user,
+                                    'link' => false,
+                                    'width' => 30,
+                                    'htmlOptions' => ['id' => 'user-account-image'],
+                                    'showSelfOnlineStatus' => true,
+                                ]);
+                                ?>
+                            </div>
+                            <div class="notification-event ">
+                                <a href="#" class="h6 notification-friend"><?php echo $user['username']; ?></a>
+                                <span class="chat-message-item">8 Friends in Common</span>
+                            </div>
+                            <span class="notification-icon color-red mt-[10px]">
+                                <a href="#" class="accept-request mt-[10px]">
+                                    <span class="without-text">
+                                        Follow
+                                    </span>
+                                </a>
+                            </span>
+                        </li>
+                        <?php
+                    }
+                    ?>
+                    <li class="inline-items text-center hover:pointer">
+                        <div class="text-[16px] text-black font-semibold items-center ">
+                            <a class="opacity-60 text-[16px] text-black font-bold"
+                                href="http://localhost/social-media/index.php?r=user%2Fpeople">More people</a>
+                        </div>
+                    </li>
                 </ul>
 
                 <!-- ... end W-Action -->
@@ -807,24 +813,20 @@ use humhub\libs\Html;
 
             <div class="ui-block">
 
-                <div class="ui-block-title">
-                    <h6 class="title">Activity Feed</h6>
-                    <a href="#" class="more"><svg class="olymp-three-dots-icon">
-                            <use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>
-                        </svg></a>
-                </div>
 
 
                 <!-- W-Activity-Feed -->
 
-                <ul class="widget w-activity-feed notification-list">
+                <!-- <ul class="widget w-activity-feed notification-list">
                     <li>
                         <div class="author-thumb">
                             <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/avatar49-sm.jpg" alt="author">
                         </div>
                         <div class="notification-event">
-                            <a href="#" class="h6 notification-friend">Marina Polson</a> commented on Jason Mark’s <a href="#" class="notification-link">photo.</a>.
-                            <span class="notification-date"><time class="entry-date updated" datetime="2004-07-24T18:18">2 mins ago</time></span>
+                            <a href="#" class="h6 notification-friend">Marina Polson</a> commented on Jason Mark’s <a
+                                href="#" class="notification-link">photo.</a>.
+                            <span class="notification-date"><time class="entry-date updated"
+                                    datetime="2004-07-24T18:18">2 mins ago</time></span>
                         </div>
                     </li>
 
@@ -833,8 +835,10 @@ use humhub\libs\Html;
                             <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/avatar9-sm.jpg" alt="author">
                         </div>
                         <div class="notification-event">
-                            <a href="#" class="h6 notification-friend">Jake Parker </a> liked Nicholas Grissom’s <a href="#" class="notification-link">status update.</a>.
-                            <span class="notification-date"><time class="entry-date updated" datetime="2004-07-24T18:18">5 mins ago</time></span>
+                            <a href="#" class="h6 notification-friend">Jake Parker </a> liked Nicholas Grissom’s <a
+                                href="#" class="notification-link">status update.</a>.
+                            <span class="notification-date"><time class="entry-date updated"
+                                    datetime="2004-07-24T18:18">5 mins ago</time></span>
                         </div>
                     </li>
 
@@ -843,8 +847,10 @@ use humhub\libs\Html;
                             <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/avatar50-sm.jpg" alt="author">
                         </div>
                         <div class="notification-event">
-                            <a href="#" class="h6 notification-friend">Mary Jane Stark </a> added 20 new photos to her <a href="#" class="notification-link">gallery album.</a>.
-                            <span class="notification-date"><time class="entry-date updated" datetime="2004-07-24T18:18">12 mins ago</time></span>
+                            <a href="#" class="h6 notification-friend">Mary Jane Stark </a> added 20 new photos to her
+                            <a href="#" class="notification-link">gallery album.</a>.
+                            <span class="notification-date"><time class="entry-date updated"
+                                    datetime="2004-07-24T18:18">12 mins ago</time></span>
                         </div>
                     </li>
 
@@ -853,8 +859,10 @@ use humhub\libs\Html;
                             <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/avatar51-sm.jpg" alt="author">
                         </div>
                         <div class="notification-event">
-                            <a href="#" class="h6 notification-friend">Nicholas Grissom </a> updated his profile <a href="#" class="notification-link">photo</a>.
-                            <span class="notification-date"><time class="entry-date updated" datetime="2004-07-24T18:18">1 hour ago</time></span>
+                            <a href="#" class="h6 notification-friend">Nicholas Grissom </a> updated his profile <a
+                                href="#" class="notification-link">photo</a>.
+                            <span class="notification-date"><time class="entry-date updated"
+                                    datetime="2004-07-24T18:18">1 hour ago</time></span>
                         </div>
                     </li>
                     <li>
@@ -862,8 +870,10 @@ use humhub\libs\Html;
                             <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/avatar48-sm.jpg" alt="author">
                         </div>
                         <div class="notification-event">
-                            <a href="#" class="h6 notification-friend">Marina Valentine </a> commented on Chris Greyson’s <a href="#" class="notification-link">status update</a>.
-                            <span class="notification-date"><time class="entry-date updated" datetime="2004-07-24T18:18">1 hour ago</time></span>
+                            <a href="#" class="h6 notification-friend">Marina Valentine </a> commented on Chris
+                            Greyson’s <a href="#" class="notification-link">status update</a>.
+                            <span class="notification-date"><time class="entry-date updated"
+                                    datetime="2004-07-24T18:18">1 hour ago</time></span>
                         </div>
                     </li>
 
@@ -872,8 +882,10 @@ use humhub\libs\Html;
                             <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/avatar52-sm.jpg" alt="author">
                         </div>
                         <div class="notification-event">
-                            <a href="#" class="h6 notification-friend">Green Goo Rock </a> posted a <a href="#" class="notification-link">status update</a>.
-                            <span class="notification-date"><time class="entry-date updated" datetime="2004-07-24T18:18">1 hour ago</time></span>
+                            <a href="#" class="h6 notification-friend">Green Goo Rock </a> posted a <a href="#"
+                                class="notification-link">status update</a>.
+                            <span class="notification-date"><time class="entry-date updated"
+                                    datetime="2004-07-24T18:18">1 hour ago</time></span>
                         </div>
                     </li>
                     <li>
@@ -881,8 +893,10 @@ use humhub\libs\Html;
                             <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/avatar10-sm.jpg" alt="author">
                         </div>
                         <div class="notification-event">
-                            <a href="#" class="h6 notification-friend">Elaine Dreyfuss </a> liked your <a href="#" class="notification-link">blog post</a>.
-                            <span class="notification-date"><time class="entry-date updated" datetime="2004-07-24T18:18">2 hours ago</time></span>
+                            <a href="#" class="h6 notification-friend">Elaine Dreyfuss </a> liked your <a href="#"
+                                class="notification-link">blog post</a>.
+                            <span class="notification-date"><time class="entry-date updated"
+                                    datetime="2004-07-24T18:18">2 hours ago</time></span>
                         </div>
                     </li>
 
@@ -891,8 +905,10 @@ use humhub\libs\Html;
                             <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/avatar10-sm.jpg" alt="author">
                         </div>
                         <div class="notification-event">
-                            <a href="#" class="h6 notification-friend">Elaine Dreyfuss </a> commented on your <a href="#" class="notification-link">blog post</a>.
-                            <span class="notification-date"><time class="entry-date updated" datetime="2004-07-24T18:18">2 hours ago</time></span>
+                            <a href="#" class="h6 notification-friend">Elaine Dreyfuss </a> commented on your <a
+                                href="#" class="notification-link">blog post</a>.
+                            <span class="notification-date"><time class="entry-date updated"
+                                    datetime="2004-07-24T18:18">2 hours ago</time></span>
                         </div>
                     </li>
 
@@ -901,12 +917,24 @@ use humhub\libs\Html;
                             <img src="<?= Yii::getAlias('@web') ?>/themes/HumHub/img/avatar53-sm.jpg" alt="author">
                         </div>
                         <div class="notification-event">
-                            <a href="#" class="h6 notification-friend">Bruce Peterson </a> changed his <a href="#" class="notification-link">profile picture</a>.
-                            <span class="notification-date"><time class="entry-date updated" datetime="2004-07-24T18:18">15 hours ago</time></span>
+                            <a href="#" class="h6 notification-friend">Bruce Peterson </a> changed his <a href="#"
+                                class="notification-link">profile picture</a>.
+                            <span class="notification-date"><time class="entry-date updated"
+                                    datetime="2004-07-24T18:18">15 hours ago</time></span>
                         </div>
                     </li>
-                </ul>
+                </ul> -->
 
+                <?= Sidebar::widget([
+                    'widgets' => [
+                        [
+                            ActivityStreamViewer::class,
+                            ['streamAction' => '/dashboard/dashboard/activity-stream'],
+                        ]
+                    ]
+                ]);
+                ?>
+                <?= FooterMenu::widget(['location' => FooterMenu::LOCATION_SIDEBAR]); ?>
 
                 <!-- .. end W-Activity-Feed -->
             </div>

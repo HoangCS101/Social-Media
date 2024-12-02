@@ -13,7 +13,9 @@ use humhub\components\Controller;
 use humhub\modules\dashboard\components\actions\DashboardStreamAction;
 use humhub\modules\ui\view\components\View;
 use Yii;
-
+use humhub\modules\user\components\PeopleQuery;
+use humhub\modules\user\models\User;
+use humhub\modules\space\models\Space;
 class DashboardController extends Controller
 {
     /**
@@ -29,6 +31,10 @@ class DashboardController extends Controller
     {
         $this->appendPageTitle(Yii::t('DashboardModule.base', 'Dashboard'));
         $this->view->setViewContext(static::VIEW_CONTEXT);
+        $users = User::find()->all();
+        $spaces = Space::find()->all();
+        $this->view->params['users'] = $users;
+        $this->view->params['spaces'] = $spaces;
         return parent::init();
     }
 
@@ -75,10 +81,12 @@ class DashboardController extends Controller
     {
         if (Yii::$app->user->isGuest) {
             return $this->render('index_guest', []);
-        } else {
+        } else {    
+            $spaces = Space::find()->all();
             return $this->render('index', [
                 'showProfilePostForm' => Yii::$app->getModule('dashboard')->settings->get('showProfilePostForm'),
                 'contentContainer' => Yii::$app->user->getIdentity(),
+                'spaces' => $spaces,
             ]);
         }
     }

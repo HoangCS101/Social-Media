@@ -162,7 +162,7 @@ body {
     overflow-wrap: break-word;
     word-break: break-word;
     hyphens: auto;
-    padding-top: 130px;
+    padding-top: 100px;
     background-color: #ededed;
     color: #555;
     font-family: "Open Sans", sans-serif;
@@ -987,6 +987,7 @@ ul.contextMenu li.selected {
 
 .media .media-body strong {
     color: #000;
+    font-size: 14px;
 }
 
 .media .media-body h5 {
@@ -1082,7 +1083,7 @@ img {
     border: none;
     background-color: #fff;
     box-shadow: 0 0 3px #dadada;
-    border-radius: 4px;
+    border-radius: 20px;
     position: relative;
     margin-bottom: 15px;
 }
@@ -1100,7 +1101,6 @@ img {
     color: #000;
     background-color: white;
     border: none;
-    padding: 10px;
     border-radius: 4px;
 }
 
@@ -1285,7 +1285,6 @@ img {
     border: 3px solid #fff;
     border-radius: 5px;
 }
-
 .panel-profile .panel-profile-header .profile-user-photo-container .profile-user-photo+.user-online-status {
     right: -5px;
     bottom: -5px;
@@ -3397,7 +3396,7 @@ div.nested-comments-root div.comment-container {
 }
 
 .activities {
-    max-height: 400px;
+    max-height: 1000px;
     overflow: auto;
 }
 
@@ -3412,8 +3411,8 @@ div.nested-comments-root div.comment-container {
 
 .activities li .media .img-space {
     position: absolute;
-    top: 24px;
-    left: 24px;
+    top: 52px;
+    left: 38px;
 }
 
 .activities li .media .media-body {
@@ -3600,6 +3599,7 @@ div.nested-comments-root div.comment-container {
 
 .wall-entry .wall-entry-body .wall-entry-content {
     margin-bottom: 5px;
+    color: #000;
 }
 
 .wall-entry .wall-entry-body .wall-entry-content .post-short-text {
@@ -4025,10 +4025,10 @@ ul.files li.file-preview-item .file-fileInfo {
 .post-files img {
     vertical-align: top;
     padding: 2px;
-    height: 150px;
     width: 100%;
     object-fit: cover;
     border-radius: 4px;
+    height: auto;
 }
 
 @media (max-width: 650px) {
@@ -4041,6 +4041,7 @@ ul.files li.file-preview-item .file-fileInfo {
     padding: 10px;
     padding-bottom: 1px;
     margin-bottom: 10px !important;
+    display: none;
 }
 
 .post-file-list a,
@@ -4068,6 +4069,7 @@ ul.files li.file-preview-item .file-fileInfo {
 
 .image-upload-container {
     position: relative;
+    height: 300px;
 }
 
 .image-upload-container .image-upload-buttons {
@@ -6562,7 +6564,6 @@ a.label-warning:hover {
     padding: 0;
     border: none;
     border-radius: 8px;
-    box-shadow: 0 0 8px #b2b2b2;
     top: 17%;
 }
 
@@ -6617,11 +6618,19 @@ a.label-warning:hover {
 }
 
 #dropdown-search.dropdown-menu .dropdown-search-form .dropdown-search-keyword {
-    background: #f9f9f9;
-    border-color: #f9f9f9;
-    border-radius: 6px;
     padding-left: 32px;
     font-weight: 500;
+    width: 500px;
+    position: absolute;
+    top: -14px;
+    height: 70px;
+    border: 0px;
+    background-color: #515365;
+    border-radius: 0px;
+    color: white;
+}
+#dropdown-search.dropdown-menu .dropdown-search-form .dropdown-search-keyword:focus {
+    color: white;
 }
 
 #dropdown-search.dropdown-menu .dropdown-search-form .dropdown-search-keyword:-webkit-autofill,
@@ -6648,14 +6657,16 @@ a.label-warning:hover {
 
 #dropdown-search.dropdown-menu .dropdown-search-list {
     list-style: none;
-    padding: 0 16px 24px;
+    padding: 0 16px 0 24px;
     display: none;
     flex: 0 1 auto;
+    width: 500px;
+    background-color: white;
 }
 
 #dropdown-search.dropdown-menu .dropdown-search-list>li:first-child {
     margin-top: 0;
-    padding-top: 0;
+    padding-top: 80px;
 }
 
 #dropdown-search.dropdown-menu .search-provider {
