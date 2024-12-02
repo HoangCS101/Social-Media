@@ -775,8 +775,8 @@ use humhub\modules\ui\view\components\View;
 
                     $result = getRandomElements($this->params['users']);
                     foreach ($result as $user) { ?>
-                        <li class="inline-items mr-0">
-                            <div class="author-thumb mt-[10px]">
+                        <li class="inline-items" style="padding: 20px">
+                            <div class="author-thumb">
                                 <?php echo Image::widget([
                                     'user' => $user,
                                     'link' => false,
