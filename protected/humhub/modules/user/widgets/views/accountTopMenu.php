@@ -43,8 +43,10 @@ $userModel = Yii::$app->user->identity;
             ]) ?>
             <?php if ($this->context->showUserName): ?>
                 <div class="user-title pull-right hidden-xs text-white pl-2">
-                    <strong><?= Html::encode($userModel->displayName); ?></strong><br /><span
-                        class="truncate"><?= Html::encode($userModel->displayNameSub); ?></span>
+                    <strong><?= Html::encode($userModel->displayName); ?></strong><br />
+                    <span class="truncate">
+                        <?= Html::encode($userModel->displayNameSub ?: 'Student User'); ?>
+                    </span>
                 </div>
             <?php endif; ?>
 

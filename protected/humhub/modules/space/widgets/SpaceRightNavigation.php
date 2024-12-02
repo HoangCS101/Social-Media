@@ -71,14 +71,6 @@ class SpaceRightNavigation extends ProfileHeaderNavigation
             'isActive' => MenuLink::isActiveState('space', 'space', ['videos']),
         ]));
 
-        $this->addEntry(new MenuLink([
-            'label' => Yii::t('SpaceModule.base', 'Videos'),
-            'url' => $this->space->createUrl('/space/space/settings'),
-            // 'icon' => 'about',
-            'sortOrder' => 10000,
-            'isActive' => MenuLink::isActiveState('space', 'space', ['settings']),
-        ]));
-
         
 
         // if (!$this->space->getAdvancedSettings()->hideAbout) {

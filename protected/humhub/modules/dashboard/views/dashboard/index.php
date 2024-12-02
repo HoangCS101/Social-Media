@@ -11,6 +11,7 @@ use humhub\modules\dashboard\widgets\Sidebar;
 use humhub\widgets\FooterMenu;
 use humhub\libs\Html;
 use humhub\modules\user\widgets\Image;
+use humhub\modules\user\widgets\PeopleActionButtons;
 use humhub\modules\content\components\ContentContainerController;
 use humhub\modules\space\models\Space;
 use humhub\modules\space\widgets\Header;
@@ -774,7 +775,7 @@ use humhub\modules\ui\view\components\View;
 
                     $result = getRandomElements($this->params['users']);
                     foreach ($result as $user) { ?>
-                        <li class="inline-items">
+                        <li class="inline-items" style="padding: 20px">
                             <div class="author-thumb mt-[10px]">
                                 <?php echo Image::widget([
                                     'user' => $user,
@@ -784,18 +785,22 @@ use humhub\modules\ui\view\components\View;
                                     'showSelfOnlineStatus' => true,
                                 ]);
                                 ?>
-                            </div>
+                            </div> 
                             <div class="notification-event ">
                                 <a href="#" class="h6 notification-friend"><?php echo $user['username']; ?></a>
                                 <span class="chat-message-item">8 Friends in Common</span>
                             </div>
-                            <span class="notification-icon color-red mt-[10px]">
-                                <a href="#" class="accept-request mt-[10px]">
+                            <!-- <span class="notification-icon color-red"> -->
+                                <!-- <a href="#" class="accept-request mt-[10px]">
                                     <span class="without-text">
                                         Follow
                                     </span>
-                                </a>
-                            </span>
+                                    
+                                </a> -->
+                            <?= PeopleActionButtons::widget([
+                                'user' => $user,
+                                'template' => '<div class="ml-[5px]">{buttons}</div>',
+                            ]); ?>
                         </li>
                         <?php
                     }
