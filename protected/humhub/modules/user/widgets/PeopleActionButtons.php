@@ -35,7 +35,7 @@ class PeopleActionButtons extends Widget
     public function run()
     {
         $html = $this->addFollowButton();
-        $html .= $this->addFriendshipButton();
+        // $html .= $this->addFriendshipButton();
 
         if (trim($html) === '') {
             return '';
@@ -49,8 +49,8 @@ class PeopleActionButtons extends Widget
     {
         return UserFollowButton::widget([
             'user' => $this->user,
-            'followOptions' => ['class' => 'btn btn-primary btn-sm'],
-            'unfollowOptions' => ['class' => 'btn btn-primary btn-sm active'],
+            'followOptions' => ['class' => 'accept-request mt-[10px]'],
+            'unfollowOptions' => ['class' => 'active accept-request mt-[10px]'],
         ]);
     }
 

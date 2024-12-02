@@ -55,7 +55,7 @@ class UserFollowButton extends Widget
             $this->followLabel = Yii::t('UserModule.base', 'Follow');
         }
         if ($this->unfollowLabel === null) {
-            $this->unfollowLabel = '<span class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp;' . Yii::t('UserModule.base', 'Following');
+            $this->unfollowLabel = Yii::t('UserModule.base', 'Unfollow');
         }
 
         if (!isset($this->followOptions['class'])) {
