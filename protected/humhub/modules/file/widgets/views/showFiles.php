@@ -30,9 +30,8 @@ foreach ($files as $file) {
 }
 
 $fullWidthColumnClass = 'col-media col-xs-12 col-sm-12 col-md-12';
-$nonFluidColumnClass = 'col-media col-xs-12 col-sm-6 col-md-6';
-$fluidColumnClass = 'col-media col-xs-12 col-sm-6 col-md-6';
-
+$nonFluidColumnClass = count($images) > 1 ? 'col-media col-xs-12 col-sm-6 col-md-6':'col-media col-xs-12 col-sm-12 col-md-12';
+$fluidColumnClass = count($images) > 1 ? 'col-media col-xs-12 col-sm-6 col-md-6':'col-media col-xs-12 col-sm-12 col-md-12';
 $galleryColumnClass = ThemeHelper::isFluid() ? $fluidColumnClass : $nonFluidColumnClass;
 ?>
 
@@ -85,6 +84,7 @@ $galleryColumnClass = ThemeHelper::isFluid() ? $fluidColumnClass : $nonFluidColu
                 <?php endforeach ?>
 
                 <?php foreach ($images as $image): ?>
+
                     <?php $previewImage->applyFile($image) ?>
                     <div class="<?= $galleryColumnClass ?>">
                         <a data-ui-gallery="<?= 'gallery-' . $object->getUniqueId(); ?>"

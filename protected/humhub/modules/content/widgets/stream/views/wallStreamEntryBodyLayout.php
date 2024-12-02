@@ -21,8 +21,8 @@ use humhub\modules\ui\view\components\View;
             <?= $header ?>
         </div>
 
-        <div class="wall-entry-body font-semibold">
-            <div class="topic-label-list">
+        <div class="wall-entry-body font-semibold p-0">
+            <div class="topic-label-list text-black">
                 <?php foreach ($topics as $topic) : ?>
                     <?= TopicLabel::forTopic($topic) ?>
                 <?php endforeach; ?>

@@ -26,26 +26,30 @@ AppAsset::register($this);
     <?php $this->head() ?>
     <?= $this->render('head') ?>
     <style>
+        body {
+            background-color: #e9e9e969;
+        }
+
         .dropdown-toggle::after {
             display: none;
         }
-
+        .
         .more-photos span,
         .post .more-photos span,
         .post .post__author-name {
             font-weight: 200;
             opacity: 0.8;
         }
-
-        .post__date a {
+        .post .author-date a {
             font-size: 14px;
-        }
-
-        .post .author-date {
-            font-size: 16px;
-            color: black;
             /* hoặc bất kỳ kiểu nào bạn muốn áp dụng */
         }
+        .post .post__date a {
+            font-size: 12px;
+            color: black;
+        }
+
+
     </style>
 
 </head>
@@ -115,7 +119,7 @@ AppAsset::register($this);
     document.querySelector('.dropdown-search-keyword').addEventListener('focus', function () {
         const searchList = document.querySelector('.dropdown-search-list');
         if (searchList) {
-            searchList.style.display = 'block'; // Hiển thị lại danh sách
+            searchList.style.display = 'block'; 
         }
     });
 </script>

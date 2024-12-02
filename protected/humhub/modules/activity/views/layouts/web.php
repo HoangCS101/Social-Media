@@ -19,15 +19,15 @@ use yii\helpers\Url;
 
 ?>
 
-
 <?php if ($clickable) : ?>
+
 <a href="<?= Url::to(['/activity/link', 'id' => $record->id]) ?>">
     <?php endif; ?>
 
-    <div class="media">
+    <div class="media py-4">
         <?php if ($originator !== null) : ?>
             <!-- Show user image -->
-            <?= $originator->getProfileImage()->render(32, ['class' => 'media-object', 'link' => false, 'htmlOptions' => ['class' => 'pull-left']]) ?>
+            <?= $originator->getProfileImage()->render(32, ['class' => 'media-object', 'link' => false, 'htmlOptions' => ['class' => 'pull-left pt-2 px-2']]) ?>
         <?php endif; ?>
 
         <!-- Show space image, if you are outside from a space -->
