@@ -12,27 +12,34 @@ use yii\helpers\Html;
         <?php echo PanelMenu::widget(['id' => 'user-spaces-panel']); ?>
 
         <div class="panel-heading">
-            <?php echo Yii::t('UserModule.base', '<strong>Member</strong> of these Spaces'); ?>
+            <?php echo Yii::t('UserModule.base', 'Member of these Spaces'); ?>
         </div>
 
         <div class="panel-body">
             <?php foreach ($spaces as $space): ?>
-                <?php
-                echo Image::widget([
-                    'space' => $space,
-                    'width' => 24,
-                    'htmlOptions' => [
-                        'class' => 'current-space-image',
-                    ],
-                    'link' => 'true',
-                    'linkOptions' => [
-                        'class' => 'tt',
-                        'data-toggle' => 'tooltip',
-                        'data-placement' => 'top',
-                        'title' => $space->name,
-                    ]
-                ]);
-                ?>
+                <div class="flex ">
+                    <?php
+                    echo Image::widget([
+                        'space' => $space,
+                        'width' => 24,
+                        'htmlOptions' => [
+                            'class' => 'current-space-image',
+                        ],
+                        'link' => 'true',
+                        'linkOptions' => [
+                            'class' => 'tt',
+                            'data-toggle' => 'tooltip',
+                            'data-placement' => 'top',
+                            'title' => $space->name,
+                        ]
+                    ]);
+                        ?>
+                   <div>
+                     <?php echo $space->name; ?>
+                   </div>
+                    ?>
+                </div>
+
             <?php endforeach; ?>
 
             <?php if ($showMoreLink): ?>

@@ -50,7 +50,7 @@ $profileImageHeight = $container->getProfileImage()->height();
 
     <div class="top-header">
         <div class="image-upload-container profile-banner-image-container top-header-thumb">
-            <?= $container->getProfileBannerImage()->render('width:100%; height: 420px', ['class' => 'img-profile-header-background']) ?>
+            <?= $container->getProfileBannerImage()->render('width:100%; height:300px', ['class' => 'img-profile-header-background']) ?>
 
             <?php if ($canEdit) : ?>
                 <div class="image-upload-loader">
@@ -120,3 +120,15 @@ $profileImageHeight = $container->getProfileImage()->height();
         </div>
     </div>
 <?= Html::endTag('div') ?>
+<script>
+  window.onload = function() {
+    // Lấy chiều cao của .top-header-author
+    const topHeaderAuthorHeight = document.querySelector('.top-header-author').offsetHeight;
+    
+    // Tính toán chiều cao mới cho .top-header
+    const newHeight = topHeaderAuthorHeight + 320;
+
+    // Áp dụng chiều cao mới cho .top-header
+    document.querySelector('.top-header').style.height = newHeight + 'px';
+  }
+</script>

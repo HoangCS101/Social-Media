@@ -11,6 +11,7 @@ use humhub\modules\dashboard\widgets\Sidebar;
 use humhub\widgets\FooterMenu;
 use humhub\libs\Html;
 use humhub\modules\user\widgets\Image;
+use humhub\modules\user\widgets\PeopleActionButtons;
 use humhub\modules\content\components\ContentContainerController;
 use humhub\modules\space\models\Space;
 use humhub\modules\space\widgets\Header;
@@ -21,7 +22,6 @@ use humhub\modules\ui\view\components\View;
 ?>
 
 <?= Html::beginContainer() ?>
-
 <div class="container">
     <div class="row">
 
@@ -736,24 +736,17 @@ use humhub\modules\ui\view\components\View;
         <aside class="col col-xl-3 order-xl-3 col-lg-6 order-lg-3 col-md-6 col-sm-12 col-12">
 
             <div class="ui-block rounded-[20px]">
-
-
-
                 <div class="ui-block-title">
                     <h6 class="title text-[14px] text-black">Friend Suggestions</h6>
                     <a href="#" class="more"><svg class="olymp-three-dots-icon">
                             <use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>
                         </svg></a>
                 </div>
-
-
-
                 <!-- W-Action -->
-
                 <ul class="widget w-friend-pages-added notification-list friend-requests">
 
                     <?php
-                    function getRandomElements($array, $count = 5)
+                    function getRandomElements($array, $count)
                     {
                         // Kiểm tra nếu số phần tử của mảng nhỏ hơn hoặc bằng số lượng cần lấy
                         if (count($array) <= $count) {
@@ -772,9 +765,9 @@ use humhub\modules\ui\view\components\View;
                         return array_intersect_key($array, array_flip($randomKeys));
                     }
 
-                    $result = getRandomElements($this->params['users']);
+                    $result = getRandomElements($this->params['users'], 5);
                     foreach ($result as $user) { ?>
-                        <li class="inline-items">
+                        <li class="inline-items" style="padding: 20px">
                             <div class="author-thumb mt-[10px]">
                                 <?php echo Image::widget([
                                     'user' => $user,
@@ -786,11 +779,12 @@ use humhub\modules\ui\view\components\View;
                                 ?>
                             </div>
                             <div class="notification-event ">
-                                <a href="#" class="h6 notification-friend"><?php echo $user['username']; ?></a>
+                                <a href="index.php?r=user%2Fprofile%2Fhome&cguid=<?= $user->guid ?>"
+                                    class="h6 notification-friend"><?php echo $user->displayName; ?></a>
                                 <span class="chat-message-item">8 Friends in Common</span>
                             </div>
-                            <span class="notification-icon color-red mt-[10px]">
-                                <a href="#" class="accept-request mt-[10px]">
+                            <!-- <span class="notification-icon color-red"> -->
+                            <!-- <a href="#" class="accept-request mt-[10px]">
                                     <span class="without-text">
                                         Follow
                                     </span>
@@ -811,7 +805,66 @@ use humhub\modules\ui\view\components\View;
                 <!-- ... end W-Action -->
             </div>
 
-            <div class="ui-block">
+
+        </aside>
+
+        <!-- ... end Left Sidebar -->
+
+
+        <!-- Right Sidebar -->
+
+        <aside class="col col-xl-3 order-xl-3 col-lg-6 order-lg-3 col-md-6 col-sm-12 col-12">
+
+        <div class="ui-block rounded-[20px]">
+                <div class="ui-block-title">
+                    <h6 class="title">Pages You May Like</h6>
+                    <a href="#" class="more"><svg class="olymp-three-dots-icon">
+                            <use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>
+                        </svg></a>
+                </div>
+
+                <!-- W-Friend-Pages-Added -->
+
+                <ul class="widget w-friend-pages-added notification-list friend-requests">
+                    <?php
+
+                    $result_space = getRandomElements($spaces, 3);
+                    foreach ($result_space as $space) { ?>
+                        <li class="inline-items">
+                            <div class="author-thumb pt-[10px]">
+                                <?php echo $space->getProfileImage()->render(30, ['class' => 'space-avatar', 'id' => 'space-account-image']);
+                                ?>
+                            </div>
+                            <div class="notification-event">
+                                <a href="index.php?r=space%2Fspace&cguid=<?= $space->guid ?>"
+                                    class="h6 notification-friend"> <?php echo $space->name ?> </a>
+                                <span class="chat-message-item"> <?php echo $space->description ?> </span>
+                            </div>
+                            <span class="notification-icon" data-toggle="tooltip" data-placement="top"
+                                data-original-title="ADD TO YOUR FAVS">
+                                <a href="#">
+                                    <svg class="olymp-star-icon">
+                                        <use xlink:href="svg-icons/sprites/icons.svg#olymp-star-icon"></use>
+                                    </svg>
+                                </a>
+                            </span>
+
+                        </li>
+                        <?php
+                    }
+                    ?>
+                    <li class="inline-items">
+                        <a href="index.php?r=space%2Fspaces" class="text-center text-[12px] text-center opacity-80">
+                            <p class="text-center"> More Spaces</p>
+                        </a>
+
+                    </li>
+
+                </ul>
+
+                <!-- .. end W-Friend-Pages-Added -->
+            </div>
+            <div class="ui-block rounded-[20px] overflow-hidden">
 
 
 
