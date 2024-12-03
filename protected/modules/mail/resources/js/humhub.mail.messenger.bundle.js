@@ -764,7 +764,18 @@ humhub.module('mail.conversation', function (module, require, $) {
     };
 
     var getRootView = function () {
-        return Widget.instance('#mail-conversation-root');
+        var conn = new WebSocket('ws://localhost:8080');
+
+        conn.onopen = function(e) {
+            console.log("Connection established!");
+            conn.send(JSON.stringify({ type: 'join', id: id }));  // Send the conversation ID to the server
+        };
+
+        conn.onmessage = function(e) {
+            console.log("Message received: ", e.data);
+        };
+
+        return Widget.instance('#mail-conversation-root[conversation-id="' + id + '"]');
     };
 
     var init = function () {

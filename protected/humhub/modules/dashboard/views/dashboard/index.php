@@ -803,7 +803,7 @@ use humhub\modules\ui\view\components\View;
                     <li class="inline-items text-center hover:pointer">
                         <div class="text-[16px] text-black font-semibold items-center ">
                             <a class="opacity-60 text-[16px] text-black font-bold"
-                                href="http://localhost/social-media/index.php?r=user%2Fpeople">More people</a>
+                                href="index.php?r=user%2Fpeople">More people</a>
                         </div>
                     </li>
                 </ul>
