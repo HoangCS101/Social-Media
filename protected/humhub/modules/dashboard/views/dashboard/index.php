@@ -679,7 +679,92 @@ use humhub\modules\ui\view\components\View;
             </div>
 
 
+ 
             <div class="ui-block rounded-[20px]">
+                <div class="ui-block-title">
+                    <h6 class="title text-[14px] text-black">Friend Suggestions</h6>
+                    <a href="#" class="more"><svg class="olymp-three-dots-icon">
+                            <use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>
+                        </svg></a>
+                </div>
+                <!-- W-Action -->
+                <ul class="widget w-friend-pages-added notification-list friend-requests">
+
+                    <?php
+                    function getRandomElements($array, $count)
+                    {
+                        // Kiểm tra nếu số phần tử của mảng nhỏ hơn hoặc bằng số lượng cần lấy
+                        if (count($array) <= $count) {
+                            return $array; // Trả về toàn bộ mảng nếu nhỏ hơn hoặc bằng $count
+                        }
+
+                        // Lấy $count phần tử ngẫu nhiên từ mảng
+                        $randomKeys = array_rand($array, $count);
+
+                        // Nếu chỉ chọn 1 phần tử, array_rand() trả về 1 khóa, cần chuyển nó thành mảng
+                        if (!is_array($randomKeys)) {
+                            $randomKeys = [$randomKeys];
+                        }
+
+                        // Trả về các phần tử từ mảng gốc theo các khóa ngẫu nhiên
+                        return array_intersect_key($array, array_flip($randomKeys));
+                    }
+
+                    $result = getRandomElements($this->params['users'], 5);
+                    foreach ($result as $user) { ?>
+                        <li class="inline-items" style="padding: 20px">
+                            <div class="author-thumb mt-[10px]">
+                                <?php echo Image::widget([
+                                    'user' => $user,
+                                    'link' => false,
+                                    'width' => 30,
+                                    'htmlOptions' => ['id' => 'user-account-image'],
+                                    'showSelfOnlineStatus' => true,
+                                ]);
+                                ?>
+                            </div>
+                            <div class="notification-event ">
+                                <a href="index.php?r=user%2Fprofile%2Fhome&cguid=<?= $user->guid ?>"
+                                    class="h6 notification-friend"><?php echo $user->displayName; ?></a>
+                                <span class="chat-message-item">8 Friends in Common</span>
+                            </div>
+                            <!-- <span class="notification-icon color-red"> -->
+                            <!-- <a href="#" class="accept-request mt-[10px]">
+                                    <span class="without-text">
+                                        Follow
+                                    </span>
+                                    
+                                </a> -->
+                            <?= PeopleActionButtons::widget([
+                                'user' => $user,
+                                'template' => '<div class="ml-[5px] float-right">{buttons}</div>',
+                            ]); ?>
+                        </li>
+                        <?php
+                    }
+                    ?>
+                    <li class="inline-items text-center hover:pointer">
+                        <div class="text-[16px] text-black font-semibold items-center ">
+                            <a class="opacity-60 text-[12px] text-black font-bold" href="index.php?r=user%2Fpeople">More
+                                people</a>
+                        </div>
+                    </li>
+                </ul>
+
+                <!-- ... end W-Action -->
+            </div>
+
+
+        </aside>
+
+        <!-- ... end Left Sidebar -->
+
+
+        <!-- Right Sidebar -->
+
+        <aside class="col col-xl-3 order-xl-3 col-lg-6 order-lg-3 col-md-6 col-sm-12 col-12">
+
+        <div class="ui-block rounded-[20px]">
                 <div class="ui-block-title">
                     <h6 class="title">Pages You May Like</h6>
                     <a href="#" class="more"><svg class="olymp-three-dots-icon">
@@ -692,7 +777,7 @@ use humhub\modules\ui\view\components\View;
                 <ul class="widget w-friend-pages-added notification-list friend-requests">
                     <?php
 
-                    $result_space = getRandomElements($spaces,3);
+                    $result_space = getRandomElements($spaces, 3);
                     foreach ($result_space as $space) { ?>
                         <li class="inline-items">
                             <div class="author-thumb pt-[10px]">
@@ -728,91 +813,6 @@ use humhub\modules\ui\view\components\View;
 
                 <!-- .. end W-Friend-Pages-Added -->
             </div>
-        </aside>
-
-        <!-- ... end Left Sidebar -->
-
-
-        <!-- Right Sidebar -->
-
-        <aside class="col col-xl-3 order-xl-3 col-lg-6 order-lg-3 col-md-6 col-sm-12 col-12">
-
-            <div class="ui-block rounded-[20px]">
-
-
-
-                <div class="ui-block-title">
-                    <h6 class="title text-[14px] text-black">Friend Suggestions</h6>
-                    <a href="#" class="more"><svg class="olymp-three-dots-icon">
-                            <use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>
-                        </svg></a>
-                </div>
-                <!-- W-Action -->
-                <ul class="widget w-friend-pages-added notification-list friend-requests">
-
-                    <?php
-                    function getRandomElements($array, $count)
-                    {
-                        // Kiểm tra nếu số phần tử của mảng nhỏ hơn hoặc bằng số lượng cần lấy
-                        if (count($array) <= $count) {
-                            return $array; // Trả về toàn bộ mảng nếu nhỏ hơn hoặc bằng $count
-                        }
-
-                        // Lấy $count phần tử ngẫu nhiên từ mảng
-                        $randomKeys = array_rand($array, $count);
-
-                        // Nếu chỉ chọn 1 phần tử, array_rand() trả về 1 khóa, cần chuyển nó thành mảng
-                        if (!is_array($randomKeys)) {
-                            $randomKeys = [$randomKeys];
-                        }
-
-                        // Trả về các phần tử từ mảng gốc theo các khóa ngẫu nhiên
-                        return array_intersect_key($array, array_flip($randomKeys));
-                    }
-
-                    $result = getRandomElements($this->params['users'],5);
-                    foreach ($result as $user) { ?>
-                        <li class="inline-items" style="padding: 20px">
-                            <div class="author-thumb mt-[10px]">
-                                <?php echo Image::widget([
-                                    'user' => $user,
-                                    'link' => false,
-                                    'width' => 30,
-                                    'htmlOptions' => ['id' => 'user-account-image'],
-                                    'showSelfOnlineStatus' => true,
-                                ]);
-                                ?>
-                            </div> 
-                            <div class="notification-event ">
-                                <a href="index.php?r=user%2Fprofile%2Fhome&cguid=<?= $user->guid ?>" class="h6 notification-friend"><?php echo $user->displayName; ?></a>
-                                <span class="chat-message-item">8 Friends in Common</span>
-                            </div>
-                            <!-- <span class="notification-icon color-red"> -->
-                                <!-- <a href="#" class="accept-request mt-[10px]">
-                                    <span class="without-text">
-                                        Follow
-                                    </span>
-                                    
-                                </a> -->
-                            <?= PeopleActionButtons::widget([
-                                'user' => $user,
-                                'template' => '<div class="ml-[5px]">{buttons}</div>',
-                            ]); ?>
-                        </li>
-                        <?php
-                    }
-                    ?>
-                    <li class="inline-items text-center hover:pointer">
-                        <div class="text-[16px] text-black font-semibold items-center ">
-                            <a class="opacity-60 text-[12px] text-black font-bold" href="index.php?r=user%2Fpeople">More
-                                people</a>
-                        </div>
-                    </li>
-                </ul>
-
-                <!-- ... end W-Action -->
-            </div>
-
             <div class="ui-block rounded-[20px] overflow-hidden">
 
 

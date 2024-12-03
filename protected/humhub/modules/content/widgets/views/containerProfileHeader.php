@@ -50,7 +50,7 @@ $profileImageHeight = $container->getProfileImage()->height();
 
     <div class="top-header">
         <div class="image-upload-container profile-banner-image-container top-header-thumb">
-            <?= $container->getProfileBannerImage()->render('width:100%; height:420px', ['class' => 'img-profile-header-background']) ?>
+            <?= $container->getProfileBannerImage()->render('width:100%; height:300px', ['class' => 'img-profile-header-background']) ?>
 
             <?php if ($canEdit) : ?>
                 <div class="image-upload-loader">
