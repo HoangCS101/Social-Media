@@ -33,23 +33,23 @@ AppAsset::register($this);
         .dropdown-toggle::after {
             display: none;
         }
-        .
-        .more-photos span,
+
+        . .more-photos span,
         .post .more-photos span,
         .post .post__author-name {
             font-weight: 200;
             opacity: 0.8;
         }
+
         .post .author-date a {
             font-size: 14px;
             /* hoặc bất kỳ kiểu nào bạn muốn áp dụng */
         }
+
         .post .post__date a {
             font-size: 12px;
             color: black;
         }
-
-
     </style>
 
 </head>
@@ -58,7 +58,9 @@ AppAsset::register($this);
     <?php $this->beginBody() ?>
     <header class="header z-[1000] p-0" id="site-header">
         <div class="container mx-auto z-10">
-            <div class="page-title ">
+
+            <div class="page-title flex ">
+                <img src="https://hcmut.edu.vn/img/nhanDienThuongHieu/01_logobachkhoatoi.png" alt="" class="w-[70px] h-auto">
                 <?= SiteLogo::widget() ?>
             </div>
             <div class="header-content-wrapper min-h-[70px] flex justify-between">
@@ -70,7 +72,7 @@ AppAsset::register($this);
                     <!-- <a href="#" class="link-find-friend"></a> -->
 
                 </div>
-                
+
                 <!-- <form class="search-bar w-search notification-list friend-requests ">
                     <div class="form-group with-button">
                         <input class="form-control js-user-search" placeholder="Search here people or pages..."
@@ -89,7 +91,7 @@ AppAsset::register($this);
                 </div>
             </div>
             <!-- <div class="w-full bg-purple-dark-opacity h-10"> -->
-                
+
         </div>
     </header>
 
