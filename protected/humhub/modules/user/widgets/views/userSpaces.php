@@ -34,10 +34,10 @@ use yii\helpers\Html;
                         ]
                     ]);
                         ?>
-                   <div>
+                   <div class="ml-2 ">
                      <?php echo $space->name; ?>
                    </div>
-                    ?>
+                
                 </div>
 
             <?php endforeach; ?>

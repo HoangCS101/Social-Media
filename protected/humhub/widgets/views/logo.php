@@ -13,7 +13,7 @@ use yii\helpers\Html;
                  id="img-logo"/>
         </a>
     <?php else: ?>
-        <a class="navbar-brand navbar-brand-text"
+        <a class="navbar-brand navbar-brand-text px-0 py-2"
            href="<?= Yii::$app->homeUrl; ?>" id="text-logo">
             <?= Html::encode(Yii::$app->name); ?>
         </a>
