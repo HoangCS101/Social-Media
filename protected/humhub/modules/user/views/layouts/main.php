@@ -16,9 +16,15 @@ AppAsset::register($this);
 <head>
     <title><?= Html::encode($this->pageTitle); ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <script src="https://cdn.tailwindcss.com"></script>
     <?php $this->head() ?>
     <?= $this->render('@humhub/views/layouts/head'); ?>
     <meta charset="<?= Yii::$app->charset ?>">
+    <style>
+        .form-group.has-error::after {
+            display: none
+        }
+    </style>
 </head>
 
 <body class="login-container">

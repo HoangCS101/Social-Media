@@ -16,7 +16,7 @@ $this->pageTitle = Yii::t('UserModule.auth', 'Password recovery');
 
 ?>
 <div class="container" style="text-align: center;">
-    <?= SiteLogo::widget(['place' => 'login']); ?>
+    <!-- <?= SiteLogo::widget(['place' => 'login']); ?>
     <br>
 
     <div class="row">
@@ -44,6 +44,52 @@ $this->pageTitle = Yii::t('UserModule.auth', 'Password recovery');
                 <hr>
                 <?= Html::submitButton(Yii::t('UserModule.auth', 'Reset password'), ['class' => 'btn btn-primary', 'data-ui-loader' => ""]); ?>
                 <?= Button::primary(Yii::t('UserModule.auth', 'Back'))->link(Url::home())->pjax(false) ?>
+
+                <?php ActiveForm::end(); ?>
+
+            </div>
+        </div>
+    </div> -->
+
+
+    <div class="min-h-screen bg-inherit flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <div class="sm:mx-auto sm:w-full sm:max-w-md">
+            <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                Password Recovery
+            </h2>
+        </div>
+
+        <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+            <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+
+                <?php $form = ActiveForm::begin(['enableClientValidation' => false]); ?>
+
+                <p class="text-left"><?= Yii::t('UserModule.auth', 'Just enter your e-mail address. We\'ll send you recovery instructions!'); ?></p>
+
+                <?= $form->field($model, 'email')->textInput(['class' => 'form-control', 'id' => 'email_txt', 'placeholder' => Yii::t('UserModule.auth', 'Your email')])->label(false) ?>
+
+                <div class="form-group">
+                    <?= $form->field($model, 'verifyCode')->widget(Captcha::class, [
+                        'model' => $model,
+                        'attribute' => 'verifyCode',
+                        'captchaAction' => '/user/auth/captcha',
+                        'options' => ['class' => 'form-control', 'placeholder' => Yii::t('UserModule.auth', 'Enter security code above')]
+                    ])->label(false);
+                    ?>
+                </div>
+
+                <hr>
+                <div class="row">
+                    <div class="col-6">
+                        <?= Html::submitButton(Yii::t('UserModule.auth', 'Reset password'), ['class' => 'btn btn-large btn-primary group relative w-full justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500', 'data-ui-loader' => ""]); ?>
+                    </div>
+                    <div class="col-6">
+                        <?= Button::primary(Yii::t('UserModule.auth', 'Back'))
+                        ->link(Url::home())
+                        ->pjax(false)
+                        ->cssClass('btn btn-large btn-primary group relative w-full justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500') ?>
+                    </div>
+                </div>
 
                 <?php ActiveForm::end(); ?>
 
