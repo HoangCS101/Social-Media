@@ -17,22 +17,29 @@ use yii\helpers\Html;
 
         <div class="panel-body">
             <?php foreach ($spaces as $space): ?>
-                <?php
-                echo Image::widget([
-                    'space' => $space,
-                    'width' => 24,
-                    'htmlOptions' => [
-                        'class' => 'current-space-image',
-                    ],
-                    'link' => 'true',
-                    'linkOptions' => [
-                        'class' => 'tt',
-                        'data-toggle' => 'tooltip',
-                        'data-placement' => 'top',
-                        'title' => $space->name,
-                    ]
-                ]);
-                ?>
+                <div class="flex ">
+                    <?php
+                    echo Image::widget([
+                        'space' => $space,
+                        'width' => 24,
+                        'htmlOptions' => [
+                            'class' => 'current-space-image',
+                        ],
+                        'link' => 'true',
+                        'linkOptions' => [
+                            'class' => 'tt',
+                            'data-toggle' => 'tooltip',
+                            'data-placement' => 'top',
+                            'title' => $space->name,
+                        ]
+                    ]);
+                        ?>
+                   <div class="ml-2 ">
+                     <?php echo $space->name; ?>
+                   </div>
+                
+                </div>
+
             <?php endforeach; ?>
 
             <?php if ($showMoreLink): ?>

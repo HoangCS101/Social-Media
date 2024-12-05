@@ -22,7 +22,6 @@ use humhub\modules\ui\view\components\View;
 ?>
 
 <?= Html::beginContainer() ?>
-
 <div class="container">
     <div class="row">
 
@@ -680,81 +679,19 @@ use humhub\modules\ui\view\components\View;
             </div>
 
 
+ 
             <div class="ui-block rounded-[20px]">
-                <div class="ui-block-title">
-                    <h6 class="title">Pages You May Like</h6>
-                    <a href="#" class="more"><svg class="olymp-three-dots-icon">
-                            <use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>
-                        </svg></a>
-                </div>
-
-                <!-- W-Friend-Pages-Added -->
-
-                <ul class="widget w-friend-pages-added notification-list friend-requests">
-                    <?php
-                    foreach ($spaces as $space) { ?>
-                        <li class="inline-items">
-                            <div class="author-thumb pt-[10px]">
-                                <?php echo $space->getProfileImage()->render(30, ['class' => 'space-avatar', 'id' => 'space-account-image']);
-                                ?>
-                            </div>
-                            <div class="notification-event">
-                                <a href="http://localhost/social-media/index.php?r=space%2Fspace&cguid=<?= $space->guid ?>"
-                                    class="h6 notification-friend"> <?php echo $space->name ?> </a>
-                                <span class="chat-message-item"> <?php echo $space->description ?> </span>
-                            </div>
-                            <span class="notification-icon" data-toggle="tooltip" data-placement="top"
-                                data-original-title="ADD TO YOUR FAVS">
-                                <a href="#">
-                                    <svg class="olymp-star-icon">
-                                        <use xlink:href="svg-icons/sprites/icons.svg#olymp-star-icon"></use>
-                                    </svg>
-                                </a>
-                            </span>
-
-                        </li>
-                        <?php
-                    }
-                    ?>
-                    <li class="inline-items">
-                        <a href="http://localhost/social-media/index.php?r=space%2Fspaces" class="text-center opacity-80">
-                            More Spaces
-                        </a>
-
-                    </li>
-
-                </ul>
-
-                <!-- .. end W-Friend-Pages-Added -->
-            </div>
-        </aside>
-
-        <!-- ... end Left Sidebar -->
-
-
-        <!-- Right Sidebar -->
-
-        <aside class="col col-xl-3 order-xl-3 col-lg-6 order-lg-3 col-md-6 col-sm-12 col-12">
-
-            <div class="ui-block rounded-[20px]">
-
-
-
                 <div class="ui-block-title">
                     <h6 class="title text-[14px] text-black">Friend Suggestions</h6>
                     <a href="#" class="more"><svg class="olymp-three-dots-icon">
                             <use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>
                         </svg></a>
                 </div>
-
-
-
                 <!-- W-Action -->
-
                 <ul class="widget w-friend-pages-added notification-list friend-requests">
 
                     <?php
-                    function getRandomElements($array, $count = 5)
+                    function getRandomElements($array, $count)
                     {
                         // Kiểm tra nếu số phần tử của mảng nhỏ hơn hoặc bằng số lượng cần lấy
                         if (count($array) <= $count) {
@@ -773,7 +710,7 @@ use humhub\modules\ui\view\components\View;
                         return array_intersect_key($array, array_flip($randomKeys));
                     }
 
-                    $result = getRandomElements($this->params['users']);
+                    $result = getRandomElements($this->params['users'], 5);
                     foreach ($result as $user) { ?>
                         <li class="inline-items" style="padding: 20px">
                             <div class="author-thumb mt-[10px]">
@@ -785,13 +722,14 @@ use humhub\modules\ui\view\components\View;
                                     'showSelfOnlineStatus' => true,
                                 ]);
                                 ?>
-                            </div> 
+                            </div>
                             <div class="notification-event ">
-                                <a href="#" class="h6 notification-friend"><?php echo $user['username']; ?></a>
+                                <a href="index.php?r=user%2Fprofile%2Fhome&cguid=<?= $user->guid ?>"
+                                    class="h6 notification-friend"><?php echo $user->displayName; ?></a>
                                 <span class="chat-message-item">8 Friends in Common</span>
                             </div>
                             <!-- <span class="notification-icon color-red"> -->
-                                <!-- <a href="#" class="accept-request mt-[10px]">
+                            <!-- <a href="#" class="accept-request mt-[10px]">
                                     <span class="without-text">
                                         Follow
                                     </span>
@@ -799,7 +737,7 @@ use humhub\modules\ui\view\components\View;
                                 </a> -->
                             <?= PeopleActionButtons::widget([
                                 'user' => $user,
-                                'template' => '<div class="ml-[5px]">{buttons}</div>',
+                                'template' => '<div class="ml-[5px] float-right">{buttons}</div>',
                             ]); ?>
                         </li>
                         <?php
@@ -807,8 +745,8 @@ use humhub\modules\ui\view\components\View;
                     ?>
                     <li class="inline-items text-center hover:pointer">
                         <div class="text-[16px] text-black font-semibold items-center ">
-                            <a class="opacity-60 text-[16px] text-black font-bold"
-                                href="http://localhost/social-media/index.php?r=user%2Fpeople">More people</a>
+                            <a class="opacity-60 text-[12px] text-black font-bold" href="index.php?r=user%2Fpeople">More
+                                people</a>
                         </div>
                     </li>
                 </ul>
@@ -816,7 +754,66 @@ use humhub\modules\ui\view\components\View;
                 <!-- ... end W-Action -->
             </div>
 
-            <div class="ui-block">
+
+        </aside>
+
+        <!-- ... end Left Sidebar -->
+
+
+        <!-- Right Sidebar -->
+
+        <aside class="col col-xl-3 order-xl-3 col-lg-6 order-lg-3 col-md-6 col-sm-12 col-12">
+
+        <div class="ui-block rounded-[20px]">
+                <div class="ui-block-title">
+                    <h6 class="title">Pages You May Like</h6>
+                    <a href="#" class="more"><svg class="olymp-three-dots-icon">
+                            <use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>
+                        </svg></a>
+                </div>
+
+                <!-- W-Friend-Pages-Added -->
+
+                <ul class="widget w-friend-pages-added notification-list friend-requests">
+                    <?php
+
+                    $result_space = getRandomElements($spaces, 3);
+                    foreach ($result_space as $space) { ?>
+                        <li class="inline-items">
+                            <div class="author-thumb pt-[10px]">
+                                <?php echo $space->getProfileImage()->render(30, ['class' => 'space-avatar', 'id' => 'space-account-image']);
+                                ?>
+                            </div>
+                            <div class="notification-event">
+                                <a href="index.php?r=space%2Fspace&cguid=<?= $space->guid ?>"
+                                    class="h6 notification-friend"> <?php echo $space->name ?> </a>
+                                <span class="chat-message-item"> <?php echo $space->description ?> </span>
+                            </div>
+                            <span class="notification-icon" data-toggle="tooltip" data-placement="top"
+                                data-original-title="ADD TO YOUR FAVS">
+                                <a href="#">
+                                    <svg class="olymp-star-icon">
+                                        <use xlink:href="svg-icons/sprites/icons.svg#olymp-star-icon"></use>
+                                    </svg>
+                                </a>
+                            </span>
+
+                        </li>
+                        <?php
+                    }
+                    ?>
+                    <li class="inline-items">
+                        <a href="index.php?r=space%2Fspaces" class="text-center text-[12px] text-center opacity-80">
+                            <p class="text-center"> More Spaces</p>
+                        </a>
+
+                    </li>
+
+                </ul>
+
+                <!-- .. end W-Friend-Pages-Added -->
+            </div>
+            <div class="ui-block rounded-[20px] overflow-hidden">
 
 
 

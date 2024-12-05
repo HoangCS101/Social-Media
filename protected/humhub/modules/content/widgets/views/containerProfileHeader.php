@@ -49,7 +49,7 @@ $profileImageHeight = $container->getProfileImage()->height();
 <?= Html::beginTag('div', $options) ?>
 
     <div class="top-header">
-        <div class="image-upload-container top-header-thumb">
+        <div class="image-upload-container profile-banner-image-container top-header-thumb">
             <?= $container->getProfileBannerImage()->render('width:100%; height:300px', ['class' => 'img-profile-header-background']) ?>
 
             <?php if ($canEdit) : ?>
@@ -87,6 +87,9 @@ $profileImageHeight = $container->getProfileImage()->height();
                     <div class="col col-lg-5 ml-auto col-md-5 col-sm-12 col-12">
                         <?= SpaceRightNavigation::widget(['space' => $container]); ?>
                     </div>
+                    <?= $this->render($headerControlView, [
+                    'container' => $container,
+                    ]) ?>
                 </div>
             <?php endif; ?>
         </div>
