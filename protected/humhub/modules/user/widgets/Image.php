@@ -46,7 +46,7 @@ class Image extends BaseImage
         }
 
         Html::addCssClass($this->imageOptions, 'img-rounded');
-        Html::addCssStyle($this->imageOptions, 'width: ' . $this->width . 'px; height: ' . $this->height . 'px');
+        Html::addCssStyle($this->imageOptions, 'width: ' . $this->width . 'px; height: auto');
 
         if ($this->tooltipText || $this->showTooltip) {
             $this->imageOptions['data-toggle'] = 'tooltip';
