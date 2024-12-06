@@ -34,9 +34,9 @@ $module = Yii::$app->getModule('comment');
 
     <?= CommentControls::widget(['comment' => $comment]) ?>
 
-    <?= UserImage::widget(['user' => $user, 'width' => 25, 'htmlOptions' => ['class' => 'pull-left', 'data-contentcontainer-id' => $user->contentcontainer_id]]); ?>
-    <div>
-        <div class="media-body">
+    <?= UserImage::widget(['user' => $user, 'width' => 30, 'htmlOptions' => ['class' => 'pull-left', 'data-contentcontainer-id' => $user->contentcontainer_id]]); ?>
+    <div class="w-full">
+        <div class="media-body w-full block">
             <h4 class="media-heading">
                 <?= Html::containerLink($user) ?>
                 <small>&middot <?= TimeAgo::widget(['timestamp' => $createdAt]) ?>
@@ -59,7 +59,7 @@ $module = Yii::$app->getModule('comment');
             <?= CommentEntryLinks::widget(['object' => $comment]); ?>
         </div>
 
-        <div class="nested-comments-root">
+        <div class="nested-comments-root pt-1">
             <?= Comments::widget(['object' => $comment]); ?>
         </div>
     </div>
