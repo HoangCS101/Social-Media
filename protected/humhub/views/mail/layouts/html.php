@@ -519,6 +519,8 @@ use humhub\widgets\PoweredBy;
             </style>
 
             <?php $this->head() ?>
+            <script src="https://cdn.tailwindcss.com"></script>
+        
     </head>
 
     <body style="font-size:12px; font-family: <?= Yii::$app->view->theme->variable('mail-font-family', DefaultMailStyle::DEFAULT_FONT_FAMILY) ?>; background-color: <?= Yii::$app->view->theme->variable('background-color-page', '#ededed') ?>;">

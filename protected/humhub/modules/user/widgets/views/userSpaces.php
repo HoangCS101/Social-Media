@@ -16,9 +16,13 @@ use yii\helpers\Html;
         </div>
 
         <div class="panel-body">
-            <?php foreach ($spaces as $space): ?>
-                <div class="flex ">
-                    <?php
+            <ul class="widget w-friend-pages-added notification-list friend-requests">
+                <?php
+
+                foreach ($spaces as $space) { ?>
+                    <li class="inline-items">
+                        <div class="author-thumb pt-[10px]">
+                        <?php
                     echo Image::widget([
                         'space' => $space,
                         'width' => 24,
@@ -33,14 +37,34 @@ use yii\helpers\Html;
                             'title' => $space->name,
                         ]
                     ]);
-                        ?>
-                   <div>
-                     <?php echo $space->name; ?>
-                   </div>
                     ?>
-                </div>
+                        </div>
+                        <div class="notification-event">
+                            <a href="index.php?r=space%2Fspace&cguid=<?= $space->guid ?>" class="h6 notification-friend">
+                                <?php echo $space->name ?> </a>
+                            <span class="chat-message-item"> <?php echo $space->description ?> </span>
+                        </div>
+                        <span class="notification-icon" data-toggle="tooltip" data-placement="top"
+                            data-original-title="ADD TO YOUR FAVS">
+                            <a href="#">
+                                <svg class="olymp-star-icon">
+                                    <use xlink:href="svg-icons/sprites/icons.svg#olymp-star-icon"></use>
+                                </svg>
+                            </a>
+                        </span>
 
-            <?php endforeach; ?>
+                    </li>
+                    <?php
+                }
+                ?>
+                <li class="inline-items">
+                    <a href="index.php?r=space%2Fspaces" class="text-center text-[12px] text-center opacity-80">
+                        <p class="text-center"> More Spaces</p>
+                    </a>
+
+                </li>
+
+            </ul>
 
             <?php if ($showMoreLink): ?>
                 <br>

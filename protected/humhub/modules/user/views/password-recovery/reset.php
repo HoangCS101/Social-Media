@@ -33,6 +33,35 @@ $this->pageTitle = Yii::t('UserModule.auth', 'Password reset');
             </div>
         </div>
     </div>
+
+    <div class="min-h-screen bg-inherit flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <div class="sm:mx-auto sm:w-full sm:max-w-md">
+            <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                Change your password
+            </h2>
+        </div>
+
+        <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+            <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+
+
+            <?php $form = ActiveForm::begin(['enableClientValidation' => false]); ?>
+
+            <?= $form->field($model, 'newPassword')->passwordInput(['class' => 'form-control', 'id' => 'new_password', 'maxlength' => 255, 'value' => '']) ?>
+
+            <?= $form->field($model, 'newPasswordConfirm')->passwordInput(['class' => 'form-control', 'maxlength' => 255, 'value' => '']) ?>
+
+            <?= Html::submitButton(Yii::t('UserModule.auth', 'Change password'), ['class' => 'btn btn-large btn-primary group relative w-full justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500', 'data-ui-loader' => '']); ?>
+
+            <a class="btn btn-large btn-primary group relative w-full justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" data-ui-loader href="<?= Url::home() ?>">
+                <?= Yii::t('UserModule.auth', 'Back') ?>
+            </a>
+
+            <?php ActiveForm::end(); ?>
+
+            </div>
+        </div>
+    </div>
 </div>
 
 <script <?= \humhub\libs\Html::nonce() ?>>

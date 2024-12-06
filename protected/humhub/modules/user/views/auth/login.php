@@ -7,6 +7,8 @@ use humhub\modules\user\widgets\AuthChoice;
 use humhub\widgets\SiteLogo;
 use yii\captcha\Captcha;
 use yii\widgets\ActiveForm;
+use yii\helpers\Url;
+
 
 $this->pageTitle = Yii::t('UserModule.auth', 'Login');
 
@@ -21,13 +23,11 @@ $this->pageTitle = Yii::t('UserModule.auth', 'Login');
 ?>
 
 <div id="user-auth-login-modal" class="container" style="text-align: center;">
-    <?= SiteLogo::widget(['place' => 'login']); ?>
-    <br>
 
-    <div class="panel panel-default animated bounceIn" id="login-form"
+    <!-- <div class="panel panel-default animated bounceIn" id="login-form"
          style="max-width: 300px; margin: 0 auto 20px; text-align: left;">
 
-        <div class="panel-heading"><?= Yii::t('UserModule.auth', '<strong>Please</strong> sign in'); ?></div>
+        <div class="panel-heading"><?= Yii::t('UserModule.auth', 'SIGN IN'); ?></div>
 
         <div class="panel-body">
 
@@ -58,7 +58,6 @@ $this->pageTitle = Yii::t('UserModule.auth', 'Login');
                 <hr>
                 <div class="row">
                     <div class="col-md-4">
-                        <?= Html::submitButton(Yii::t('UserModule.auth', 'Sign in'), ['id' => 'login-button', 'data-ui-loader' => "", 'class' => 'btn btn-large btn-primary']); ?>
                     </div>
                     <?php if ($passwordRecoveryRoute) : ?>
                         <div class="col-md-8 text-right">
@@ -81,51 +80,75 @@ $this->pageTitle = Yii::t('UserModule.auth', 'Login');
                 <?php ActiveForm::end(); ?>
             <?php endif; ?>
         </div>
-    </div>
+    </div> -->
 
-    <br>
-
-    <?php if ($canRegister && $showRegistrationForm) : ?>
-        <div id="register-form"
-             class="panel panel-default animated bounceInLeft"
-             style="max-width: 300px; margin: 0 auto 20px; text-align: left;">
-
-            <div class="panel-heading"><?= Yii::t('UserModule.auth', '<strong>Sign</strong> up') ?></div>
-
-            <div class="panel-body">
-
-                <?php if (AuthChoice::hasClients()): ?>
-                    <?= AuthChoice::widget() ?>
-                    <div class="or-container">
-                        <hr>
-                        <div>or</div>
-                    </div>
-                <?php else: ?>
-                    <p><?= Yii::t('UserModule.auth', "Don't have an account? Join the network by entering your e-mail address."); ?></p>
-                <?php endif; ?>
-
-                <?php $form = ActiveForm::begin(['id' => 'invite-form']); ?>
-                <?= $form->field($invite, 'email')->input('email', ['id' => 'register-email', 'placeholder' => $invite->getAttributeLabel('email'), 'aria-label' => $invite->getAttributeLabel('email')])->label(false); ?>
-                <?php if ($invite->showCaptureInRegisterForm()) : ?>
-                    <div id="registration-form-captcha" style="display: none;">
-                        <div><?= Yii::t('UserModule.auth', 'Please enter the letters from the image.'); ?></div>
-
-                        <?= $form->field($invite, 'captcha')->widget(Captcha::class, [
-                            'captchaAction' => '/user/auth/captcha',
-                        ])->label(false); ?>
-                    </div>
-                <?php endif; ?>
-                <hr>
-                <?= Html::submitButton(Yii::t('UserModule.auth', 'Register'), ['class' => 'btn btn-primary', 'data-ui-loader' => '']); ?>
-
-                <?php ActiveForm::end(); ?>
-            </div>
+    <div class="min-h-screen bg-inherit flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <div class="sm:mx-auto sm:w-full sm:max-w-md">
+            <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                Sign in to your account
+            </h2>
+            <p class="mt-2 text-center text-sm text-red-600">
+                Or
+                <a class="font-medium text-red-600 hover:text-blue-500"  data-action-url="<?= Url::to(['/user/password-recovery']) ?>" data-ui-loader>
+                    create an account
+                </a>
+            </p>
         </div>
 
-    <?php endif; ?>
+        <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+            <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+                    <?php $form = ActiveForm::begin(['id' => 'account-login-form', 'enableClientValidation' => false]); ?>
+
+                    <div>
+                        <label for="email" class="block text-left text-sm font-medium text-gray-700">
+                            Email address
+                        </label>
+                        <div class="mt-1">
+                            <?= $form->field($model, 'username')->textInput(['id' => 'login_username', 'placeholder' => $model->getAttributeLabel('username'), 'aria-label' => $model->getAttributeLabel('username')])->label(false); ?>     
+                        </div>
+                    </div>          
+
+                    <div>
+                        <label for="password" class="block text-left text-sm font-medium text-gray-700">
+                            Password
+                        </label>
+                        <div class="mt-1">
+                            <?= $form->field($model, 'password')
+                            ->passwordInput(['id' => 'login_password', 'placeholder' => $model->getAttributeLabel('password'), 'aria-label' => $model->getAttributeLabel('password')])
+                            ->label(false); ?>
+                        </div>
+                    </div>
+
+                    <div class="flex items-top justify-between">
+                        <?= $form->field($model, 'rememberMe')->checkbox(); ?>
+                        <div class="form-group">
+                            <?= Html::a(
+                                Yii::t('UserModule.auth', 'Forgot your password?'),
+                                $passwordRecoveryRoute,
+                                [
+                                    'id' => 'password-recovery-link',
+                                    'class' => 'font-medium text-blue-600 hover:text-blue-500',
+                                    'target' => is_array($passwordRecoveryRoute) ? '_self' : '_blank',
+                                    'data' => [
+                                        'pjax-prevent' => true,
+                                    ]
+                                ]
+                            ) ?>
+                        </div>
+                    </div>
+
+                    <div>
+                       <?= Html::submitButton(Yii::t('UserModule.auth', 'Sign in'), ['id' => 'login-button', 'data-ui-loader' => "", 'class' => 'btn btn-large btn-primary relative w-full justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500']); ?>
+                    </div>
+                    <?php ActiveForm::end(); ?>
+            </div>
+        </div>
+    </div>
+
 
     <?= humhub\widgets\LanguageChooser::widget(); ?>
 </div>
+
 
 <script <?= Html::nonce() ?>>
     $(function () {
