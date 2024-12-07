@@ -7751,5 +7751,9 @@ ul.tag_input li img {
 }
 
 .header .page-title {
-    padding: 16px 32px 0 0;
+    padding: 10px 32px 0 0;
+}
+
+.header .page-title a {
+    line-height: 34px;
 }

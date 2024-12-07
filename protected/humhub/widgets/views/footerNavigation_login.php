@@ -16,7 +16,7 @@ use humhub\modules\ui\menu\MenuLink;
 
 ?>
 
-<div class="text text-center powered">
+<div class="text text-center powered hidden">
     <?php if (!empty($entries)): ?>
         <div class="footer-nav footer-nav-login">
             <?php foreach ($entries as $k => $entry): ?>
