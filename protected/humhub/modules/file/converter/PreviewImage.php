@@ -69,7 +69,7 @@ class PreviewImage extends BaseConverter
             $this->applyFile($file);
         }
 
-        return Html::img($this->getUrl(), ['class' => 'animated fadeIn', 'alt' => $this->getAltText()]);
+        return Html::img($this->getUrl(), ['class' => 'animated fadeIn object-fit: contain', 'alt' => $this->getAltText()]);
     }
 
     protected function getAltText($file = null)
