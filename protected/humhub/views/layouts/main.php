@@ -43,12 +43,15 @@ AppAsset::register($this);
 
         .post .author-date a {
             font-size: 14px;
-            /* hoặc bất kỳ kiểu nào bạn muốn áp dụng */
         }
 
         .post .post__date a {
             font-size: 12px;
             color: black;
+        }
+
+        .form-group.has-error::after {
+            display: none;
         }
     </style>
 
@@ -69,16 +72,8 @@ AppAsset::register($this);
                         <?= TopMenuRightStack::widget() ?>
                     </ul>
 
-                    <!-- <a href="#" class="link-find-friend"></a> -->
 
                 </div>
-
-                <!-- <form class="search-bar w-search notification-list friend-requests ">
-                    <div class="form-group with-button">
-                        <input class="form-control js-user-search" placeholder="Search here people or pages..."
-                            type="text">
-                    </div>
-                </form> -->
                 <div class="control-block flex">
                     <div class="control-icon more has-items z-[9999]">
                         <?= NotificationArea::widget() ?>
@@ -90,7 +85,6 @@ AppAsset::register($this);
 
                 </div>
             </div>
-            <!-- <div class="w-full bg-purple-dark-opacity h-10"> -->
 
         </div>
     </header>
