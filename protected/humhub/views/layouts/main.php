@@ -30,6 +30,10 @@ AppAsset::register($this);
             background-color: #e9e9e969;
         }
 
+        .dropup .dropdown-toggle::after {
+            display: none;
+        }
+
         .dropdown-toggle::after {
             display: none;
         }
