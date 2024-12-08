@@ -32,7 +32,7 @@ if (!$isSingleParticipant) {
             'aria-expanded' => 'false'
         ]
     ]) ?>
-    <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="conversation-settings-button">
+    <ul class="dropdown-menu dropdown-menu-right left-auto right-0" aria-labelledby="conversation-settings-button">
         <li>
             <?= ModalButton::none(Yii::t('MailModule.base', 'Tags'))->icon('star')
                 ->load(Url::toEditConversationTags($message))->link()->loader(false) ?>

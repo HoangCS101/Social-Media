@@ -18,6 +18,13 @@ use humhub\modules\space\widgets\Header;
 use humhub\modules\space\widgets\Menu;
 use humhub\modules\space\widgets\SpaceContent;
 use humhub\modules\ui\view\components\View;
+use humhub\modules\ui\icon\widgets\Icon;
+use yii\helpers\Url;
+use humhub\modules\space\permissions\CreatePrivateSpace;
+use humhub\modules\space\permissions\CreatePublicSpace;
+
+$manager = Yii::$app->user->permissionmanager;
+$canCreateSpace = $manager->can(new CreatePublicSpace()) || $manager->can(new CreatePrivateSpace());
 
 ?>
 
@@ -765,11 +772,18 @@ use humhub\modules\ui\view\components\View;
         <aside class="col col-xl-3 order-xl-3 col-lg-6 order-lg-3 col-md-6 col-sm-12 col-12">
 
         <div class="ui-block rounded-[20px]">
-                <div class="ui-block-title">
-                    <h6 class="title">Pages You May Like</h6>
-                    <a href="#" class="more"><svg class="olymp-three-dots-icon">
-                            <use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>
-                        </svg></a>
+                <div class="ui-block-title flex justify-between">
+                    <h6 class="title flex items-center">Spaces</h6>
+                        <?php if ($canCreateSpace) : ?>
+                        <li>
+                            <div class="dropdown-footer">
+                                <a href="#" class="btn btn-info pr-3 pl-3" data-action-click="ui.modal.load"
+                                data-action-url="<?= Url::to(['/space/create/create']) ?>">
+                                    <i class="fa fa-plus m-0"></i>
+                                </a>
+                            </div>
+                        </li>
+                        <?php endif; ?>
                 </div>
 
                 <!-- W-Friend-Pages-Added -->

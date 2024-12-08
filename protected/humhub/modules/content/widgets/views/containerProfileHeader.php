@@ -77,6 +77,8 @@ $profileImageHeight = $container->getProfileImage()->height();
                     </div>
                     <div class="col col-lg-5 ml-auto col-md-5 col-sm-12 col-12">
                         <?= ProfileRightNavigation::widget(['user' => $container]); ?>
+                        
+                        
                     </div>
                 </div>
             <?php else : ?>
@@ -86,10 +88,13 @@ $profileImageHeight = $container->getProfileImage()->height();
                     </div>
                     <div class="col col-lg-5 ml-auto col-md-5 col-sm-12 col-12">
                         <?= SpaceRightNavigation::widget(['space' => $container]); ?>
+                        <div class="align-right pt-4 pr-4">
+                            <?= $this->render($headerControlView, [
+                            'container' => $container,
+                            ]) ?>
+                        </div>
                     </div>
-                    <?= $this->render($headerControlView, [
-                    'container' => $container,
-                    ]) ?>
+                    
                 </div>
             <?php endif; ?>
         </div>

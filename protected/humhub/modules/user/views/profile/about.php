@@ -63,7 +63,7 @@ $categories = $user->profile->getProfileFieldCategories();
                     
                     <ul class="widget w-personal-info">
                         <?php foreach ($user->profile->getProfileFields($category) as $field) : ?>
-                            <li>
+                            <li class="pt-[5px] pb-[5px]">
                                 <?= Html::tag('span', Html::encode(Yii::t($field->getTranslationCategory(), $field->title)), ['class' => 'title']) ?>
                                 <?php if (strtolower($field->title) == 'about'): ?>
                                         <span class="text"><?= RichText::output($field->getUserValue($user, true)) ?></span>
