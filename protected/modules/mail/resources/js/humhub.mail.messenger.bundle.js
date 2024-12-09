@@ -7,6 +7,7 @@ humhub.module('mail.ConversationView', function (module, require, $) {
     var object = require('util.object');
     var mail = require('mail.notification');
     var view = require('ui.view');
+    var conn;
 
     var ConversationView = Widget.extend();
 
@@ -21,6 +22,7 @@ humhub.module('mail.ConversationView', function (module, require, $) {
         if (!this.getActiveMessageId()) {
             this.setActiveMessageId(Widget.instance('#inbox').getFirstMessageId());
         }
+        console.log("ActiveMessage: ", this.getActiveMessageId());
 
         this.reload();
 
@@ -29,6 +31,18 @@ humhub.module('mail.ConversationView', function (module, require, $) {
         }).on('mouseleave', '.mail-conversation-entry', function () {
             $(this).find('.conversation-menu').hide();
         });
+
+        conn = new WebSocket('ws://localhost:8080');
+        conn.onopen = (e) => {
+            console.log("Connection established for active message ", this.getActiveMessageId());
+        };
+
+        conn.onmessage = function(e) {
+            Widget.instance('#inbox').updateEntries([that.getActiveMessageId()]);
+            that.loadUpdate();
+            console.log("Message Recieved!!!");
+            console.log(e.data);
+        };
     };
 
     ConversationView.prototype.loader = function (load) {
@@ -53,7 +67,6 @@ humhub.module('mail.ConversationView', function (module, require, $) {
         var $lastEntry = this.$.find('.mail-conversation-entry:not(.own):last');
         var lastEntryId = $lastEntry.data('entry-id');
         var data = {id: this.getActiveMessageId(), from: lastEntryId};
-
         var that = this;
         client.get(this.options.loadUpdateUrl, {data: data}).then(function (response) {
             if (response.html) {
@@ -70,6 +83,9 @@ humhub.module('mail.ConversationView', function (module, require, $) {
             if (response.success) {
                 that.appendEntry(response.content).then(function () {
                     that.$.find(".time").timeago(); // somehow this is not triggered after reply
+                    var string = 'Message sent from ' + that.getActiveMessageId();
+                    conn.send(string);
+                    console.log(string);
                     var richtext = that.getReplyRichtext();
                     if (richtext) {
                         richtext.$.trigger('clear');
@@ -84,7 +100,7 @@ humhub.module('mail.ConversationView', function (module, require, $) {
                         that.focus();
                     }
                     Widget.instance('#inbox').updateEntries([that.getActiveMessageId()]);
-                    that.setLivePollInterval();
+                    // that.setLivePollInterval();
                 });
             } else {
                 module.log.error(response, true);
@@ -177,6 +193,7 @@ humhub.module('mail.ConversationView', function (module, require, $) {
         this.loader();
         client.get(this.options.loadMessageUrl, {data: {id: messageId}}).then(function (response) {
             that.setActiveMessageId(messageId);
+            console.log("Switch to message ", that.getActiveMessageId());
             that.options.isLast = false;
 
             var inbox = Widget.instance('#inbox');
