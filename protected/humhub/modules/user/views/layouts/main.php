@@ -22,16 +22,18 @@ AppAsset::register($this);
     <meta charset="<?= Yii::$app->charset ?>">
     <style>
         .form-group.has-error::after {
-            display: none
+            display: none;
+        }
+        .form-group.has-error input{
+            outline: 2px solid red; 
+            outline-offset: 2px;
         }
     </style>
 </head>
 
-<body class="login-container">
+<body class="login-container bg-none bg-white">
 <?php $this->beginBody() ?>
 <?= $content; ?>
-<br/>
-<?= FooterMenu::widget(['location' => FooterMenu::LOCATION_LOGIN]); ?>
 <?php $this->endBody() ?>
 </body>
 
