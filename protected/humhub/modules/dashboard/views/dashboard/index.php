@@ -41,8 +41,6 @@ use humhub\modules\ui\view\components\View;
         </main>
 
         <!-- ... end Main Content -->
-
-
         <!-- Left Sidebar -->
 
         <aside class="col col-xl-3 order-xl-1 col-lg-6 order-lg-2 col-md-6 col-sm-12 col-12">
