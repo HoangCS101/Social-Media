@@ -1944,7 +1944,7 @@ ul.tab-menu-settings li.active > a {
 
 .btn-info:hover,
 .btn-info:focus {
-    background: #ff5e3a !important;
+    background: #8fa9ff !important;
     text-decoration: none;
 }
 
@@ -1970,7 +1970,7 @@ ul.tab-menu-settings li.active > a {
 
 .btn-info.active:hover,
 .btn-info.active:focus {
-    border: 1px solid #ff5e3a;
+    border: 1px solid #473aff;
     color: #ff5e3a !important;
 }
 
@@ -3834,7 +3834,15 @@ div.nested-comments-root div.comment-container {
 
 #wall-stream-filter-nav .select2 .select2-selection__choice span,
 #wall-stream-filter-nav .select2 .select2-selection__choice i {
-    line-height: 19px !important;
+    line-height: 19px !important;   
+}
+.select2-selection__rendered .select2-selection__choice
+{
+    display: flex;
+}
+.select2-selection__rendered .select2-selection__choice span
+{
+    line-height: 26px;
 }
 
 #wall-stream-filter-nav .select2 .select2-selection__choice .img-rounded {

@@ -42,7 +42,7 @@ $canCreateSpace = $manager->can(new CreatePublicSpace()) || $manager->can(new Cr
                     <?php if ($canCreateSpace) : ?>
                         <li>
                             <div class="dropdown-footer">
-                                <a href="#" class="btn btn-info col-md-4 align-right" data-action-click="ui.modal.load"
+                                <a href="#" class="btn btn-info w-full align-right px-[12px] py-0 text-[14px]" data-action-click="ui.modal.load"
                                 data-action-url="<?= Url::to(['/space/create/create']) ?>">
                                     <?= Yii::t('SpaceModule.chooser', '+') ?>
                                 </a>

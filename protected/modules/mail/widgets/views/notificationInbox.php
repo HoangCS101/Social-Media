@@ -18,7 +18,7 @@ $canStartConversation = Yii::$app->user->can(StartConversation::class);
     <a href="#" id="icon-messages" class="text-white" data-toggle="dropdown">
         <i class="fa fa-envelope"></i>
     </a>
-    <span id="badge-messages" style="display:none;" class="label label-danger label-notification"></span>
+    <span id="badge-messages" style="display:none;" class="label label-danger label-notification rounded-[50%] w-4 h-4 absolute top-[-6px] left-[10px]"></span>
     <ul id="dropdown-messages" class="dropdown-menu mail-inbox-messages w-[350px] left-[-140px] top-[50px] p-0">
         <li class="dropdown-header">
             <div class="arrow"></div>
