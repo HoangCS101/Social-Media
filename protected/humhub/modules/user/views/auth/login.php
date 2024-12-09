@@ -22,7 +22,7 @@ $this->pageTitle = Yii::t('UserModule.auth', 'Login');
 
 ?>
 
-<div id="user-auth-login-modal" class="container" style="text-align: center;">
+<!-- <div id="user-auth-login-modal" class="container max-h-creen" style="text-align: center; background-color: white"> -->
 
     <!-- <div class="panel panel-default animated bounceIn" id="login-form"
          style="max-width: 300px; margin: 0 auto 20px; text-align: left;">
@@ -82,7 +82,7 @@ $this->pageTitle = Yii::t('UserModule.auth', 'Login');
         </div>
     </div> -->
 
-    <div class="min-h-screen bg-inherit flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <!-- <div class="min-h-screen bg-inherit flex flex-col justify-center py-12 sm:px-6 lg:px-8">
         <div class="sm:mx-auto sm:w-full sm:max-w-md">
             <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
                 Sign in to your account
@@ -97,57 +97,87 @@ $this->pageTitle = Yii::t('UserModule.auth', 'Login');
 
         <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
             <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-                    <?php $form = ActiveForm::begin(['id' => 'account-login-form', 'enableClientValidation' => false]); ?>
-
-                    <div>
-                        <label for="email" class="block text-left text-sm font-medium text-gray-700">
-                            Email address
-                        </label>
-                        <div class="mt-1">
-                            <?= $form->field($model, 'username')->textInput(['id' => 'login_username', 'placeholder' => $model->getAttributeLabel('username'), 'aria-label' => $model->getAttributeLabel('username')])->label(false); ?>     
-                        </div>
-                    </div>          
-
-                    <div>
-                        <label for="password" class="block text-left text-sm font-medium text-gray-700">
-                            Password
-                        </label>
-                        <div class="mt-1">
-                            <?= $form->field($model, 'password')
-                            ->passwordInput(['id' => 'login_password', 'placeholder' => $model->getAttributeLabel('password'), 'aria-label' => $model->getAttributeLabel('password')])
-                            ->label(false); ?>
-                        </div>
-                    </div>
-
-                    <div class="flex items-top justify-between">
-                        <?= $form->field($model, 'rememberMe')->checkbox(); ?>
-                        <div class="form-group">
-                            <?= Html::a(
-                                Yii::t('UserModule.auth', 'Forgot your password?'),
-                                $passwordRecoveryRoute,
-                                [
-                                    'id' => 'password-recovery-link',
-                                    'class' => 'font-medium text-blue-600 hover:text-blue-500',
-                                    'target' => is_array($passwordRecoveryRoute) ? '_self' : '_blank',
-                                    'data' => [
-                                        'pjax-prevent' => true,
-                                    ]
-                                ]
-                            ) ?>
-                        </div>
-                    </div>
-
-                    <div>
-                       <?= Html::submitButton(Yii::t('UserModule.auth', 'Sign in'), ['id' => 'login-button', 'data-ui-loader' => "", 'class' => 'btn btn-large btn-primary relative w-full justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500']); ?>
-                    </div>
-                    <?php ActiveForm::end(); ?>
+                    
             </div>
         </div>
+    </div> -->
+
+
+<div id="user-auth-login-modal" class="container" style="text-align: center; background-color: white">
+    <div class="font-[sans-serif]">
+      <div class="max-h-screen flex flex-col items-center justify-center">
+        <div class="grid md:grid-cols-2 items-center max-md:gap-8 max-w-6xl max-md:max-w-lg w-full p-4 m-4 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded-md">
+          <div class="md:max-w-md w-full px-4 py-4">
+                <div class="mb-8">
+                    <h3 class="text-gray-800 text-3xl font-extrabold">Sign in</h3>
+                </div>
+
+                <?php $form = ActiveForm::begin(['id' => 'account-login-form', 'enableClientValidation' => false]); ?>
+                    
+                <div>
+                    <label class="text-gray-800 text-xs block mb-2 text-left">Email</label>
+                    <div class="relative flex items-center">
+                        <?= $form->field($model, 'username', ['options' => ['class' => 'w-full form-group']])
+                        ->textInput([
+                        'id' => 'login_username', 
+                        'placeholder' => $model->getAttributeLabel('username'), 
+                        'aria-label' => $model->getAttributeLabel('username'),
+                        'class' => 'w-full text-gray-800 text-sm border-b border-gray-300 focus:border-blue-600 px-2 py-2 outline-none'
+                        ])
+                        ->label(false)?>     
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-gray-800 text-xs block mb-2 text-left">Password</label>
+                    <div class="relative flex items-center">
+                        <?= $form->field($model, 'password', ['options' => ['class' => 'w-full form-group']])
+                            ->passwordInput([
+                                'id' => 'login_password', 
+                                'placeholder' => $model->getAttributeLabel('password'), 
+                                'aria-label' => $model->getAttributeLabel('password'),
+                                'class' => 'w-full text-gray-800 text-sm border-b border-gray-300 focus:border-blue-600 px-2 py-2 outline-none'
+                                ])
+                            ->label(false)?>
+                    </div>
+                </div>
+
+                <div class="flex items-top justify-between">
+                    <?= $form->field($model, 'rememberMe')->checkbox(); ?>
+                    <div class="form-group">
+                        <?= Html::a(
+                            Yii::t('UserModule.auth', 'Forgot your password?'),
+                            $passwordRecoveryRoute,
+                            [
+                                'id' => 'password-recovery-link',
+                                'class' => 'text-blue-600 font-semibold text-sm hover:underline',
+                                'target' => is_array($passwordRecoveryRoute) ? '_self' : '_blank',
+                                'data' => [
+                                    'pjax-prevent' => true,
+                                ]
+                            ]
+                        ) ?>
+                    </div>
+                </div>
+
+
+                <div class="mt-12">
+                    <?= Html::submitButton(Yii::t('UserModule.auth', 'Sign in'), ['id' => 'login-button', 'data-ui-loader' => "", 'class' => 'btn btn-large btn-primary relative w-full shadow-xl py-2.5 px-4 text-sm tracking-wide rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none']); ?>
+                </div>
+              <?php ActiveForm::end(); ?>
+          </div>
+
+          <div class="bg-[#000842] rounded-xl lg:p-8 p-8">
+            <img src="https://readymadeui.com/signin-image.webp" class="w-[80%] h-[80%] object-contain" alt="login-image" />
+          </div>
+        </div>
+      </div>
     </div>
 
 
-    <?= humhub\widgets\LanguageChooser::widget(); ?>
 </div>
+
+
 
 
 <script <?= Html::nonce() ?>>

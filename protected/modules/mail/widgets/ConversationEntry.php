@@ -107,7 +107,7 @@ class ConversationEntry extends JsWidget
         ];
 
         if ($this->isOwnMessage()) {
-            Html::addCssClass($result, 'own');
+            Html::addCssClass($result, 'own justify-end');
         }
 
         if ($this->isPrevEntryFromSameUser()) {

@@ -70,7 +70,7 @@ class FileHandlerButtonDropdown extends Widget
         if (count($this->handlers) !== 0) {
             $output .= '<button type="button" class="btn ' . $this->cssButtonClass . ' dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button>';
 
-            $cssClass = ($this->pullRight) ? 'dropdown-menu dropdown-menu-right' : 'dropdown-menu';
+            $cssClass = ($this->pullRight) ? 'dropdown-menu dropdown-menu-right right-0 left-auto' : 'dropdown-menu';
 
             $output .= Html::beginTag('ul', ['class' => $cssClass]);
             foreach ($this->handlers as $handler) {

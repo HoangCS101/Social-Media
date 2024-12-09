@@ -21,7 +21,9 @@ use humhub\modules\ui\view\components\View;
 
                 <div class="controls controls-header pull-right">
                     <?= HeaderControls::widget(['widgets' => [
-                        [InviteButton::class, ['space' => $container], ['sortOrder' => 10]],
+                        [InviteButton::class, [
+                            'space' => $container
+                        ], ['sortOrder' => 10]],
                         [MembershipButton::class, [
                             'space' => $container,
                             'options' => [

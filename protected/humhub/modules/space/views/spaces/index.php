@@ -40,7 +40,7 @@ CardsAsset::register($this);
 </div>
 
 
-<div class="row cards">
+<div class="grid gap-4 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mb-12">
     <?php if (!$spaces->exists()): ?>
         <div class="col-md-12">
             <div class="panel panel-default">

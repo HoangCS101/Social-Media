@@ -7,6 +7,11 @@ use humhub\modules\space\widgets\Menu;
 use humhub\modules\space\widgets\SpaceContent;
 use humhub\modules\ui\view\components\View;
 use humhub\widgets\FooterMenu;
+use yii\helpers\Url;
+use humhub\modules\space\permissions\CreatePrivateSpace;
+use humhub\modules\space\permissions\CreatePublicSpace;
+
+
 
 /**
  * @var View $this
@@ -17,6 +22,8 @@ use humhub\widgets\FooterMenu;
 /** @var ContentContainerController $context */
 $context = $this->context;
 $space = $context->contentContainer;
+$manager = Yii::$app->user->permissionmanager;
+$canCreateSpace = $manager->can(new CreatePublicSpace()) || $manager->can(new CreatePrivateSpace());
 
 ?>
 <div class="container space-layout-container">
@@ -30,11 +37,18 @@ $space = $context->contentContainer;
 
             <?= Menu::widget(['space' => $space]); ?>
             <div class="ui-block rounded-[20px]">
-                <div class="ui-block-title">
-                    <h6 class="title">Pages You May Like</h6>
-                    <a href="#" class="more"><svg class="olymp-three-dots-icon">
-                            <use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>
-                        </svg></a>
+                <div class="ui-block-title flex justify-between">
+                    <h6 class="title">Spaces</h6>
+                    <?php if ($canCreateSpace) : ?>
+                        <li>
+                            <div class="dropdown-footer">
+                                <a href="#" class="btn btn-info w-full align-right px-[12px] py-0 text-[14px]" data-action-click="ui.modal.load"
+                                data-action-url="<?= Url::to(['/space/create/create']) ?>">
+                                    <?= Yii::t('SpaceModule.chooser', '+') ?>
+                                </a>
+                            </div>
+                        </li>
+                    <?php endif; ?>
                 </div>
                 <ul class="widget w-friend-pages-added notification-list friend-requests">
 
