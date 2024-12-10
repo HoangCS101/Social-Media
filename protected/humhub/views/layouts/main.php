@@ -21,7 +21,7 @@ AppAsset::register($this);
 <head>
     <title><?= strip_tags($this->pageTitle) ?></title>
     <meta charset="<?= Yii::$app->charset ?>">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0"> -->
     <script src="https://cdn.tailwindcss.com"></script>
     <?php $this->head() ?>
     <?= $this->render('head') ?>
@@ -57,6 +57,18 @@ AppAsset::register($this);
         .form-group.has-error::after {
             display: none;
         }
+
+        .checkbox input[type="checkbox"] {
+            opacity: 1;
+            position: absolute;
+            margin: 0;
+            z-index: 100;
+            width: 0;
+            height: 0;
+            overflow: hidden;
+            left: 0;
+            pointer-events: none;
+        }
     </style>
 
 </head>
@@ -67,7 +79,8 @@ AppAsset::register($this);
         <div class="container mx-auto z-10">
 
             <div class="page-title flex ">
-                <img src="https://hcmut.edu.vn/img/nhanDienThuongHieu/01_logobachkhoatoi.png" alt="" class="w-[70px] h-auto">
+                <img src="https://hcmut.edu.vn/img/nhanDienThuongHieu/01_logobachkhoatoi.png" alt=""
+                    class="w-[70px] h-auto">
                 <?= SiteLogo::widget() ?>
             </div>
             <div class="header-content-wrapper min-h-[70px] flex justify-between">

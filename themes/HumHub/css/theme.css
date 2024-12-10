@@ -2140,6 +2140,7 @@ ul.tab-menu-settings li.active > a {
 .checkbox {
     margin-top: 5px !important;
     margin-bottom: 0;
+    /* padding-left: 25px; */
 }
 
 div.required > label:after {
@@ -2155,7 +2156,7 @@ div.required.has-error > label:after {
 .radio label,
 .checkbox label {
     font-weight: bold;
-    padding-left: 0;
+    padding-left: 25px;
 }
 
 .form-control {
@@ -4131,7 +4132,7 @@ ul.files li.file-preview-item .file-fileInfo {
 
 .image-upload-container {
     position: relative;
-    height: 300px;
+    /* height: 300px; */
 }
 
 .image-upload-container .image-upload-buttons {
