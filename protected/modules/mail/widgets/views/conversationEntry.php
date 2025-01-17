@@ -17,6 +17,7 @@ use humhub\modules\user\widgets\Image;
 /* @var $showUser bool */
 /* @var $userColor string */
 /* @var $showDateBadge bool */
+/* @var $isOwnMessage bool */
 ?>
 <?php if ($showDateBadge) : ?>
     <?= ConversationDateBadge::widget(['entry' => $entry]) ?>
@@ -24,8 +25,9 @@ use humhub\modules\user\widgets\Image;
 
 <?= Html::beginTag('div', $options) ?>
 
-<div class="media">
-
+<div class="media <?= $isOwnMessage ? 'justify-end' : '' ?>">
+    <?= ConversationEntryMenu::widget(['entry' => $entry]) ?>
+    
     <?php if ($showUser) : ?>
         <span class="author-image pull-left">
             <?= Image::widget([
@@ -36,18 +38,19 @@ use humhub\modules\user\widgets\Image;
     <?php endif; ?>
 
     <div class="<?= $contentClass ?>">
-        <div class="markdown-render">
+        <div class="markdown-render" style="min-width: 50px; max-width: 300px">
             <?php if ($showUser) : ?>
                 <div class="author-label"
                      style="color:<?= $userColor ?>"><?= Html::encode($entry->user->displayName) ?></div>
             <?php endif; ?>
             <?= RichText::output($entry->content) ?>
+
             <?= ShowFiles::widget(['object' => $entry]) ?>
         </div>
         <?= MessageEntryTime::widget(['entry' => $entry]) ?>
     </div>
-
-    <?= ConversationEntryMenu::widget(['entry' => $entry]) ?>
+    
+    
 </div>
 
 <?= Html::endTag('div') ?>
