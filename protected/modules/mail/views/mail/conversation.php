@@ -33,7 +33,7 @@ use humhub\widgets\Button;
 
     <?php else : ?>
 
-        <div id="mail-conversation-header" class="panel-heading">
+        <div id="mail-conversation-header" class="panel-heading" style="padding: 19px">
             <?= ConversationHeader::widget(['message' => $message]) ?>
         </div>
 

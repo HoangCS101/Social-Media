@@ -12,7 +12,7 @@ MailMessengerAsset::register($this);
 ?>
 <div class="<?= ThemeHelper::isFluid() ? 'container-fluid' : 'container' ?><?= $messageId ? ' mail-conversation-single-message' : '' ?>">
     <div class="row" style="margin-top: -30px">
-        <div class="col-md-4 p-0" style="border-radius: none;">
+        <div class="col-md-4 p-0 bg-white" style="border-radius: none;">
             <?= $this->render('_conversation_sidebar') ?>
         </div>
 
