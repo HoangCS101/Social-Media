@@ -97,7 +97,7 @@ $this->pageTitle = Yii::t('UserModule.auth', 'Login');
 
         <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
             <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-                    
+
             </div>
         </div>
     </div> -->
@@ -113,18 +113,18 @@ $this->pageTitle = Yii::t('UserModule.auth', 'Login');
                 </div>
 
                 <?php $form = ActiveForm::begin(['id' => 'account-login-form', 'enableClientValidation' => false]); ?>
-                    
+
                 <div>
                     <label class="text-gray-800 text-xs block mb-2 text-left">Email</label>
                     <div class="relative flex items-center">
                         <?= $form->field($model, 'username', ['options' => ['class' => 'w-full form-group']])
                         ->textInput([
-                        'id' => 'login_username', 
-                        'placeholder' => $model->getAttributeLabel('username'), 
+                        'id' => 'login_username',
+                        'placeholder' => $model->getAttributeLabel('username'),
                         'aria-label' => $model->getAttributeLabel('username'),
                         'class' => 'w-full text-gray-800 text-sm border-b border-gray-300 focus:border-blue-600 px-2 py-2 outline-none'
                         ])
-                        ->label(false)?>     
+                        ->label(false)?>
                     </div>
                 </div>
 
@@ -133,8 +133,8 @@ $this->pageTitle = Yii::t('UserModule.auth', 'Login');
                     <div class="relative flex items-center">
                         <?= $form->field($model, 'password', ['options' => ['class' => 'w-full form-group']])
                             ->passwordInput([
-                                'id' => 'login_password', 
-                                'placeholder' => $model->getAttributeLabel('password'), 
+                                'id' => 'login_password',
+                                'placeholder' => $model->getAttributeLabel('password'),
                                 'aria-label' => $model->getAttributeLabel('password'),
                                 'class' => 'w-full text-gray-800 text-sm border-b border-gray-300 focus:border-blue-600 px-2 py-2 outline-none'
                                 ])
@@ -168,7 +168,7 @@ $this->pageTitle = Yii::t('UserModule.auth', 'Login');
           </div>
 
           <div class="bg-[#000842] rounded-xl lg:p-8 p-8">
-            <img src="https://readymadeui.com/signin-image.webp" class="w-[80%] h-[80%] object-contain" alt="login-image" />
+            <img src="https://hcmut.edu.vn/img/carouselItem/36986508.jpeg?t=36986508" class="w-[80%] h-[80%] object-contain" alt="login-image" />
           </div>
         </div>
       </div>

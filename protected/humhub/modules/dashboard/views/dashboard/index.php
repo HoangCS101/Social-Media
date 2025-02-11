@@ -684,62 +684,7 @@ $canCreateSpace = $manager->can(new CreatePublicSpace()) || $manager->can(new Cr
             </div>
 
 
-            <div class="ui-block rounded-[20px]">
-                <div class="ui-block-title">
-                    <h6 class="title">Pages You May Like</h6>
-                    <a href="#" class="more"><svg class="olymp-three-dots-icon">
-                            <use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>
-                        </svg></a>
-                </div>
-
-                <!-- W-Friend-Pages-Added -->
-
-                <ul class="widget w-friend-pages-added notification-list friend-requests">
-                    <?php
-                    foreach ($spaces as $space) { ?>
-                        <li class="inline-items">
-                            <div class="author-thumb pt-[10px]">
-                                <?php echo $space->getProfileImage()->render(30, ['class' => 'space-avatar', 'id' => 'space-account-image']);
-                                ?>
-                            </div>
-                            <div class="notification-event">
-                                <a href="http://localhost/social-media/index.php?r=space%2Fspace&cguid=<?= $space->guid ?>"
-                                    class="h6 notification-friend"> <?php echo $space->name ?> </a>
-                                <span class="chat-message-item"> <?php echo $space->description ?> </span>
-                            </div>
-                            <span class="notification-icon" data-toggle="tooltip" data-placement="top"
-                                data-original-title="ADD TO YOUR FAVS">
-                                <a href="#">
-                                    <svg class="olymp-star-icon">
-                                        <use xlink:href="svg-icons/sprites/icons.svg#olymp-star-icon"></use>
-                                    </svg>
-                                </a>
-                            </span>
-
-                        </li>
-                        <?php
-                    }
-                    ?>
-                    <li class="inline-items">
-                        <a href="http://localhost/social-media/index.php?r=space%2Fspaces" class="text-center opacity-80">
-                            More Spaces
-                        </a>
-
-                    </li>
-
-                </ul>
-
-                <!-- .. end W-Friend-Pages-Added -->
-            </div>
-        </aside>
-
-        <!-- ... end Left Sidebar -->
-
-
-        <!-- Right Sidebar -->
-
-        <aside class="col col-xl-3 order-xl-3 col-lg-6 order-lg-3 col-md-6 col-sm-12 col-12">
-
+ 
             <div class="ui-block rounded-[20px]">
                 <div class="ui-block-title">
                     <h6 class="title text-[14px] text-black">Friend Suggestions</h6>
@@ -793,16 +738,20 @@ $canCreateSpace = $manager->can(new CreatePublicSpace()) || $manager->can(new Cr
                                     <span class="without-text">
                                         Follow
                                     </span>
-                                </a>
-                            </span>
+                                    
+                                </a> -->
+                            <?= PeopleActionButtons::widget([
+                                'user' => $user,
+                                'template' => '<div class="ml-[5px] float-right">{buttons}</div>',
+                            ]); ?>
                         </li>
                         <?php
                     }
                     ?>
                     <li class="inline-items text-center hover:pointer">
                         <div class="text-[16px] text-black font-semibold items-center ">
-                            <a class="opacity-60 text-[16px] text-black font-bold"
-                                href="index.php?r=user%2Fpeople">More people</a>
+                            <a class="opacity-60 text-[12px] text-black font-bold" href="index.php?r=user%2Fpeople">More
+                                people</a>
                         </div>
                     </li>
                 </ul>
