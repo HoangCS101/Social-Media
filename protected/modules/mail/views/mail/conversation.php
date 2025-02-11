@@ -23,7 +23,7 @@ use humhub\widgets\Button;
 /* @var $fileHandlers BaseFileHandler[] */
 
 ?>
-<div class="panel panel-default">
+<div class="panel panel-default rounded-none">
 
     <?php if ($message === null) : ?>
 
@@ -39,7 +39,7 @@ use humhub\widgets\Button;
 
         <?= ConversationTags::widget(['message' => $message]) ?>
 
-        <div class="panel-body">
+        <div class="panel-body" style="background-color: #f3f3f3 !important">
 
             <div class="media-list conversation-entry-list">
                 <?= Messages::widget(['message' => $message]) ?>

@@ -24,33 +24,41 @@ use humhub\modules\user\widgets\Image;
 <?php endif; ?>
 
 <?= Html::beginTag('div', $options) ?>
-
-<div class="media <?= $isOwnMessage ? 'justify-end' : '' ?>">
-    <?= ConversationEntryMenu::widget(['entry' => $entry]) ?>
-    
+<div class="d-flex flex-row">
     <?php if ($showUser) : ?>
-        <span class="author-image pull-left">
+        <span class="author-image pull-left mr-2">
             <?= Image::widget([
                 'user' => $entry->user,
                 'width' => 30,
             ]) ?>
         </span>
     <?php endif; ?>
+    <div class="media flex-column pt-0 mt-0">
+        <div class="d-flex flex-row <?= $isOwnMessage ? 'justify-end' : '' ?>">
+            <?= ConversationEntryMenu::widget(['entry' => $entry]) ?>
+            
+            <div class="<?= $contentClass ?>" style="background-color: <?= $showUser? '#fff': '#234dffcc'?> !important">
+                <div class="markdown-render" style="min-width: 50px; max-width: 300px;">
+                    <?php if (!$isOwnMessage) : ?>
+                        <div class="author-label" style="color: <?= Html::encode($userColor) ?>">
+                            <?= Html::encode($entry->user->displayName) ?>
+                        </div>
+                        <p style="color: #000"><?= Html::encode($entry->content) ?></p>
+                    <?php else : ?>
+                        <p style="color: #fff"><?= Html::encode($entry->content) ?></p>
+                    <?php endif; ?>
 
-    <div class="<?= $contentClass ?>">
-        <div class="markdown-render" style="min-width: 50px; max-width: 300px">
-            <?php if ($showUser) : ?>
-                <div class="author-label"
-                     style="color:<?= $userColor ?>"><?= Html::encode($entry->user->displayName) ?></div>
-            <?php endif; ?>
-            <?= RichText::output($entry->content) ?>
-
-            <?= ShowFiles::widget(['object' => $entry]) ?>
+                    <?= ShowFiles::widget(['object' => $entry]) ?>
+                </div>
+            </div>
         </div>
-        <?= MessageEntryTime::widget(['entry' => $entry]) ?>
+        <?php if ($isOwnMessage) : ?>
+            <?= MessageEntryTime::widget(['entry' => $entry, 'options' => ['class' => 'ml-auto']]) ?>
+        <?php else : ?>
+            <?= MessageEntryTime::widget(['entry' => $entry, 'options' => ['class' => 'mr-auto']]) ?>
+        <?php endif; ?>
     </div>
-    
-    
 </div>
+
 
 <?= Html::endTag('div') ?>

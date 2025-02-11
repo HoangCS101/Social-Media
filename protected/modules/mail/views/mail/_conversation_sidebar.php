@@ -11,9 +11,9 @@ $canStartConversation = Yii::$app->user->can(StartConversation::class);
 
 $filterModel = new InboxFilterForm();
 ?>
-<div id="mail-conversation-overview" class="panel panel-default mail-inbox-messages">
-    <div class="panel-heading">
-        <a data-action-click="mail.inbox.toggleInbox">
+<div id="mail-conversation-overview" class="panel panel-default mail-inbox-messages rounded-none">
+    <div class="panel-heading rounded-none">
+        <a data-action-click="mail.inbox.toggleInbox" style="font-size:25px">
             <span class="visible-xs-inline"><?=Icon::get('bars')?></span> <?= Yii::t('MailModule.views_mail_index', 'Conversations') ?>
         </a>
         <?php if ($canStartConversation) : ?>
