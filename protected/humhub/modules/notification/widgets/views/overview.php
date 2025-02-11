@@ -23,7 +23,7 @@ use yii\helpers\Html;
 
 </div>
 <!-- container for ajax response -->
-<ul id="dropdown-notifications" class="dropdown-menu w-[360px] top-[50px] left-[-100px] z-[1000] p-0">
+<ul id="dropdown-notifications" class="dropdown-menu w-[400px] top-[50px] left-[-100px] z-[1000] p-0">
     <div class="mCustomScrollbar" data-mcs-theme="dark">
         <div class="ui-block-title ui-block-title-small text-[10px] font-semibold">
             <div class="arrow"></div> <?= Yii::t('NotificationModule.base', 'Notifications'); ?>

@@ -48,8 +48,6 @@ $canCreateSpace = $manager->can(new CreatePublicSpace()) || $manager->can(new Cr
         </main>
 
         <!-- ... end Main Content -->
-
-
         <!-- Left Sidebar -->
 
         <aside class="col col-xl-3 order-xl-1 col-lg-6 order-lg-2 col-md-6 col-sm-12 col-12">
@@ -777,9 +775,9 @@ $canCreateSpace = $manager->can(new CreatePublicSpace()) || $manager->can(new Cr
                         <?php if ($canCreateSpace) : ?>
                         <li>
                             <div class="dropdown-footer">
-                                <a href="#" class="btn btn-info pr-3 pl-3x" data-action-click="ui.modal.load"
+                                <a href="#" class="btn btn-info py-[1px] px-3 text-[12px] bg-[]" data-action-click="ui.modal.load"
                                 data-action-url="<?= Url::to(['/space/create/create']) ?>">
-                                    <i class="fa fa-plus m-0"></i>
+                                    <i class="fa fa-plus m-0 text-[10px]"></i>
                                 </a>
                             </div>
                         </li>
