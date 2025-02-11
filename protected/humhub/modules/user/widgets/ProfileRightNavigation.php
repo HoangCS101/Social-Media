@@ -63,7 +63,7 @@ class ProfileRightNavigation extends ProfileHeaderNavigation
             'url' => $this->user->createUrl('/user/profile/about'),
             'sortOrder' => 300,
             'isActive' => MenuLink::isActiveState('user', 'profile', 'videos'),
-            'isVisible' => $this->user->permissionManager->can(ViewAboutPage::class),
+            // 'isVisible' => $this->user->permissionManager->can(ViewAboutPage::class),
         ]));
 
         $this->addEntry(new MenuLink([
@@ -72,7 +72,7 @@ class ProfileRightNavigation extends ProfileHeaderNavigation
             'url' => $this->user->createUrl('/user/account/edit'),
             'sortOrder' => 300,
             'isActive' => MenuLink::isActiveState('user', 'account', 'edit'),
-            'isVisible' => $this->user->permissionManager->can(ViewAboutPage::class),
+            // 'isVisible' => $this->user->permissionManager->can(ViewAboutPage::class),
         ]));
 
         

@@ -65,6 +65,7 @@ class ConversationEntry extends JsWidget
             'userColor' => $showUser ? $this->getUserColor() : null,
             'showDateBadge' => $this->showDateBadge(),
             'options' => $this->getOptions(),
+            'isOwnMessage' => $this->isOwnMessage()
         ]);
     }
 
@@ -103,7 +104,7 @@ class ConversationEntry extends JsWidget
     public function getAttributes()
     {
         $result = [
-            'class' => 'media mail-conversation-entry',
+            'class' => 'media mail-conversation-entry pr-4',
         ];
 
         if ($this->isOwnMessage()) {

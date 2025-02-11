@@ -72,7 +72,7 @@ class ProfileLeftNavigation extends ProfileHeaderNavigation
             'url' => $this->user->createUrl('/user/profile/people'),
             'sortOrder' => 300,
             'isActive' => MenuLink::isActiveState('user', 'profile', 'friend'),
-            'isVisible' => $this->user->permissionManager->can(ViewAboutPage::class),
+            // 'isVisible' => $this->user->permissionManager->can(ViewAboutPage::class),
         ]));
 
         parent::init();
