@@ -22,7 +22,6 @@ use humhub\widgets\ModalDialog;
     'id' => 'mail-create',
     'closable' => false,
 ]) ?>
-<div class="modal-content">
     <?php $form = ActiveForm::begin(['enableClientValidation' => false, 'acknowledge' => true]) ?>
 
     <div class="modal-header">
@@ -83,8 +82,6 @@ use humhub\widgets\ModalDialog;
     </div>
 
     <?php ActiveForm::end(); ?>
-</div>
-
 <?php ModalDialog::end() ?>
 
 
