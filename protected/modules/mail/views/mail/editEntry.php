@@ -57,12 +57,13 @@ use yii\bootstrap\ActiveForm;
 <div class="modal-footer">
 
     <div class="row">
+        <div class="col-md-4 pl-2 pr-2">
             <?= Button::save(Yii::t('base', 'Save'))->submit()->action('mail.conversation.submitEditEntry')->options(['data-entry-id' => $entry->id]) ?>
-        <div class="col-md-4"></div>
-        <div class="col-md-4">
+        </div>
+        <div class="col-md-4 pl-2 pr-2">
             <?= ModalButton::cancel() ?>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 pl-2 pr-2">
             <?= Button::danger(Yii::t('base', 'Delete'))->right()->options(['data-entry-id' => $entry->id])
                 ->action('mail.conversation.deleteEntry')
                 ->confirm(Yii::t('MailModule.views_mail_show', '<strong>Confirm</strong> message deletion'),
