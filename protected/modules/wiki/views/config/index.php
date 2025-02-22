@@ -16,6 +16,7 @@ use yii\bootstrap\ActiveForm;
     <div class="panel-heading"><?= Yii::t('WikiModule.base', '<strong>Wiki</strong> module configuration') ?></div>
     <div class="panel-body">
         <?php $form = ActiveForm::begin() ?>
+        cdscs
 
         <?= $form->field($model, 'contentHiddenDefault')->widget(ContentHiddenCheckbox::class, [
             'type' => ContentHiddenCheckbox::TYPE_GLOBAL,

@@ -1,8 +1,8 @@
 {
-    "id": "wiki",
-    "name": "Wiki",
-    "description": "Create and edit pages with this powerful tool. Build a collaborative knowledge base, view and share information with your colleagues.",
-    "keywords": ["wiki"],
+    "id": "Forum",
+    "name": "Forum",
+    "description": "Create and participate in conversations in Spaces",
+    "keywords": ["Forum"],
     "version": "2.3.6",
     "humhub": {
         "minVersion": "1.16.2"

@@ -36,6 +36,8 @@ $canCreateSpace = $manager->can(new CreatePublicSpace()) || $manager->can(new Cr
         <div class="col-md-2 layout-nav-container">
 
             <?= Menu::widget(['space' => $space]); ?>
+
+            
             <div class="ui-block rounded-[20px]">
                 <div class="ui-block-title flex justify-between">
                     <h6 class="title">Spaces</h6>

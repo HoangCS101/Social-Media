@@ -28,7 +28,7 @@ class Menu extends LeftNavigation
     public $space;
 
     /** @var Space */
-    public $id = 'space-main-menu';
+    public $id = 'space-main-menu aaa';
 
     /**
      * @inheritdoc
