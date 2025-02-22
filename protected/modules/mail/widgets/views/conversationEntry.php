@@ -37,15 +37,22 @@ use humhub\modules\user\widgets\Image;
         <div class="d-flex flex-row <?= $isOwnMessage ? 'justify-end' : '' ?>">
             <?= ConversationEntryMenu::widget(['entry' => $entry]) ?>
             
-            <div class="<?= $contentClass ?>" style="background-color: <?= $showUser? '#fff': '#234dffcc'?> !important">
-                <div class="markdown-render" style="min-width: 50px; max-width: 300px;">
+            <div 
+                class="<?= $contentClass ?>" 
+                style="
+                    background-color: <?= $showUser? '#fff': '#234dffcc'?> !important; 
+                    min-width: 15px; 
+                    max-width: 500px !important;
+                "
+            >
+                <div class="markdown-render" style="min-width: 15px; max-width: 500px;">
                     <?php if (!$isOwnMessage) : ?>
                         <div class="author-label" style="color: <?= Html::encode($userColor) ?>">
                             <?= Html::encode($entry->user->displayName) ?>
                         </div>
-                        <p style="color: #000"><?= Html::encode($entry->content) ?></p>
+                        <p style="color: #000; width: auto"><?= Html::encode($entry->content) ?></p>
                     <?php else : ?>
-                        <p style="color: #fff"><?= Html::encode($entry->content) ?></p>
+                        <p style="color: #fff; width: auto"><?= Html::encode($entry->content) ?></p>
                     <?php endif; ?>
 
                     <?= ShowFiles::widget(['object' => $entry]) ?>
