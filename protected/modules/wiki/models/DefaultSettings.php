@@ -54,7 +54,7 @@ class DefaultSettings extends Model
 
         $this->module_label = $this->getSettings()->get(
             self::SETTING_MODULE_LABEL,
-            Yii::t('WikiModule.base', 'Wiki'),
+            Yii::t('WikiModule.base', 'Forum'),
         );
 
         $this->contentHiddenDefault = $this->getSettings()->get(

@@ -23,7 +23,7 @@ use humhub\widgets\Button;
 /* @var $options array */
 ?>
 <?= Html::beginTag('div', $options) ?>
-    <div>
+    <div class="py-2 text-[14px] font-semibold">
         <?= Button::asLink()->icon('arrows')->cssClass('wiki-page-control drag-icon')->visible($item && $showDrag) ?>
         <?= ($icon ? Icon::get($icon) . ' ' : '') . Html::tag($url ? 'a' : 'span', Html::encode($title), ['href' => $url, 'class' => 'page-title-text']) ?>
         <?php if ($titleInfo) : ?>

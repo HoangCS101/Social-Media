@@ -36,6 +36,7 @@ $settings = new DefaultSettings(['contentContainer' => $contentContainer]);
             <?php WikiContent::begin(['cssClass' => 'wiki-page-content']) ?>
             <div class="wiki-page-content-header">
                 <h3><?= Html::encode($settings->module_label) ?></h3>
+                
                 <?= WikiSearchForm::widget(['contentContainer' => $contentContainer, 'cssClass' => 'pull-left']) ?>
                 <div class="wiki-page-content-header-actions">
                     <?= Button::info(Yii::t('WikiModule.base', 'Last edited'))->sm()->link(Url::toLastEdited($contentContainer))->cssClass(Helper::isEnterpriseTheme() ? 'hidden-lg' : '') ?>
@@ -44,7 +45,8 @@ $settings = new DefaultSettings(['contentContainer' => $contentContainer]);
                 <div class="clearfix"></div>
             </div>
 
-            <?= CategoryListView::widget(['contentContainer' => $contentContainer]) ?>
+            
+            <?= CategoryListView::widget(config: ['contentContainer' => $contentContainer]) ?>
 
             <?php WikiContent::end() ?>
         </div>
