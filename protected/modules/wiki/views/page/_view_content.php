@@ -31,9 +31,9 @@ use humhub\modules\wiki\helpers\Url;
 <div class="flex flex-wrap gap-4">
     <div>
 
-    <div class="bg-white shadow-lg rounded-lg p-6 flex flex-col items-center space-y-4">
+    <div class="bg-white p-6 flex flex-col items-center space-y-4">
         <!-- Upvote Button -->
-        <button id="upvote" class="w-14 h-14 flex items-center justify-center rounded-full border-2 border-gray-400 text-gray-600 hover:bg-green-500 hover:text-white transition duration-300 text-2xl">
+        <button id="upvote" class="w-10 h-10 flex items-center justify-center rounded-full border-2 border-gray-400 text-gray-600 hover:bg-green-500 hover:text-white transition duration-300 text-2xl">
             ▲
         </button>
 
@@ -41,7 +41,7 @@ use humhub\modules\wiki\helpers\Url;
         <p id="vote-count" class="text-4xl font-bold text-gray-800 transition duration-300">0</p>
 
         <!-- Downvote Button -->
-        <button id="downvote" class="w-14 h-14 flex items-center justify-center rounded-full border-2 border-gray-400 text-gray-600 hover:bg-red-500 hover:text-white transition duration-300 text-2xl">
+        <button id="downvote" class="w-10 h-10 flex items-center justify-center rounded-full border-2 border-gray-400 text-gray-600 hover:bg-red-500 hover:text-white transition duration-300 text-2xl">
             ▼
         </button>
     </div>
@@ -52,7 +52,7 @@ use humhub\modules\wiki\helpers\Url;
         <?= $this->render('_view_category_index', ['page' => $page]) ?>
 
         <?php if (!empty($content)): ?>
-            <div class=" min-h-[212px] markdown-render bg-white rounded-lg p-4  transition-all duration-300 ease-in-out hover:shadow-xl border-l-4 border-gray-200 text-lg leading-relaxed"
+            <div class=" min-h-[212px] markdown-render bg-white rounded-lg p-4  transition-all duration-300 ease-in-out border-l-4 border-gray-200 text-lg leading-relaxed"
                 data-ui-widget="wiki.Page" <?= $canEdit ? ' data-edit-url="' . Url::toWikiEdit($page) . '"' : '' ?>
                 data-ui-init style="display:none">
                 <?= WikiRichText::output($content, ['id' => 'wiki-page-richtext',]) ?>
@@ -67,7 +67,7 @@ use humhub\modules\wiki\helpers\Url;
                     <?= Button::info(Yii::t('WikiModule.base', 'Edit page'))
                         ->link(Url::toWikiEdit($page))
                         ->icon('fa-pencil-square-o')
-                        ->addClass('bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-bold py-4 px-8 rounded-lg shadow-lg transition-all duration-300 ease-in-out text-xl')
+                        ->addClass('bg-gradient-to-r from-green-400 to-green-600 text-white font-bold py-4 px-8 rounded-lg shadow-lg transition-all duration-300 ease-in-out text-xl')
                         ?>
                 </div>
             <?php endif; ?>

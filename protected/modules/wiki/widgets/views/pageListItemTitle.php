@@ -11,12 +11,6 @@ use humhub\modules\wiki\models\HierarchyItem;
 use humhub\modules\wiki\services\HierarchyListService;
 use humhub\widgets\Button;
 
-
-use humhub\modules\wiki\helpers\Url;
-use humhub\modules\wiki\models\WikiPage;
-
-use humhub\widgets\Link;
-use humhub\widgets\TimeAgo;
 /* @var $service HierarchyListService */
 /* @var $item HierarchyItem */
 /* @var $icon string */
@@ -30,11 +24,6 @@ use humhub\widgets\TimeAgo;
 ?>
 
 <?= Html::beginTag('div', $options) ?>
-<?php if (isset($wikiPage) && $wikiPage instanceof WikiPage) {
-    echo "Wiki Page Title: " . $wikiPage->title;
-    echo "Updated By: " . $wikiPage->content->updatedBy->displayName;
-}
-?>
     <div class="py-2 text-[14px] font-semibold">
         <?= Button::asLink()->icon('arrows')->cssClass('wiki-page-control drag-icon')->visible($item && $showDrag) ?>
         <?= ($icon ? Icon::get($icon) . ' ' : '') . Html::tag($url ? 'a' : 'span', Html::encode($title), ['href' => $url, 'class' => 'page-title-text']) ?>
