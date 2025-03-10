@@ -21,14 +21,11 @@ use humhub\modules\wiki\models\WikiPageRevision;
 Assets::register($this);
 ?>
 <?= $this->render('_view_header', ['page' => $page, 'revision' => $revision, 'displayTitle' => false]) ?>
-
 <div class="wiki-page-body">
     <?= $this->render('_view_content', ['page' => $page, 'canEdit' => $canEdit, 'content' => $content]) ?>
 </div>
-
 <hr>
-
-<div class="wall-entry-controls social-controls">
+<div class="wall-entry-controls social-controls pt-2 pl-2 mb-0 text-[14px] font-comment-forum">
     <?= ContentObjectLinks::widget([
         'object' => $page,
         'seperator' => '&middot;',

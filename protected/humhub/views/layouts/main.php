@@ -69,6 +69,10 @@ AppAsset::register($this);
             left: 0;
             pointer-events: none;
         }
+        .layout-content-container .wiki-content .social-controls a
+        {
+            font-size: 14px;
+        }
     </style>
 
 </head>

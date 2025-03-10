@@ -235,7 +235,7 @@
 }
 .layout-content-container .wiki-content .social-controls,
 .layout-content-container .wiki-content .social-controls a {
-  font-size: 11px;
+  font-size: 14px;
   color: var(--text-color-soft2);
   margin-bottom: 10px;
 }

@@ -26,7 +26,7 @@ use yii\web\View;
         <?php endforeach; ?>
     <?php else : ?>
         <tr>
-            <td><?= Yii::t('WikiModule.base', 'No wiki pages found.') ?></td>
+            <td><?= Yii::t('WikiModule.base', 'No topic pages found.') ?></td>
         </tr>
     <?php endif; ?>
     </tbody>
