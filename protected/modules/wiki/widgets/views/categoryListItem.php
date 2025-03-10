@@ -28,9 +28,9 @@ use humhub\modules\wiki\widgets\PageListItemTitle;
 /* @var $maxLevel int */
 /* @var $displaySubPages bool */
 ?>
+
 <li class="my-2 bg-gray-100 :hover bg-red-500500 wiki-category-list-item<?= $service->isCurrentItem($item) ? ' wiki-list-item-selected' : '' ?>"
     <?php if ($item): ?> data-page-id="<?= $item->id ?>" <?php endif; ?>>
-
     <?php if (!$hideTitle): ?>
         <?= PageListItemTitle::widget([
             'service' => $service,
@@ -46,6 +46,7 @@ use humhub\modules\wiki\widgets\PageListItemTitle;
         <ul class="wiki-page-list" <?php if ($item && $item->isFolded): ?> style="display:none" <?php endif; ?>>
             <?php foreach ($subItems as $item): ?>
                 <li class="wiki-category-list-item<?= $service->isCurrentItem($item) ? ' wiki-list-item-selected' : '' ?>"
+                fwef
                     data-page-id="<?= $item->id ?>">
                     <?= PageListItemTitle::widget([
                         'service' => $service,
@@ -77,7 +78,6 @@ use humhub\modules\wiki\widgets\PageListItemTitle;
                 </li>
             <?php endforeach; ?>
         </ul>
-
 
     <?php endif; ?>
 </li>

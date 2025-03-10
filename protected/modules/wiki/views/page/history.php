@@ -32,7 +32,6 @@ if ($isEnabledDiffTool) {
 <div class="panel panel-default">
     <div class="panel-body">
         <div class="row">
-
             <?php WikiContent::begin(['cssClass' => 'wiki-page-content']) ?>
 
             <div class="wiki-headline">
