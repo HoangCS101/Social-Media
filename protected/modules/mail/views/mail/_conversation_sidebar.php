@@ -25,9 +25,26 @@ $filterModel = new InboxFilterForm();
         </div>
 
     </div>
+    <div class="w-full bg-white shadow-md rounded-lg">
+        <!-- Tabs -->
+        <div id="tab-indicator" class="absolute bottom-0 h-1 bg-blue-600 transition-all duration-300"></div>
+        <div class="flex border-b">
+            <button class="tab-button w-50 py-2 text-center border-b-2 border-transparent focus:outline-none active" data-tab="normalChatTab">Normal Chat</button>
+            <button class="tab-button w-50 py-2 text-center border-b-2 border-transparent focus:outline-none" data-tab="secureChatTab">Secure Chat</button>
+        </div>
 
-    <div class="inbox-wrapper">
-        <hr style="margin:0">
-        <?= ConversationInbox::widget(['filter' => $filterModel]) ?>
+        <!-- Tab Content -->
+        <div>
+            <div id="normalChatTab" class="tab-content">
+                <div class="inbox-wrapper">
+                    <hr style="margin:0">
+                    <?= ConversationInbox::widget(['filter' => $filterModel]) ?>
+                </div>
+            </div>
+            <div id="secureChatTab" class="tab-content">
+                
+            </div>
+        </div>
     </div>
+    
 </div>

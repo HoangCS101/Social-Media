@@ -59,7 +59,6 @@ use humhub\widgets\Label;
                 <?php $form = ActiveForm::begin(['enableClientValidation' => false, 'acknowledge' => true]) ?>
 
                 <div class="content-create-input-group">
-                    <?= $form->field($replyForm, 'enable_secure_chat')->checkbox() ?>
 
                     <?= $form->field($replyForm, 'message')->widget(MailRichtextEditor::class, [
                         'id' => 'reply-' . time(),
