@@ -64,10 +64,6 @@ use humhub\widgets\Label;
                         'id' => 'reply-' . time(),
                         'layout' => AbstractRichTextEditor::LAYOUT_INLINE,
                     ])->label(false) ?>
-                    <?= $form->field($replyForm, 'message')->widget(MailRichtextEditor::class, [
-                        'id' => 'reply-' . time(),
-                        'layout' => AbstractRichTextEditor::LAYOUT_INLINE,
-                    ])->label(false) ?>
 
                     <div class="upload-buttons">
                         <?php $uploadButton = UploadButton::widget([

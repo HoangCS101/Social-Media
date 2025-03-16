@@ -128,52 +128,47 @@ class CreateMessage extends Model
 
     public function save()
     {
-        if(!$this->getSecure()) {
-            $transaction = Message::getDb()->beginTransaction();
+        $transaction = Message::getDb()->beginTransaction();
 
-            try {
-                if (!$this->validate()) {
-                    $transaction->rollBack();
-                    return false;
-                }
-
-                if (!$this->saveMessage()) {
-                    $transaction->rollBack();
-                    return false;
-                }
-
-                if (!$this->saveRecipients()) {
-                    $transaction->rollBack();
-                    return false;
-                }
-
-                if (!$this->saveMessageEntry()) {
-                    $transaction->rollBack();
-                    return false;
-                }
-
-                if (!$this->saveOriginatorUserMessage()) {
-                    $transaction->rollBack();
-                    return false;
-                }
-
-                $this->saveTags();
-
-                (new Config())->incrementConversationCount(Yii::$app->user->getIdentity());
-
-                $transaction->commit();
-            } catch (\Exception $e) {
+        try {
+            if (!$this->validate()) {
                 $transaction->rollBack();
-                throw $e;
-            } catch (\Throwable $e) {
-                $transaction->rollBack();
-                throw $e;
+                return false;
             }
+
+            if (!$this->saveMessage()) {
+                $transaction->rollBack();
+                return false;
+            }
+
+            if (!$this->saveRecipients()) {
+                $transaction->rollBack();
+                return false;
+            }
+
+            if (!$this->saveMessageEntry()) {
+                $transaction->rollBack();
+                return false;
+            }
+
+            if (!$this->saveOriginatorUserMessage()) {
+                $transaction->rollBack();
+                return false;
+            }
+
+            $this->saveTags();
+
+            (new Config())->incrementConversationCount(Yii::$app->user->getIdentity());
+
+            $transaction->commit();
+        } catch (\Exception $e) {
+            $transaction->rollBack();
+            throw $e;
+        } catch (\Throwable $e) {
+            $transaction->rollBack();
+            throw $e;
         }
-        else {
-            
-        }
-        
+    
 
         return true;
     }
@@ -207,10 +202,6 @@ class CreateMessage extends Model
         return $this->messageInstance->save();
     }
 
-    private function getSecure()
-    {
-        return $this->checkSecureChat;
-    }
 
     /**
      * Returns an Array with selected recipients

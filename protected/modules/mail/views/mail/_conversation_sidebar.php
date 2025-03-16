@@ -2,14 +2,16 @@
 
 use humhub\modules\mail\models\forms\InboxFilterForm;
 use humhub\modules\mail\permissions\StartConversation;
-use humhub\modules\mail\widgets\ConversationInbox;
 use humhub\modules\mail\widgets\NewMessageButton;
 use humhub\modules\mail\widgets\InboxFilter;
+use humhub\modules\mail\widgets\SecureChatMenu;
 use humhub\modules\ui\icon\widgets\Icon;
+
 
 $canStartConversation = Yii::$app->user->can(StartConversation::class);
 
 $filterModel = new InboxFilterForm();
+// $type = Yii::$app->request->get('type', 'normal');
 ?>
 <div id="mail-conversation-overview" class="panel panel-default mail-inbox-messages rounded-none">
     <div class="panel-heading rounded-none">
@@ -25,25 +27,15 @@ $filterModel = new InboxFilterForm();
         </div>
 
     </div>
-    <div class="w-full bg-white shadow-md rounded-lg">
-        <!-- Tabs -->
-        <div id="tab-indicator" class="absolute bottom-0 h-1 bg-blue-600 transition-all duration-300"></div>
-        <div class="flex border-b">
-            <button class="tab-button w-50 py-2 text-center border-b-2 border-transparent focus:outline-none active" data-tab="normalChatTab">Normal Chat</button>
-            <button class="tab-button w-50 py-2 text-center border-b-2 border-transparent focus:outline-none" data-tab="secureChatTab">Secure Chat</button>
-        </div>
+    <div class="w-full bg-white shadow-md rounded-lg h-[80vh]">
 
-        <!-- Tab Content -->
-        <div>
-            <div id="normalChatTab" class="tab-content">
-                <div class="inbox-wrapper">
-                    <hr style="margin:0">
-                    <?= ConversationInbox::widget(['filter' => $filterModel]) ?>
-                </div>
-            </div>
-            <div id="secureChatTab" class="tab-content">
-                
-            </div>
+        <?= SecureChatMenu::widget([
+            'filter' => $filterModel,
+            'options' => ['class' => '[&>ul]:pb-0 [&>li]:w-1/2']
+        ]); ?>
+
+        <div id="inbox-list-container">
+            <?= $this->render('_inboxList', ['type' => $type, 'filter' => $filterModel]); ?>
         </div>
     </div>
     

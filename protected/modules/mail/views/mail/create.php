@@ -34,8 +34,9 @@ use humhub\widgets\ModalDialog;
     <div class="modal-body">
         <?= $form->field($model, 'secure')->checkbox([
             'label' => Yii::t('MailModule.views_mail_create', 'Enable secure chat'),
-            'uncheck' => false, // Giá trị khi checkbox không được chọn
-            'value' => true, // Giá trị khi checkbox được chọn
+            'uncheck' => false, 
+            'value' => true,
+            'default' => false
         ]) ?>
 
         <?= $form->field($model, 'recipient')->widget(UserPickerField::class,

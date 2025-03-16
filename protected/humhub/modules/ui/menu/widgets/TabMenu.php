@@ -24,7 +24,7 @@ abstract class TabMenu extends Menu
     public $template = '@ui/menu/widgets/views/tab-menu.php';
 
     /**
-     * @var bool whether or not to skip rendering if only one menu link is given
+     * @var bool whether or     not to skip rendering if only one menu link is given
      */
     public $renderSingleTab = false;
 
