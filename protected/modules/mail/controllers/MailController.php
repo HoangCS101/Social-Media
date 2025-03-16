@@ -338,7 +338,7 @@ class MailController extends Controller
         }
 
         if ($model->load(Yii::$app->request->post())) {
-            if($secure) {
+            if($model->secure) {
                 $data = [
                     'recipient' => $userGuid,
                     'title' => $model->title,
