@@ -17,7 +17,7 @@ use yii\helpers\Html;
 </a>
 
 <span id="badge-notifications" style="display:none;"
-    class="label label-danger label-notifications relative top-[-10px] rounded-[50%] w-4 h-4"></span>
+    class="label label-danger label-notifications relative top-[-6px] rounded-[50%] w-4 h-4"></span>
 
 <div class="p-2">
 

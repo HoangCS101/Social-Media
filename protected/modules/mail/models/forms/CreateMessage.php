@@ -18,6 +18,7 @@ use yii\helpers\Html;
  */
 class CreateMessage extends Model
 {
+    public $secure = false;
     public $recipient;
     public $recipientUser;
     public $message;
@@ -46,6 +47,7 @@ class CreateMessage extends Model
      */
     public $tags = [];
 
+
     /**
      * Declares the validation rules.
      */
@@ -55,6 +57,7 @@ class CreateMessage extends Model
             [['message', 'recipient', 'title'], 'required'],
             [['files', 'tags'], 'safe'],
             ['recipient', 'checkRecipient'],
+            [['secure'], 'boolean'],
         ];
     }
 
@@ -66,6 +69,7 @@ class CreateMessage extends Model
     public function attributeLabels()
     {
         return [
+            'secure' => Yii::t('MailModule.forms_CreateMessageForm', 'Secure'),
             'recipient' => Yii::t('MailModule.forms_CreateMessageForm', 'Recipient'),
             'tags' => Yii::t('MailModule.forms_CreateMessageForm', 'Tags'),
             'title' => Yii::t('MailModule.forms_CreateMessageForm', 'Subject'),
@@ -164,6 +168,7 @@ class CreateMessage extends Model
             $transaction->rollBack();
             throw $e;
         }
+    
 
         return true;
     }
@@ -196,6 +201,7 @@ class CreateMessage extends Model
 
         return $this->messageInstance->save();
     }
+
 
     /**
      * Returns an Array with selected recipients

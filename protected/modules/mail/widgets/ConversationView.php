@@ -23,6 +23,7 @@ class ConversationView extends JsWidget
      */
     public $id = 'mail-conversation-root';
 
+
     /**
      * @inheritdoc
      */
@@ -32,10 +33,13 @@ class ConversationView extends JsWidget
      * @var int
      */
     public $messageId;
+    public $messageType;
+
 
     public function getData()
     {
         return [
+            'message-type' => $this->messageType,
             'message-id' => $this->messageId,
             'load-message-url' => Url::toLoadMessage(),
             'load-update-url' => Url::toUpdateMessage(),

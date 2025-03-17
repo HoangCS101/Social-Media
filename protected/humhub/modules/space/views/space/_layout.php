@@ -44,7 +44,7 @@ $canCreateSpace = $manager->can(new CreatePublicSpace()) || $manager->can(new Cr
                     <?php if ($canCreateSpace) : ?>
                         <li>
                             <div class="dropdown-footer">
-                                <a href="#" class="btn btn-info w-full align-right px-[12px] py-0 text-[14px]" data-action-click="ui.modal.load"
+                                <a href="#" class="btn btn-info w-full align-right px-3 py-1 text-[14px]" data-action-click="ui.modal.load"
                                 data-action-url="<?= Url::to(['/space/create/create']) ?>">
                                     <i class="fa fa-plus m-0"></i>
                                 </a>

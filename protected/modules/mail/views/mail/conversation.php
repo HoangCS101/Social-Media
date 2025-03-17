@@ -15,6 +15,7 @@ use humhub\modules\mail\widgets\Messages;
 use humhub\modules\ui\form\widgets\ActiveForm;
 use humhub\modules\ui\view\components\View;
 use humhub\widgets\Button;
+use humhub\widgets\Label;
 
 /* @var $this View */
 /* @var $replyForm ReplyForm */
@@ -73,7 +74,7 @@ use humhub\widgets\Button;
                             'preview' => '#mail-create-upload-preview-' . $message->id,
                             'dropZone' => '#mail-create-form-' . $message->id,
                             'max' => Yii::$app->getModule('content')->maxAttachedFiles,
-                            'cssButtonClass' => 'btn-sm btn-info',
+                            'cssButtonClass' => 'btn-sm btn-info pl-[10px] pr-0',
                         ]) ?>
                         <?= FileHandlerButtonDropdown::widget([
                             'primaryButton' => $uploadButton,

@@ -20,7 +20,7 @@ use humhub\modules\wiki\widgets\WikiMenu;
 
     <?php if (!empty($entries)) : ?>
         <?= Html::beginTag('div', $options) ?>
-            <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true">
+            <button type="button" class="btn-sm btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true">
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu pull-right">

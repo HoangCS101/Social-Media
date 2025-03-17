@@ -2,14 +2,16 @@
 
 use humhub\modules\mail\models\forms\InboxFilterForm;
 use humhub\modules\mail\permissions\StartConversation;
-use humhub\modules\mail\widgets\ConversationInbox;
 use humhub\modules\mail\widgets\NewMessageButton;
 use humhub\modules\mail\widgets\InboxFilter;
+use humhub\modules\mail\widgets\SecureChatMenu;
 use humhub\modules\ui\icon\widgets\Icon;
+
 
 $canStartConversation = Yii::$app->user->can(StartConversation::class);
 
 $filterModel = new InboxFilterForm();
+// $type = Yii::$app->request->get('type', 'normal');
 ?>
 <div id="mail-conversation-overview" class="panel panel-default mail-inbox-messages rounded-none">
     <div class="panel-heading rounded-none">
@@ -25,9 +27,16 @@ $filterModel = new InboxFilterForm();
         </div>
 
     </div>
+    <div class="w-full bg-white shadow-md rounded-lg h-[80vh]">
 
-    <div class="inbox-wrapper">
-        <hr style="margin:0">
-        <?= ConversationInbox::widget(['filter' => $filterModel]) ?>
+        <?= SecureChatMenu::widget([
+            'filter' => $filterModel,
+            'options' => ['class' => '[&>ul]:pb-0 [&>li]:w-1/2']
+        ]); ?>
+
+        <div id="inbox-list-container">
+            <?= $this->render('_inboxList', ['type' => $type, 'filter' => $filterModel]); ?>
+        </div>
     </div>
+    
 </div>
