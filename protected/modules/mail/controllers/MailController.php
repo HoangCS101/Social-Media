@@ -59,10 +59,11 @@ class MailController extends Controller
      * @param null $id
      * @return string
      */
-    public function actionIndex($id = null)
+    public function actionIndex($id = null, $type = 'normal')
     {
         return $this->render('index', [
             'messageId' => $id,
+            'messageType' => $type
         ]);
     }
 
@@ -130,27 +131,33 @@ class MailController extends Controller
         ]);
     }
 
-    public function actionReply($id)
+    public function actionReply($id, $type)
     {
         $message = $this->getMessage($id, true);
 
         $this->checkMessagePermissions($message);
 
         // Reply Form
-        $replyForm = new ReplyForm(['model' => $message]);
-        if ($replyForm->load(Yii::$app->request->post()) && $replyForm->save()) {
-            return $this->asJson([
-                'success' => true,
-                'content' => ConversationEntry::widget(['entry' => $replyForm->reply, 'showDateBadge' => $replyForm->reply->isFirstToday()]),
-            ]);
-        }
+        if($type === 'normal') {
+            $replyForm = new ReplyForm(['model' => $message]);
+            if ($replyForm->load(Yii::$app->request->post()) && $replyForm->save()) {
+                return $this->asJson([
+                    'success' => true,
+                    'content' => ConversationEntry::widget(['entry' => $replyForm->reply, 'showDateBadge' => $replyForm->reply->isFirstToday()]),
+                ]);
+            }
 
-        return $this->asJson([
-            'success' => false,
-            'error' => [
-                'message' => $replyForm->getFirstError('message'),
-            ],
-        ]);
+            return $this->asJson([
+                'success' => false,
+                'error' => [
+                    'message' => $replyForm->getFirstError('message'),
+                ],
+            ]);
+
+        }
+        else {}
+        
+        
     }
 
     /**
@@ -312,9 +319,9 @@ class MailController extends Controller
      * Creates a new Message
      * and redirects to it.
      */
-    public function actionCreate($userGuid = null, ?string $title = null, ?string $message = null)
+    public function actionCreate($userGuid = null, ?string $title = null, ?string $message = null, ?bool $secure = false)
     {
-        $model = new CreateMessage(['recipient' => [$userGuid], 'title' => $title, 'message' => $message]);
+        $model = new CreateMessage(['secure' => $secure, 'recipient' => [$userGuid], 'title' => $title, 'message' => $message]);
 
         // Preselect user if userGuid is given
         if ($userGuid) {
@@ -330,8 +337,29 @@ class MailController extends Controller
             }
         }
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->htmlRedirect(['index', 'id' => $model->messageInstance->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            if($model->secure) {
+                $data = [
+                    'recipient' => $userGuid,
+                    'title' => $model->title,
+                    'message' => $model->message,
+                    'secure' => true
+                ];
+            
+                // Send data to another server
+                $response = Yii::$app->httpClient->post('https://external-server.com/api/storeMessage', $data)->send();
+            
+                if ($response->isOk) {
+                    return $this->htmlRedirect(['index']);
+                } else {
+                    Yii::$app->session->setFlash('error', 'Failed to store the secure message.');
+                }
+            }
+            else {
+                if($model->save()) {
+                    // return $this->htmlRedirect(['index', 'id' => $model->messageInstance->id]);
+                }
+            }
         }
 
         return $this->renderAjax('create', [

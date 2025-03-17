@@ -64,14 +64,14 @@ $container = $model->content->container;
 
     <div class="post__date flex flex-wrap font-mono font-thin opacity-50">
         <?php if ($renderOptions->isShowAuthorInformationInSubHeadLine($model)): ?>
-            <?= Html::containerLink($model->content->createdBy, ['class' => 'wall-entry-container-link ']) ?>
+            <?= Html::containerLink($model->content->createdBy, ['class' => 'wall-entry-container-link pr-2']) ?>
         <?php endif ?>
         <?php if ($renderOptions->isShowContainerInformationInSubTitle($model)): ?>
             <?php if ($renderOptions->isShowAuthorInformationInSubHeadLine($model)): ?>
                 <?= Icon::get('caret-right') ?>
-                <?= Html::containerLink($model->content->container, ['class' => 'wall-entry-container-link ']) ?>
+                <?= Html::containerLink($model->content->container, ['class' => 'pl-2 wall-entry-container-link ']) ?>
             <?php elseif ($model->content->container instanceof Space): ?>
-                <?= Html::containerLink($model->content->container, ['class' => 'wall-entry-container-link ']) ?>
+                <?= Html::containerLink($model->content->container, ['class' => 'pl-2 wall-entry-container-link ']) ?>
             <?php endif; ?>
         <?php endif; ?>
 

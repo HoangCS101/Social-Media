@@ -68,7 +68,7 @@ $placeholder = ($isNestedComment)
                 'preview' => '#comment_create_upload_preview_' . $id,
                 'dropZone' => '#comment_create_form_' . $id,
                 'max' => $contentModule->maxAttachedFiles,
-                'cssButtonClass' => 'btn-sm btn-default',
+                'cssButtonClass' => 'btn-sm btn-default pl-[10px] pr-0',
             ]);
             echo FileHandlerButtonDropdown::widget([
                 'primaryButton' => $uploadButton,
@@ -78,7 +78,8 @@ $placeholder = ($isNestedComment)
             ]);
             echo Button::info()
                 ->icon('send')
-                ->cssClass('btn-comment-submit')->sm()
+                ->cssClass('btn-comment-submit ')->sm()
+                ->style('padding: 8px 16px !important;')
                 ->action('submit', $submitUrl)->submit();
             ?></div>
     </div>

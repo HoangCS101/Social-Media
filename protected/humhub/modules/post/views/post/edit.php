@@ -38,7 +38,7 @@ use yii\bootstrap\ActiveForm;
                     'preview' => '#post_upload_preview_' . $model->post->id,
                     'progress' => '#post_upload_progress_' . $model->post->id,
                     'max' => Yii::$app->getModule('content')->maxAttachedFiles,
-                    'cssButtonClass' => 'btn-sm btn-default',
+                    'cssButtonClass' => 'btn-sm btn-default pl-[10px] pr-0',
                 ]),
                 'handlers' => $fileHandlers,
                 'cssButtonClass' => 'btn-sm btn-default',

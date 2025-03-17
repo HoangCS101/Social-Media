@@ -14,12 +14,12 @@ $categories = $user->profile->getProfileFieldCategories();
 ?>
 <div class="container profile-layout-container">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-lg-12">
             <?= ProfileHeader::widget(['user' => $user]) ?>
         </div>
     </div>
     <div class="row profile-content">
-        <div class="col-md-3 layout-nav-container">
+        <div class="col-lg-3 col-md-0 layout-nav-container">
             <div class="ui-block">
 				<div class="ui-block-title">
 					<h6 class="title">Profile Intro</h6>
@@ -54,14 +54,14 @@ $categories = $user->profile->getProfileFieldCategories();
                 </div>
 			</div>
         </div>
-        <div class="col-md-<?= ($this->hasSidebar()) ? '6' : '9' ?> layouts-content-container">
+        <div class="col-lg-<?= ($this->hasSidebar()) ? '6' : '9' ?> col-md-12 layouts-content-container">
             <?= $content; ?>
             <?php if (!$this->hasSidebar()): ?>
                 <?= FooterMenu::widget(['location' => FooterMenu::LOCATION_FULL_PAGE]); ?>
             <?php endif; ?>
         </div>
         <?php if ($this->hasSidebar()): ?>
-            <div class="col-md-3 layout-sidebar-container">
+            <div class="col-lg-3 col-md-0 layout-sidebar-container">
                 <?= $this->getSidebar() ?>
 
 				<?= FooterMenu::widget(['location' => FooterMenu::LOCATION_SIDEBAR]); ?>
