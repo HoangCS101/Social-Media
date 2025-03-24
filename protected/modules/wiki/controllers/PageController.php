@@ -104,36 +104,36 @@ class PageController extends BaseController
         ]);
     }
     public function actionVote()
-{
-    Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
-    $request = Yii::$app->request;
-    if ($request->isPost) {
-        $forumId = $request->post('forum_id');
-        $type = $request->post('type'); // 'upvote' hoặc 'downvote'
+        $request = Yii::$app->request;
+        if ($request->isPost) {
+            $forumId = $request->post('forum_id');
+            $type = $request->post('type'); // 'upvote' hoặc 'downvote'
 
-        // Tìm forum vote theo forum_id
-        $forumVote = ForumVote::findOne(['forum_id' => $forumId]);
+            // Tìm forum vote theo forum_id
+            $forumVote = ForumVote::findOne(['forum_id' => $forumId]);
 
-        if (!$forumVote) {
-            return ['success' => false, 'message' => 'Không tìm thấy forum'];
+            if (!$forumVote) {
+                return ['success' => false, 'message' => 'Không tìm thấy forum'];
+            }
+
+            // Cập nhật vote count
+            if ($type === 'upvote') {
+                $forumVote->total_vote += 1;
+            } elseif ($type === 'downvote') {
+                $forumVote->total_vote -= 1;
+            }
+
+            if ($forumVote->save()) {
+                return ['success' => true, 'newVote' => $forumVote->total_vote];
+            } else {
+                return ['success' => false, 'message' => 'Lỗi khi lưu'];
+            }
         }
-
-        // Cập nhật vote count
-        if ($type === 'upvote') {
-            $forumVote->total_vote += 1;
-        } elseif ($type === 'downvote') {
-            $forumVote->total_vote -= 1;
-        }
-
-        if ($forumVote->save()) {
-            return ['success' => true, 'newVote' => $forumVote->total_vote];
-        } else {
-            return ['success' => false, 'message' => 'Lỗi khi lưu'];
-        }
+        return ['success' => false, 'message' => 'Yêu cầu không hợp lệ'];
     }
-    return ['success' => false, 'message' => 'Yêu cầu không hợp lệ'];
-}
 
     /**
      * @param int $id
@@ -240,22 +240,35 @@ class PageController extends BaseController
         if ($form->load(Yii::$app->request->post()) && $form->save()) {
 
             $this->view->saved();
-            $title = Yii::$app->request->post('WikiPage')['title'];
-            $wikiPage = WikiPage::find()
-                ->where(['title' => $title])
-                ->orderBy(['id' => SORT_DESC]) // Sắp xếp theo ID giảm dần (lớn nhất đầu tiên)
-                ->one();
+        
+            $wikiPageData = Yii::$app->request->post('WikiPage');
 
-            $forumVote = new ForumVote();
-            $forumVote->forum_id = $wikiPage->id; // Gán giá trị cho forum_id
-            $forumVote->total_vote = 00; // Gán giá trị cho total_vote
-            $forumVote->updated_at = date('Y-m-d H:i:s'); // Gán giá trị cho thời gian cập nhật
-
-            if ($forumVote->save()) {
-                echo "Lưu thành công!";
+            if (!empty($wikiPageData) && isset($wikiPageData['title'])) {
+                $title = $wikiPageData['title'];
             } else {
-                echo "Lưu thất bại!";
-                print_r($forumVote->getErrors()); // Hiển thị lỗi nếu có
+                $title = null; // hoặc gán giá trị mặc định
+            }
+
+            if ($title != null) {
+                $wikiPage = WikiPage::find()
+                    ->where(['title' => $title])
+                    ->orderBy(['id' => SORT_DESC]) // Sắp xếp theo ID giảm dần (lớn nhất đầu tiên)
+                    ->one();
+                $check = ForumVote::find()->where(['forum_id' => $wikiPage->id])->one();
+
+                if($check !== null){
+                    
+                } else {
+                $forumVote = new ForumVote();
+                $forumVote->forum_id = $wikiPage->id; // Gán giá trị cho forum_id                
+                $forumVote->total_vote = 0; // Gán giá trị cho total_vote
+                $forumVote->updated_at = date('Y-m-d H:i:s'); // Gán giá trị cho thời gian cập nhật
+                if ($forumVote->save()) {
+                    echo "Lưu thành công!";
+                } else {
+                    echo "Lưu thất bại!";
+                    print_r($forumVote->getErrors()); // Hiển thị lỗi nếu có
+                }}
             }
             return $this->redirect(Url::toWiki($form->page));
         }
