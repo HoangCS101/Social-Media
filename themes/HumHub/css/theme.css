@@ -6638,7 +6638,7 @@ a.label-warning:hover {
 #dropdown-search.dropdown-menu {
     left: auto;
     right: 0;
-    max-width: 100%;
+    /* max-width: 100%; */
     min-width: 400px;
     padding: 0;
     border: none;
@@ -6751,7 +6751,7 @@ a.label-warning:hover {
     padding: 0 16px 0 24px;
     display: none;
     flex: 0 1 auto;
-    width: 500px;
+    /* width: 500px; */
     background-color: white;
 }
 
