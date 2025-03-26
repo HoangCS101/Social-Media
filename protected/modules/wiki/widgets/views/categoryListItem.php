@@ -41,7 +41,6 @@ use humhub\modules\wiki\widgets\PageListItemTitle;
             'maxLevel' => $maxLevel,
         ]) ?>
     <?php endif; ?>
-
     <?php if ($displaySubPages): ?>
         <ul class="wiki-page-list" <?php if ($item && $item->isFolded): ?> style="display:none" <?php endif; ?>>
             <?php foreach ($subItems as $item): ?>

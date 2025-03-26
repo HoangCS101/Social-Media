@@ -73,6 +73,10 @@ AppAsset::register($this);
         .layout-content-container .wiki-content .social-controls a {
             font-size: 14px;
         }
+
+        button.btn . {
+            padding: 0px;
+        }
     </style>
 
 </head>
@@ -152,5 +156,6 @@ AppAsset::register($this);
     </script>
 
 </body>
+
 </html>
 <?php $this->endPage() ?>

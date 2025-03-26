@@ -23,6 +23,8 @@ use yii\db\StaleObjectException;
 use yii\web\HttpException;
 use yii\web\Response;
 
+use humhub\modules\wiki\models\ForumVote;
+
 /**
  * PageController
  *
@@ -57,6 +59,7 @@ class PageController extends BaseController
      */
     public function actionView(int $id = null, $revisionId = null)
     {
+
         $page = $this->getWikiPage($id);
         if (!$page) {
             throw new HttpException(404, 'Wiki page not found!');
@@ -72,6 +75,21 @@ class PageController extends BaseController
             $page->delete();
             throw new HttpException(404, 'Wiki page revision not found!');
         }
+        // $votes = ForumVote::find()->all();
+
+        // $forumVote = ForumVote::findOne(['forum_id' => $id]);
+        // if ($forumVote) {
+        //     echo "ForumVote ID: " . $forumVote->id;
+        //     echo "</br>";
+        //     echo "Forum ID: " . $forumVote->forum_id;
+        //     echo "</br>";
+        //     echo "Total Vote: " . $forumVote->total_vote;
+        //     echo "</br>";
+        //     echo "Updated At: " . $forumVote->updated_at;
+        // } else {
+        //     echo "Không tìm thấy ForumVote với ID = $id";
+        // }
+        // var_dump($page->title);
 
         return $this->renderSidebarContent('view', [
             'page' => $page,
@@ -84,6 +102,37 @@ class PageController extends BaseController
             'canAdminister' => $this->canAdminister(),
             'canCreatePage' => $this->canCreatePage(),
         ]);
+    }
+    public function actionVote()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $request = Yii::$app->request;
+        if ($request->isPost) {
+            $forumId = $request->post('forum_id');
+            $type = $request->post('type'); // 'upvote' hoặc 'downvote'
+
+            // Tìm forum vote theo forum_id
+            $forumVote = ForumVote::findOne(['forum_id' => $forumId]);
+
+            if (!$forumVote) {
+                return ['success' => false, 'message' => 'Không tìm thấy forum'];
+            }
+
+            // Cập nhật vote count
+            if ($type === 'upvote') {
+                $forumVote->total_vote += 1;
+            } elseif ($type === 'downvote') {
+                $forumVote->total_vote -= 1;
+            }
+
+            if ($forumVote->save()) {
+                return ['success' => true, 'newVote' => $forumVote->total_vote];
+            } else {
+                return ['success' => false, 'message' => 'Lỗi khi lưu'];
+            }
+        }
+        return ['success' => false, 'message' => 'Yêu cầu không hợp lệ'];
     }
 
     /**
@@ -189,7 +238,38 @@ class PageController extends BaseController
         $form = (new PageEditForm(['container' => $this->contentContainer]))->forPage($id, $title, $categoryId);
 
         if ($form->load(Yii::$app->request->post()) && $form->save()) {
+
             $this->view->saved();
+        
+            $wikiPageData = Yii::$app->request->post('WikiPage');
+
+            if (!empty($wikiPageData) && isset($wikiPageData['title'])) {
+                $title = $wikiPageData['title'];
+            } else {
+                $title = null; // hoặc gán giá trị mặc định
+            }
+
+            if ($title != null) {
+                $wikiPage = WikiPage::find()
+                    ->where(['title' => $title])
+                    ->orderBy(['id' => SORT_DESC]) // Sắp xếp theo ID giảm dần (lớn nhất đầu tiên)
+                    ->one();
+                $check = ForumVote::find()->where(['forum_id' => $wikiPage->id])->one();
+
+                if($check !== null){
+                    
+                } else {
+                $forumVote = new ForumVote();
+                $forumVote->forum_id = $wikiPage->id; // Gán giá trị cho forum_id                
+                $forumVote->total_vote = 0; // Gán giá trị cho total_vote
+                $forumVote->updated_at = date('Y-m-d H:i:s'); // Gán giá trị cho thời gian cập nhật
+                if ($forumVote->save()) {
+                    echo "Lưu thành công!";
+                } else {
+                    echo "Lưu thất bại!";
+                    print_r($forumVote->getErrors()); // Hiển thị lỗi nếu có
+                }}
+            }
             return $this->redirect(Url::toWiki($form->page));
         }
 

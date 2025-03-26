@@ -27,6 +27,7 @@ use humhub\modules\topic\widgets\TopicPicker;
 
 Assets::register($this);
 ?>
+
 <div class="panel panel-default">
     <!-- <?= WikiPath::widget(['page' => $model->page]) ?> -->
     <div class="panel-body">
@@ -49,6 +50,7 @@ Assets::register($this);
                     <?php endif; ?>
                 </div>
             </div>
+
 
             <?php $form = ActiveForm::begin(
                 [
@@ -86,7 +88,9 @@ Assets::register($this);
             <?php else: ?>
                 <?= $form->field($model, 'confirmOverwriting')->hiddenInput()->label(false); ?>
             <?php endif; ?>
+
             <div<?php if ($requireConfirmation): ?> style="display:none" <?php endif; ?>>
+                
                 <?= $form->field($model->page, 'title')
                     ->textInput([
                         'placeholder' => Yii::t('WikiModule.base', 'New topic title'),

@@ -35,7 +35,7 @@ class CompletedTaskListView extends Widget
         $dataProvider = new ActiveDataProvider([
             'query' => TaskList::findHiddenLists($this->contentContainer),
             'pagination' => [
-                'pageSize' => 10,
+                'pageSize' => 20,
                 'route' => TaskListUrl::ROUTE_LOAD_CLOSED_LISTS
             ],
         ]);

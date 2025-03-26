@@ -17,6 +17,9 @@ use humhub\modules\wiki\widgets\WikiContent;
 use humhub\modules\wiki\widgets\WikiSearchForm;
 use humhub\widgets\Button;
 
+use humhub\modules\wiki\widgets\WikiListHeader;
+use humhub\modules\wiki\widgets\WikiListTable;
+use yii\data\ActiveDataProvider;
 /* @var $this View */
 /* @var $contentContainer ContentContainerActiveRecord */
 /* @var $canCreate bool */
@@ -33,10 +36,11 @@ $settings = new DefaultSettings(['contentContainer' => $contentContainer]);
 <div class="panel panel-default">
     <div class="panel-body">
         <div class="row">
+
             <?php WikiContent::begin(['cssClass' => 'wiki-page-content']) ?>
             <div class="wiki-page-content-header">
                 <h3><?= Html::encode($settings->module_label) ?></h3>
-                
+
                 <?= WikiSearchForm::widget(['contentContainer' => $contentContainer, 'cssClass' => 'pull-left']) ?>
                 <div class="wiki-page-content-header-actions">
                     <?= Button::info(Yii::t('WikiModule.base', 'Last edited'))->sm()->link(Url::toLastEdited($contentContainer))->cssClass(Helper::isEnterpriseTheme() ? 'hidden-lg' : '') ?>
@@ -45,9 +49,10 @@ $settings = new DefaultSettings(['contentContainer' => $contentContainer]);
                 <div class="clearfix"></div>
             </div>
 
-            
-            <?= CategoryListView::widget(config: ['contentContainer' => $contentContainer]) ?>
 
+            <!-- <?= CategoryListView::widget(config: ['contentContainer' => $contentContainer]) ?> -->
+
+                <?= WikiListTable::widget(['dataProvider' => $dataProvider]) ?>
             <?php WikiContent::end() ?>
         </div>
     </div>
