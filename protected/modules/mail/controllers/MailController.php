@@ -22,6 +22,8 @@ use humhub\modules\User\models\User;
 use humhub\modules\user\models\UserFilter;
 use humhub\modules\user\models\UserPicker;
 use humhub\modules\user\widgets\UserListBox;
+use humhub\modules\user\models\UserKey;
+use yii\httpclient\Client;
 use Yii;
 use yii\helpers\Html;
 use yii\web\ForbiddenHttpException;
@@ -70,21 +72,25 @@ class MailController extends Controller
     /**
      * Shows a Message Thread
      */
-    public function actionShow($id)
+    public function actionShow($messageId, $messageType)
     {
-        $message = ($id instanceof Message) ? $id : $this->getMessage($id);
-
+        if($messageType == 'secure') {
+            $message = ($messageId instanceof Message) ? $messageId : $this->getSecureMessage($messageId);
+        } 
+        else {
+            $message = ($messageId instanceof Message) ? $messageId : $this->getMessage($messageId); 
+        }
         $this->checkMessagePermissions($message);
-
-        // Marks message as seen
-        $message->seen(Yii::$app->user->id);
-
-        return $this->renderAjax('conversation', [
-            'message' => $message,
-            'messageCount' => UserMessage::getNewMessageCount(),
-            'replyForm' => new ReplyForm(['model' => $message]),
-            'fileHandlers' => FileHandlerCollection::getByType([FileHandlerCollection::TYPE_IMPORT, FileHandlerCollection::TYPE_CREATE]),
-        ]);
+    
+            // Marks message as seen
+            $message->seen(Yii::$app->user->id);
+    
+            return $this->renderAjax('conversation', [
+                'message' => $message,
+                'messageCount' => UserMessage::getNewMessageCount(),
+                'replyForm' => new ReplyForm(['model' => $message]),
+                'fileHandlers' => FileHandlerCollection::getByType([FileHandlerCollection::TYPE_IMPORT, FileHandlerCollection::TYPE_CREATE]),
+            ]);
     }
 
     public function actionSeen()
@@ -536,6 +542,70 @@ class MailController extends Controller
         }
 
         return null;
+    }
+
+    private function getSecureMessage($id, $throw = false): ? Message
+    {
+        $user = Yii::$app->user->identity;
+        if (!$user) {
+            if ($throw) {
+                throw new HttpException('User not authenticated');
+            }
+            return null;
+        }
+
+        // Lấy secret key từ UserKey DB
+        $userKey = UserKey::findOne(['user_id' => $user->id]);
+        if (!$userKey || empty($userKey->secret_key)) {
+            if ($throw) {
+                throw new HttpException('User doesn\'t register to access secure chat');
+            }
+            return null;
+        }
+
+        $secretKey = $userKey->secret_key;
+
+        // Gửi request đến Fabric Node Server
+        $fabricUrl = 'http://fabric-node-server/api/message/' . $id;
+        $client = new Client();
+
+        try {
+            $response = $client->createRequest()
+                ->setMethod('GET')
+                ->setUrl($fabricUrl)
+                ->setData(['secret_key' => $secretKey])
+                // ->setHeaders(['Authorization' => "Bearer {$secretKey}"])
+                ->send();
+
+            if (!$response->isOk) {
+                if ($throw) {
+                    throw new HttpException('Failed to fetch message: ' . $response->content);
+                }
+                return null;
+            }
+
+            $data = $response->data;
+            if (empty($data['message'])) {
+                if ($throw) {
+                    throw new HttpException('Message not found');
+                }
+                return null;
+            }
+
+            // Tạo một instance của Message từ dữ liệu nhận được
+            return new Message([
+                'id' => $data['id'],
+                'content' => $data['message'],
+                'sender_id' => $data['sender_id'],
+                'receiver_id' => $data['receiver_id'],
+                'created_at' => strtotime($data['created_at']),
+            ]);
+        } catch (HttpException $e) {
+            if ($throw) {
+                throw $e;
+            }
+            return null;
+        }
     }
 
     private function getNextReadMessage($id): ?Message

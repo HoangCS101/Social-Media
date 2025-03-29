@@ -40,7 +40,7 @@ use yii\helpers\Url;
     ]); ?>
 
         <input type="hidden" name="userId" value="user123">
-        <?= Html::submitButton('Đăng ký', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Register Secure Chat', ['class' => 'btn btn-success']) ?>
 
     <?php ActiveForm::end(); ?>
 
