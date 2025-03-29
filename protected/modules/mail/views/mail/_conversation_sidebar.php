@@ -13,7 +13,7 @@ $canStartConversation = Yii::$app->user->can(StartConversation::class);
 $filterModel = new InboxFilterForm();
 // $type = Yii::$app->request->get('type', 'normal');
 ?>
-<div id="mail-conversation-overview" class="panel panel-default mail-inbox-messages rounded-none">
+<div id="mail-conversation-overview h-inherit" class="panel panel-default mail-inbox-messages rounded-none">
     <div class="panel-heading rounded-none">
         <a data-action-click="mail.inbox.toggleInbox" style="font-size:25px">
             <span class="visible-xs-inline"><?=Icon::get('bars')?></span> <?= Yii::t('MailModule.views_mail_index', 'Conversations') ?>

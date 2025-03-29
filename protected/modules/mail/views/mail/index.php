@@ -12,12 +12,12 @@ use humhub\modules\ui\view\helpers\ThemeHelper;
 MailMessengerAsset::register($this);
 ?>
 <div class="<?= ThemeHelper::isFluid() ? 'container-fluid' : 'container' ?><?= $messageId ? ' mail-conversation-single-message' : '' ?>">
-    <div class="row" style="margin-top: -30px">
-        <div class="col-md-4 p-0 bg-white" style="border-radius: none;">
+    <div class="row h-inherit" style="margin-top: -30px ">
+        <div class="col-md-4 p-0 h-[610px] bg-white" style="border-radius: none;">
             <?= $this->render('_conversation_sidebar', ['type' => $messageType]) ?>
         </div>
 
-        <div class="col-md-8 messages p-0" style="border-radius: none;">
+        <div class="col-md-8 h-inherit messages p-0" style="border-radius: none;">
             <?= ConversationView::widget(['messageId' => $messageId, 'messageType' => $messageType]) ?>
         </div>
     </div>

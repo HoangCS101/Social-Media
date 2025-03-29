@@ -131,7 +131,7 @@ class MailController extends Controller
         ]);
     }
 
-    public function actionReply($id, $type)
+    public function actionReply($id, $type = 'normal')
     {
         $message = $this->getMessage($id, true);
 

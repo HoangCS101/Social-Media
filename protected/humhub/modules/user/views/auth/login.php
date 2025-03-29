@@ -174,7 +174,44 @@ $this->pageTitle = Yii::t('UserModule.auth', 'Login');
       </div>
     </div>
 
+    <?php if ($canRegister && $showRegistrationForm) : ?>
+        <div id="register-form"
+             class="panel panel-default animated bounceInLeft"
+             style="max-width: 300px; margin: 0 auto 20px; text-align: left;">
 
+            <div class="panel-heading"><?= Yii::t('UserModule.auth', '<strong>Sign</strong> up') ?></div>
+
+            <div class="panel-body">
+
+                <?php if (AuthChoice::hasClients()): ?>
+                    <?= AuthChoice::widget() ?>
+                    <div class="or-container">
+                        <hr>
+                        <div>or</div>
+                    </div>
+                <?php else: ?>
+                    <p><?= Yii::t('UserModule.auth', "Don't have an account? Join the network by entering your e-mail address."); ?></p>
+                <?php endif; ?>
+
+                <?php $form = ActiveForm::begin(['id' => 'invite-form']); ?>
+                <?= $form->field($invite, 'email')->input('email', ['id' => 'register-email', 'placeholder' => $invite->getAttributeLabel('email'), 'aria-label' => $invite->getAttributeLabel('email')])->label(false); ?>
+                <?php if ($invite->showCaptureInRegisterForm()) : ?>
+                    <div id="registration-form-captcha" style="display: none;">
+                        <div><?= Yii::t('UserModule.auth', 'Please enter the letters from the image.'); ?></div>
+
+                        <?= $form->field($invite, 'captcha')->widget(Captcha::class, [
+                            'captchaAction' => '/user/auth/captcha',
+                        ])->label(false); ?>
+                    </div>
+                <?php endif; ?>
+                <hr>
+                <?= Html::submitButton(Yii::t('UserModule.auth', 'Register'), ['class' => 'btn btn-primary', 'data-ui-loader' => '']); ?>
+
+                <?php ActiveForm::end(); ?>
+            </div>
+        </div>
+
+    <?php endif; ?>
 </div>
 
 
