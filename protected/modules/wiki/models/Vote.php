@@ -12,6 +12,7 @@ use humhub\components\ActiveRecord;
  * @property integer $user_id
  * @property integer $forum_id
  * @property boolean $is_vote
+ * @property boolean $is_love
  * @property integer $value_vote
  */
 class Vote extends ActiveRecord

@@ -48,8 +48,6 @@ $settings = new DefaultSettings(['contentContainer' => $contentContainer]);
                 </div>
                 <div class="clearfix"></div>
             </div>
-
-
             <!-- <?= CategoryListView::widget(config: ['contentContainer' => $contentContainer]) ?> -->
 
                 <?= WikiListTable::widget(['dataProvider' => $dataProvider]) ?>
