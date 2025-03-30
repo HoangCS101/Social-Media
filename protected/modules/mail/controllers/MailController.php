@@ -9,8 +9,10 @@ use humhub\modules\mail\helpers\Url;
 use humhub\modules\mail\models\forms\CreateMessage;
 use humhub\modules\mail\models\forms\InviteParticipantForm;
 use humhub\modules\mail\models\forms\ReplyForm;
+use humhub\modules\mail\models\forms\SecureReplyForm;
 use humhub\modules\mail\models\Message;
 use humhub\modules\mail\models\MessageEntry;
+use humhub\modules\mail\models\SecureMessageEntry;
 use humhub\modules\mail\models\UserMessage;
 use humhub\modules\mail\Module;
 use humhub\modules\mail\permissions\SendMail;
@@ -161,7 +163,22 @@ class MailController extends Controller
             ]);
 
         }
-        else {}
+        else {
+            $replyForm = new SecureReplyForm(['model' => $message]);
+            if ($replyForm->load(Yii::$app->request->post()) && $replyForm->save()) {
+                return $this->asJson([
+                    'success' => true,
+                    'content' => ConversationEntry::widget(['entry' => $replyForm->reply, 'showDateBadge' => $replyForm->reply->isFirstToday()]),
+                ]);
+            }
+
+            return $this->asJson([
+                'success' => false,
+                'error' => [
+                    'message' => $replyForm->getFirstError('message'),
+                ],
+            ]);
+        }
         
         
     }
