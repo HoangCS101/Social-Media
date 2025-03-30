@@ -11,7 +11,7 @@ use humhub\modules\mail\widgets\ConversationInbox;
     <?php } else { ?>
         <div class="inbox-wrapper">
             <hr style="margin:0">
-            <?= ConversationInbox::widget(['filter' => $filter]) ?>
+            <?= ConversationInbox::widget(['type'=> $type, 'filter' => $filter]) ?>
         </div>
     <?php } ?>
 

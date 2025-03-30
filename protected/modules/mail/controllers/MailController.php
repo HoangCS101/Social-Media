@@ -370,17 +370,17 @@ class MailController extends Controller
                 ];
             
                 // Send data to another server
-                $response = Yii::$app->httpClient->post('https://external-server.com/api/storeMessage', $data)->send();
+                $response = Yii::$app->httpClient->post('https://external-server.com/api/create-conversation', $data)->send();
             
                 if ($response->isOk) {
-                    return $this->htmlRedirect(['index']);
+                    return $this->htmlRedirect(['index', 'id' => $response->data->id, 'type' => 'secure']);
                 } else {
                     Yii::$app->session->setFlash('error', 'Failed to store the secure message.');
                 }
             }
             else {
                 if($model->save()) {
-                    // return $this->htmlRedirect(['index', 'id' => $model->messageInstance->id]);
+                    return $this->htmlRedirect(['index', 'id' => $model->messageInstance->id]);
                 }
             }
         }
