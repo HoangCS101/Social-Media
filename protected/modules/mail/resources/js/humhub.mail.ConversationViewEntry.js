@@ -1,6 +1,5 @@
-humhub.module('mail.ConversationEntry', function (module, require, $) {
-
-    var Widget = require('ui.widget').Widget;
+humhub.module("", function (module, require, $) {
+    var Widget = require("ui.widget").Widget;
 
     var ConversationEntry = Widget.extend();
 
@@ -10,12 +9,12 @@ humhub.module('mail.ConversationEntry', function (module, require, $) {
         this.$.fadeOut(function () {
             $(this).replaceWith($content);
             that.$ = $content;
-            that.$.fadeIn('slow');
+            that.$.fadeIn("slow");
         });
     };
 
     ConversationEntry.prototype.remove = function () {
-        this.$.fadeToggle('slow', function () {
+        this.$.fadeToggle("slow", function () {
             $(this).remove();
         });
     };

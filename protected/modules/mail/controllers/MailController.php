@@ -67,20 +67,20 @@ class MailController extends Controller
     {
         return $this->render('index', [
             'messageId' => $id,
-            'messageType' => $type
+            'messageType' => $type 
         ]);
     }
 
     /**
      * Shows a Message Thread
      */
-    public function actionShow($messageId, $messageType)
+    public function actionShow($id, $type)
     {
-        if($messageType == 'secure') {
-            $message = ($messageId instanceof Message) ? $messageId : $this->getSecureMessage($messageId);
+        if($type == 'secure') {
+            $message = ($id instanceof Message) ? $id : $this->getSecureMessage($id);
         } 
         else {
-            $message = ($messageId instanceof Message) ? $messageId : $this->getMessage($messageId); 
+            $message = ($id instanceof Message) ? $id : $this->getMessage($id); 
         }
         $this->checkMessagePermissions($message);
     
@@ -89,8 +89,9 @@ class MailController extends Controller
     
             return $this->renderAjax('conversation', [
                 'message' => $message,
+                'messageType' => $type,
                 'messageCount' => UserMessage::getNewMessageCount(),
-                'replyForm' => new ReplyForm(['model' => $message]),
+                'replyForm' => $type === 'secure'? new ReplyForm(['model' => $message]) : new SecureReplyForm(['model' => $message]),
                 'fileHandlers' => FileHandlerCollection::getByType([FileHandlerCollection::TYPE_IMPORT, FileHandlerCollection::TYPE_CREATE]),
             ]);
     }

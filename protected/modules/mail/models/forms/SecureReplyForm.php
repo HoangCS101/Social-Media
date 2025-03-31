@@ -63,7 +63,7 @@ class SecureReplyForm extends Model
 
     public function getUrl()
     {
-        return Url::toReply($this->model);
+        return Url::toReply($this->model, 'secure');
     }
 
     public function save()

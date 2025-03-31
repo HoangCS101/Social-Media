@@ -6,7 +6,7 @@ use humhub\modules\mail\widgets\ConversationInbox;
     <?php if ($type === 'normal') { ?>
         <div class="inbox-wrapper">
             <hr style="margin:0">
-            <?= ConversationInbox::widget(['filter' => $filter]) ?>
+            <?= ConversationInbox::widget(['type'=> $type, 'filter' => $filter]) ?>
         </div>
     <?php } else { ?>
         <div class="inbox-wrapper">

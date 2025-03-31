@@ -20,9 +20,9 @@ class Url extends \yii\helpers\Url
         return static::to(['/mail/mail/delete-entry', 'id' => $entry->id]);
     }
 
-    public static function toLoadMessage()
+    public static function toLoadMessage(string $type)
     {
-        return static::to(['/mail/mail/show']);
+        return static::to(['/mail/mail/show', 'type' => $type]);
     }
 
     public static function toUpdateMessage()
@@ -127,9 +127,9 @@ class Url extends \yii\helpers\Url
         return static::to(['/mail/mail/add-user', 'id' => $message->id]);
     }
 
-    public static function toReply(Message $message)
+    public static function toReply(Message $message, string $type)
     {
-        return static::to(['/mail/mail/reply', 'id' => $message->id]);
+        return static::to(['/mail/mail/reply', 'id' => $message->id, 'type' => $type]);
     }
 
     public static function toInboxLoadMore()

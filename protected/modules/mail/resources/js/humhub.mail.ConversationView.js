@@ -202,7 +202,7 @@ humhub.module("mail.ConversationView", function (module, require, $) {
         this.loader();
         client
             .get(this.options.loadMessageUrl, {
-                data: { messageId: messageId, messageType: messageType },
+                data: { id: messageId, type: messageType },
             })
             .then(function (response) {
                 that.setActiveMessageId(messageId);

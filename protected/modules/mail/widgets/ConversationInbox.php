@@ -26,6 +26,11 @@ class ConversationInbox extends JsWidget
     public $filter;
 
     /**
+     * @var string
+     */
+    public $type;
+
+    /**
      * @inheritDoc
      */
     public $init = true;
@@ -43,7 +48,7 @@ class ConversationInbox extends JsWidget
     public function init()
     {
         parent::init();
-        $this->result = $this->filter->getPage();
+        $this->result = $this->filter->getPage($this->type);
     }
 
     /**

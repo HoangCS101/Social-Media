@@ -10,7 +10,7 @@ use humhub\modules\ui\view\components\View;
 /* @var $userMessages UserMessage[] */
 
 ?>
-
+ 
 <?= Html::beginTag('ul', $options) ?>
     <?php if (empty($userMessages)) : ?>
         <li class="placeholder"><?= Yii::t('MailModule.views_mail_index', 'There are no messages yet.') ?></li>

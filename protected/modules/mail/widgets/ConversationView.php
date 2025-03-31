@@ -41,7 +41,7 @@ class ConversationView extends JsWidget
         return [
             'message-type' => $this->messageType,
             'message-id' => $this->messageId,
-            'load-message-url' => Url::toLoadMessage(),
+            'load-message-url' => Url::toLoadMessage($this->messageType),
             'load-update-url' => Url::toUpdateMessage(),
             'load-more-url' => Url::toLoadMoreMessages(),
             'mark-seen-url' => Url::toNotificationSeen(),
