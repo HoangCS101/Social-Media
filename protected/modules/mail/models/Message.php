@@ -72,8 +72,11 @@ class Message extends ActiveRecord
      * @param int|null $from
      * @return MessageEntry[]
      */
-    public function getEntryPage($from = null)
+    public function getEntryPage($from = null, $type = 'normal')
     {
+        if($type === 'secure') {
+            
+        }
         $query = $this->getEntries();
         $query->addOrderBy(['created_at' => SORT_DESC]);
 

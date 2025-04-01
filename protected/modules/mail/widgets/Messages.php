@@ -15,6 +15,11 @@ class Messages extends Widget
     public $message;
 
     /**
+     * @var string
+     */
+    public $type;
+
+    /**
      * @var
      */
     public $entries;
@@ -62,7 +67,7 @@ class Messages extends Widget
             return $this->entries;
         }
 
-        return $this->message->getEntryPage($this->from);
+        return $this->message->getEntryPage($this->from, $this->type);
     }
 
 }

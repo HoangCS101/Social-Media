@@ -10,7 +10,7 @@ use humhub\modules\ui\icon\widgets\Icon;
 
 $canStartConversation = Yii::$app->user->can(StartConversation::class);
 
-$filterModel = new InboxFilterForm();
+$filterModel = new InboxFilterForm($type);
 // $type = Yii::$app->request->get('type', 'normal');
 ?>
 <div id="mail-conversation-overview h-inherit" class="panel panel-default mail-inbox-messages rounded-none">

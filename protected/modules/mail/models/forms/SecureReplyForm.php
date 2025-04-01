@@ -4,6 +4,7 @@ namespace humhub\modules\mail\models\forms;
 
 use humhub\modules\mail\helpers\Url;
 use humhub\modules\mail\models\Message;
+use humhub\modules\mail\models\MessageEntry;
 use yii\httpclient\Client;
 use Yii;
 use yii\base\Model;
@@ -81,6 +82,7 @@ class SecureReplyForm extends Model
             ])->send();
     
             if (!$response->isOk) {
+                
                 Yii::error("Failed to fetch secure message from Fabric: " . $response->content, __METHOD__);
                 return false;
             }
@@ -89,6 +91,14 @@ class SecureReplyForm extends Model
         } catch (\Exception $e) {
             Yii::error("Error when calling Node.js API: " . $e->getMessage(), __METHOD__);
         }
+        $this->reply = new MessageEntry([
+            'message_id' => $response->id,
+            'user_id' => Yii::$app->user->id,
+            'content' => $this->message,
+        ]);
+
+        // $this->reply->notify();
+        $this->reply->fileManager->attach(Yii::$app->request->post('fileList'));
     
         return false;
     }

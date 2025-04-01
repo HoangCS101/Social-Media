@@ -6,6 +6,7 @@ use humhub\modules\mail\models\Message;
 use humhub\modules\mail\models\MessageEntry;
 use humhub\modules\mail\models\UserMessage;
 use humhub\modules\mail\models\UserMessageTag;
+use humhub\modules\user\models\UserKey;
 use humhub\modules\mail\Module;
 use humhub\modules\ui\filter\models\QueryFilter;
 use Yii;
@@ -14,6 +15,7 @@ use yii\db\conditions\ExistsCondition;
 use yii\db\conditions\LikeCondition;
 use yii\db\conditions\OrCondition;
 use yii\httpclient\Client;
+use yii\web\HttpException;
 
 class InboxFilterForm extends QueryFilter
 {
@@ -21,7 +23,7 @@ class InboxFilterForm extends QueryFilter
      * @var string
      */
     public $term;
-
+ 
     /**
      * @var array
      */
@@ -165,49 +167,42 @@ class InboxFilterForm extends QueryFilter
 
     public function secureApply()
     {
-        if(!empty($this->term)) {
-            $messageEntryContentSubQuery = MessageEntry::find()->where('message_entry.message_id = message.id')
-                ->andWhere($this->createTermLikeCondition('message_entry.content'));
+        $apiUrl = 'https://secure-message-service.com/api/conversations';
 
-            $this->query->andWhere(new OrCondition([
-                new ExistsCondition('EXISTS', $messageEntryContentSubQuery),
-                $this->createTermLikeCondition('message.title'),
-            ]));
+        $user = Yii::$app->user->identity;
+        if (!$user) {
+            throw new HttpException('User not authenticated');
         }
 
-        if(!empty($this->participants)) {
-            foreach ($this->participants as $userGuid) {
-                $participantsExistsSubQuery = UserMessage::find()->joinWith('user')->where('user_message.message_id = message.id')
-                    ->andWhere(['user.guid' => $userGuid]);
-                $this->query->andWhere(new ExistsCondition('EXISTS', $participantsExistsSubQuery));
+        $userKey = UserKey::findOne(['user_id' => $user->id]);
+        if (!$userKey || empty($userKey->secret_key)) {
+            throw new HttpException('User doesn\'t register to access secure chat');
+            
+        }
+
+        try {
+            $response = Yii::$app->httpClient->get($apiUrl, [], [
+                'headers' => [
+                    'secret_key' => $userKey,
+                    'Accept' => 'application/json',
+                ],
+            ])->send();
+
+            if ($response->isOk) {
+                return $response->data; // Trả về JSON từ API
+            } else {
+                return [
+                    'error' => 'API request failed',
+                    'status' => $response->statusCode,
+                ];
             }
-
-        }
-
-        if(!empty($this->tags)) {
-            foreach ($this->tags as $tag) {
-                $participantsExistsSubQuery = UserMessageTag::find()
-                    ->where('user_message.message_id = user_message_tag.message_id')
-                    ->andWhere('user_message.user_id = user_message_tag.user_id')
-                    ->andWhere(['user_message_tag.tag_id' => $tag]);
-                $this->query->andWhere(new ExistsCondition('EXISTS', $participantsExistsSubQuery));
-            }
-        }
-
-        if(!empty($this->from)) {
-            $message = Message::findOne(['id' => $this->from]);
-            if(!$message) {
-                throw new InvalidCallException();
-            }
-            $this->query->andWhere(['<=', 'message.updated_at', $message->updated_at]);
-            $this->query->andWhere(['<>', 'message.id', $message->id]);
-        }
-
-        if(!empty($this->ids)) {
-            $this->query->andWhere(['IN', 'user_message.message_id', $this->ids]);
+        } catch (\Exception $e) {
+            return [
+                'error' => 'Exception occurred',
+                'message' => $e->getMessage(),
+            ];
         }
     }
-
     private function createTermLikeCondition($column)
     {
         return new LikeCondition($column, 'LIKE', $this->term);
@@ -216,19 +211,20 @@ class InboxFilterForm extends QueryFilter
     /**
      * @return UserMessage[]
      */
-    public function getPage($type)
+    public function getPageNormal()
     {
-        if($type == 'secure') {
-            $this->secureApply();
-        }
-        else {
-            $this->apply();
-        }
+        $this->apply();
         $module = Module::getModuleInstance();
         $pageSize = $this->from ? $module->inboxUpdatePageSize : $module->inboxInitPageSize;
         $result = $this->query->limit($pageSize)->all();
         $this->wasLastPage = count($result) < $pageSize;
         return $result;
+    }
+
+    public function getPageSecure()
+    {
+        $data = $this->secureApply();
+        return $data;
     }
 
     public function wasLastPage()

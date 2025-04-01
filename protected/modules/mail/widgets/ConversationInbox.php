@@ -48,7 +48,14 @@ class ConversationInbox extends JsWidget
     public function init()
     {
         parent::init();
-        $this->result = $this->filter->getPage($this->type);
+        if($this->type == 'normal') {
+            $this->result = $this->filter->getPage($this->type);
+        }
+        if($this->type == 'secure') {
+            $this->result = $this->filter->getPageSecure();
+        }
+
+        
     }
 
     /**

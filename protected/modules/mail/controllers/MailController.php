@@ -78,22 +78,35 @@ class MailController extends Controller
     {
         if($type == 'secure') {
             $message = ($id instanceof Message) ? $id : $this->getSecureMessage($id);
-        } 
-        else {
-            $message = ($id instanceof Message) ? $id : $this->getMessage($id); 
-        }
-        $this->checkMessagePermissions($message);
+            $this->checkMessagePermissions($message);
     
             // Marks message as seen
             $message->seen(Yii::$app->user->id);
-    
+            
             return $this->renderAjax('conversation', [
                 'message' => $message,
-                'messageType' => $type,
+                'type' => $type,
                 'messageCount' => UserMessage::getNewMessageCount(),
                 'replyForm' => $type === 'secure'? new ReplyForm(['model' => $message]) : new SecureReplyForm(['model' => $message]),
                 'fileHandlers' => FileHandlerCollection::getByType([FileHandlerCollection::TYPE_IMPORT, FileHandlerCollection::TYPE_CREATE]),
             ]);
+        } 
+        else {
+            $message = ($id instanceof Message) ? $id : $this->getMessage($id); 
+            $this->checkMessagePermissions($message);
+    
+            // Marks message as seen
+            $message->seen(Yii::$app->user->id);
+        
+            return $this->renderAjax('conversation', [
+                'message' => $message,
+                'type' => $type,
+                'messageCount' => UserMessage::getNewMessageCount(),
+                'replyForm' => $type === 'secure'? new ReplyForm(['model' => $message]) : new SecureReplyForm(['model' => $message]),
+                'fileHandlers' => FileHandlerCollection::getByType([FileHandlerCollection::TYPE_IMPORT, FileHandlerCollection::TYPE_CREATE]),
+            ]);
+        }
+        
     }
 
     public function actionSeen()
@@ -367,7 +380,6 @@ class MailController extends Controller
                     'recipient' => $userGuid,
                     'title' => $model->title,
                     'message' => $model->message,
-                    'secure' => true
                 ];
             
                 // Send data to another server
@@ -624,6 +636,7 @@ class MailController extends Controller
             }
             return null;
         }
+
     }
 
     private function getNextReadMessage($id): ?Message
