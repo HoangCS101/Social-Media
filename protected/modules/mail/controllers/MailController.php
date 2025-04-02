@@ -7,6 +7,7 @@ use humhub\components\Controller;
 use humhub\modules\file\handler\FileHandlerCollection;
 use humhub\modules\mail\helpers\Url;
 use humhub\modules\mail\models\forms\CreateMessage;
+use humhub\modules\mail\models\forms\SecureCreateMessage;
 use humhub\modules\mail\models\forms\InviteParticipantForm;
 use humhub\modules\mail\models\forms\ReplyForm;
 use humhub\modules\mail\models\forms\SecureReplyForm;
@@ -30,7 +31,7 @@ use Yii;
 use yii\helpers\Html;
 use yii\web\ForbiddenHttpException;
 use yii\web\HttpException;
-use yii\web\NotFoundHttpException;
+use yii\web\NotFoundHttpException; 
 
 /**
  * MailController provides messaging actions.
@@ -374,28 +375,9 @@ class MailController extends Controller
             }
         }
 
-        if ($model->load(Yii::$app->request->post())) {
-            if($model->secure) {
-                $data = [
-                    'recipient' => $userGuid,
-                    'title' => $model->title,
-                    'message' => $model->message,
-                ];
-            
-                // Send data to another server
-                $response = Yii::$app->httpClient->post('https://external-server.com/api/create-conversation', $data)->send();
-            
-                if ($response->isOk) {
-                    return $this->htmlRedirect(['index', 'id' => $response->data->id, 'type' => 'secure']);
-                } else {
-                    Yii::$app->session->setFlash('error', 'Failed to store the secure message.');
-                }
-            }
-            else {
-                if($model->save()) {
-                    return $this->htmlRedirect(['index', 'id' => $model->messageInstance->id]);
-                }
-            }
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $type = $model->secure ? 'secure': 'normal';
+            return $this->htmlRedirect(['index', 'id' => $model->messageInstance->id, 'type' => $type]);
         }
 
         return $this->renderAjax('create', [

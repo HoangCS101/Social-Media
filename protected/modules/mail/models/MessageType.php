@@ -29,7 +29,25 @@ use yii\helpers\Html;
  * @package humhub.modules.mail.models
  * @since 0.5
  */
-class SecureMessage extends Message
+class MessageType extends ActiveRecord
 {
-   
+    public static function tableName()
+    {
+        return 'message_type';
+    }
+
+    /**
+     * @return array validation rules for model attributes.
+     */
+    public function rules()
+    {
+        // NOTE: you should only define rules for those attributes that
+        // will receive user inputs.
+        return [
+            [['message_id', 'type'], 'required'],
+            [['message_id'], 'integer'],
+            [['type'], 'string', 'max' => 255],
+        ];
+    }
+
 }

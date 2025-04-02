@@ -141,6 +141,11 @@ class CreateMessage extends Model
                 return false;
             }
 
+            if(!$this->saveMessageType()) {
+                $transaction->rollBack();
+                return false;
+            }
+
             if (!$this->saveRecipients()) {
                 $transaction->rollBack();
                 return false;
@@ -202,6 +207,13 @@ class CreateMessage extends Model
         return $this->messageInstance->save();
     }
 
+    private function saveMessageType()
+    {
+        $type = $this->secure ? 'secure': 'normal';
+
+        return $this->messageInstance->addType($type);
+    }
+
 
     /**
      * Returns an Array with selected recipients
@@ -213,13 +225,28 @@ class CreateMessage extends Model
 
     private function saveMessageEntry()
     {
-        $entry = MessageEntry::createForMessage($this->messageInstance, Yii::$app->user->getIdentity(), $this->message);
-        $result = $entry->save();
-        if ($result) {
-            $entry->fileManager->attach($this->files);
+        if($this->secure) {
+            // $entry = MessageEntry::createForMessage($this->messageInstance, Yii::$app->user->getIdentity(), $this->message);
+            // $result = $entry->save();
+            // if ($result) {
+            //     $entry->fileManager->attach($this->files);
+            // }
+            // $entry->notify(true);
+            // return $result;
+            $entry = MessageEntry::createForMessage($this->messageInstance, Yii::$app->user->getIdentity(), $this->message);
+            $entry->notify(true);
+            return true;
         }
-        $entry->notify(true);
-        return $result;
+        else {
+            $entry = MessageEntry::createForMessage($this->messageInstance, Yii::$app->user->getIdentity(), $this->message);
+            $result = $entry->save();
+            if ($result) {
+                $entry->fileManager->attach($this->files);
+            }
+            $entry->notify(true);
+            return $result;
+        }
+        
     }
 
     private function saveOriginatorUserMessage()

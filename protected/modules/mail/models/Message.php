@@ -33,10 +33,17 @@ class Message extends ActiveRecord
 {
     private ?MessageEntry $_lastEntry = null;
     private ?int $_userCount = null;
+    // public string $type = '';
 
     /**
      * @return string the associated database table name
      */
+
+    // public function init() {
+    //     parent::init();
+    //     $this->type = $this->getType();
+    // }
+
     public static function tableName()
     {
         return 'message';
@@ -56,6 +63,15 @@ class Message extends ActiveRecord
         ];
     }
 
+    public function getType()
+    {
+        $type = $this->hasOne(MessageType::class, ['message_id' => 'id'])->one();
+        if(!$type && $this->addType('normal')) {
+            return 'normal';
+        }
+        return $type->type;
+    }
+
     public function getEntryUpdates($from = null)
     {
         $query = $this->hasMany(MessageEntry::class, ['message_id' => 'id']);
@@ -72,12 +88,15 @@ class Message extends ActiveRecord
      * @param int|null $from
      * @return MessageEntry[]
      */
-    public function getEntryPage($from = null, $type = 'normal')
+    public function getEntryPage($from = null)
     {
-        if($type === 'secure') {
+        if($this->getType() === 'secure' ) {
+            $query = $this->getSecureEntries();
+        }
+        else {
+            $query = $this->getEntries();
             
         }
-        $query = $this->getEntries();
         $query->addOrderBy(['created_at' => SORT_DESC]);
 
         if ($from) {
@@ -89,6 +108,7 @@ class Message extends ActiveRecord
         $query->limit($limit);
 
         return array_reverse($query->all());
+        
     }
 
     /**
@@ -97,6 +117,10 @@ class Message extends ActiveRecord
     public function getEntries()
     {
         return $this->hasMany(MessageEntry::class, ['message_id' => 'id']);
+    }
+
+    public function getSecureEntries() {
+        /*TODO */
     }
 
     /**
@@ -356,6 +380,15 @@ class Message extends ActiveRecord
 
         return $userMessage->save();
 
+    }
+
+    public function addType(string $type = 'normal'): bool
+    {
+        $messsageType = new MessageType([
+            'message_id' => $this->id,
+            'type' => $type
+        ]);
+        return $messsageType->save();
     }
 
     /**

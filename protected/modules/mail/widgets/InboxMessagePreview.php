@@ -18,6 +18,7 @@ use Yii;
 class InboxMessagePreview extends Widget
 {
     public ?UserMessage $userMessage = null;
+    public string $type = 'normal';
     private ?Message $_message = null;
 
     public function run()
@@ -27,6 +28,7 @@ class InboxMessagePreview extends Widget
         }
 
         return $this->render('inboxMessagePreview', [
+            'type' => $this->type,
             'message' => $this->userMessage->message,
             'messageTitle' => $this->getMessageTitle(),
             'messageText' => $this->getMessagePreview(),

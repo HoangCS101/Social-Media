@@ -3,6 +3,7 @@
 namespace humhub\modules\mail\models\forms;
 
 use humhub\modules\mail\models\Message;
+use humhub\modules\mail\models\MessageType;
 use humhub\modules\mail\models\MessageEntry;
 use humhub\modules\mail\models\UserMessage;
 use humhub\modules\mail\models\UserMessageTag;
@@ -33,6 +34,10 @@ class InboxFilterForm extends QueryFilter
      * @var array
      */
     public $tags;
+    /**
+     * @var string
+     */
+    public $type;
 
     /**
      * @inheritDoc
@@ -57,7 +62,7 @@ class InboxFilterForm extends QueryFilter
     /**
      * @var
      */
-    private $wasLastPage;
+    private $wasLastPage = false;
 
     /**
      * @inheritDoc
@@ -76,11 +81,10 @@ class InboxFilterForm extends QueryFilter
     /**
      * @inheritDoc
      */
-    public function init($type = 'normal')
+    public function init()
     {
         parent::init();
 
-        if($type == 'normal') {
             if ($this->autoLoad === self::AUTO_LOAD_ALL || $this->autoLoad === self::AUTO_LOAD_GET) {
                 $keyword = Yii::$app->request->get('keyword');
                 if ($keyword !== null) {
@@ -89,32 +93,38 @@ class InboxFilterForm extends QueryFilter
             }
     
             $this->query = UserMessage::findByUser();
-        }
         
-        if($type == 'secure') {
-            $apiUrl = 'https://your-node-server.com/api/conversations';
+        // if($type == 'secure') {
+        //     $apiUrl = 'https://your-node-server.com/api/conversations';
         
-            try {
-                $client = new \yii\httpclient\Client();
-                $response = $client->createRequest()
-                    ->setMethod('GET')
-                    ->setUrl($apiUrl)
-                    ->setHeaders([
-                        'secret_key' . Yii::$app->user->identity->secret_key, // Thêm token nếu cần
-                        'Accept' => 'application/json'
-                    ])
-                    ->send();
+        //     try {
+        //         $client = new \yii\httpclient\Client();
+        //         $response = $client->createRequest()
+        //             ->setMethod('GET')
+        //             ->setUrl($apiUrl)
+        //             ->setHeaders([
+        //                 'secret_key' . Yii::$app->user->identity->secret_key, // Thêm token nếu cần
+        //                 'Accept' => 'application/json'
+        //             ])
+        //             ->send();
 
-                if ($response->isOk) {
-                    $this->query = $response->data; // Gán dữ liệu lấy từ API vào $this->query
-                } else {
-                    throw new \Exception('Lỗi khi gọi API: ' . $response->content);
-                }
-            } catch (\Exception $e) {
-                Yii::error('Failed to fetch API: ' . $e->getMessage());
-                $this->query = []; // Gán danh sách rỗng nếu lỗi
-            }
-        }
+        //         if ($response->isOk) {
+        //             $this->query = $response->data; // Gán dữ liệu lấy từ API vào $this->query
+        //         } else {
+        //             throw new \Exception('Lỗi khi gọi API: ' . $response->content);
+        //         }
+        //     } catch (\Exception $e) {
+        //         Yii::error('Failed to fetch API: ' . $e->getMessage());
+        //         $this->query = []; // Gán danh sách rỗng nếu lỗi
+        //     }
+        // }
+
+        // [{
+        //     message_id: '1',
+        //     title: 'Hello',
+        //     user_id: ['eb03f4c8-8f12-4d79-842a-eff111ba1c2f'],       //     message: ['']
+
+        // }]
     }
 
     /**
@@ -122,6 +132,11 @@ class InboxFilterForm extends QueryFilter
      */
     public function apply()
     {
+
+        $participantsExistsSubQuery = MessageType::find()->where('message_type.message_id = message.id')
+                    ->andWhere(['message_type.type' =>$this->type]);
+        $this->query->andWhere(new ExistsCondition('EXISTS', $participantsExistsSubQuery));
+
         if(!empty($this->term)) {
             $messageEntryContentSubQuery = MessageEntry::find()->where('message_entry.message_id = message.id')
                 ->andWhere($this->createTermLikeCondition('message_entry.content'));
@@ -138,7 +153,6 @@ class InboxFilterForm extends QueryFilter
                     ->andWhere(['user.guid' => $userGuid]);
                 $this->query->andWhere(new ExistsCondition('EXISTS', $participantsExistsSubQuery));
             }
-
         }
 
         if(!empty($this->tags)) {
@@ -163,46 +177,8 @@ class InboxFilterForm extends QueryFilter
         if(!empty($this->ids)) {
             $this->query->andWhere(['IN', 'user_message.message_id', $this->ids]);
         }
-    }
+    } 
 
-    public function secureApply()
-    {
-        $apiUrl = 'https://secure-message-service.com/api/conversations';
-
-        $user = Yii::$app->user->identity;
-        if (!$user) {
-            throw new HttpException('User not authenticated');
-        }
-
-        $userKey = UserKey::findOne(['user_id' => $user->id]);
-        if (!$userKey || empty($userKey->secret_key)) {
-            throw new HttpException('User doesn\'t register to access secure chat');
-            
-        }
-
-        try {
-            $response = Yii::$app->httpClient->get($apiUrl, [], [
-                'headers' => [
-                    'secret_key' => $userKey,
-                    'Accept' => 'application/json',
-                ],
-            ])->send();
-
-            if ($response->isOk) {
-                return $response->data; // Trả về JSON từ API
-            } else {
-                return [
-                    'error' => 'API request failed',
-                    'status' => $response->statusCode,
-                ];
-            }
-        } catch (\Exception $e) {
-            return [
-                'error' => 'Exception occurred',
-                'message' => $e->getMessage(),
-            ];
-        }
-    }
     private function createTermLikeCondition($column)
     {
         return new LikeCondition($column, 'LIKE', $this->term);
@@ -211,20 +187,16 @@ class InboxFilterForm extends QueryFilter
     /**
      * @return UserMessage[]
      */
-    public function getPageNormal()
+    public function getPage($type)
     {
+        $this->type = $type;
         $this->apply();
         $module = Module::getModuleInstance();
         $pageSize = $this->from ? $module->inboxUpdatePageSize : $module->inboxInitPageSize;
         $result = $this->query->limit($pageSize)->all();
         $this->wasLastPage = count($result) < $pageSize;
         return $result;
-    }
-
-    public function getPageSecure()
-    {
-        $data = $this->secureApply();
-        return $data;
+    
     }
 
     public function wasLastPage()
