@@ -95,7 +95,6 @@ class Message extends ActiveRecord
         }
         else {
             $query = $this->getEntries();
-            
         }
         $query->addOrderBy(['created_at' => SORT_DESC]);
 
@@ -121,6 +120,7 @@ class Message extends ActiveRecord
 
     public function getSecureEntries() {
         /*TODO */
+        return [];
     }
 
     /**

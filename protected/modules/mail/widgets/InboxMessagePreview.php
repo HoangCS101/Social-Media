@@ -9,6 +9,7 @@ use humhub\libs\Html;
 use humhub\modules\content\widgets\richtext\RichText;
 use humhub\modules\mail\helpers\Url;
 use humhub\modules\mail\models\AbstractMessageEntry;
+use humhub\modules\mail\models\AbstractSecureMessageEntry;
 use humhub\modules\mail\models\Message;
 use humhub\modules\mail\models\MessageEntry;
 use humhub\modules\mail\models\UserMessage;
@@ -99,6 +100,7 @@ class InboxMessagePreview extends Widget
 
     public function getMessagePreview(): string
     {
+        if($this->type == 'secure') return '';
         switch ($this->getLastEntry()->type) {
             case AbstractMessageEntry::TYPE_USER_JOINED:
                 return $this->isOwnLastEntry()
@@ -106,6 +108,15 @@ class InboxMessagePreview extends Widget
                     : Yii::t('MailModule.base', '{username} joined the conversation.', ['username' => $this->getUsername()]);
 
             case AbstractMessageEntry::TYPE_USER_LEFT:
+                return $this->isOwnLastEntry()
+                    ? Yii::t('MailModule.base', 'You left the conversation.')
+                    : Yii::t('MailModule.base', '{username} left the conversation.', ['username' => $this->getUsername()]);
+            case AbstractSecureMessageEntry::TYPE_USER_JOINED:
+                return $this->isOwnLastEntry()
+                    ? Yii::t('MailModule.base', 'You joined the conversation.')
+                    : Yii::t('MailModule.base', '{username} joined the conversation.', ['username' => $this->getUsername()]);
+
+            case AbstractSecureMessageEntry::TYPE_USER_LEFT:
                 return $this->isOwnLastEntry()
                     ? Yii::t('MailModule.base', 'You left the conversation.')
                     : Yii::t('MailModule.base', '{username} left the conversation.', ['username' => $this->getUsername()]);

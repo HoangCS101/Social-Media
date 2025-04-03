@@ -4,7 +4,9 @@ namespace humhub\modules\mail\models;
 
 use humhub\components\ActiveRecord;
 use humhub\modules\mail\models\states\MessageUserJoined;
+use humhub\modules\mail\models\states\SecureMessageUserJoined;
 use humhub\modules\mail\models\states\MessageUserLeft;
+use humhub\modules\mail\models\states\SecureMessageUserLeft;
 use humhub\modules\user\models\User;
 use Yii;
 
@@ -130,7 +132,14 @@ class UserMessage extends ActiveRecord
         parent::afterSave($insert, $changedAttributes);
 
         if ($insert && $this->informAfterAdd) {
-            MessageUserJoined::inform($this->message, $this->user);
+            $type = $this->message->hasOne(MessageType::class, ['message_id' => 'id'])->one()->type;
+            if($type === 'secure') {
+                SecureMessageUserJoined::inform($this->message, $this->user);
+            }
+            else {
+                MessageUserJoined::inform($this->message, $this->user);
+
+            }
         }
     }
 
@@ -140,6 +149,12 @@ class UserMessage extends ActiveRecord
     public function afterDelete()
     {
         parent::afterDelete();
-        MessageUserLeft::inform($this->message, $this->user);
+        $type = $this->message->hasOne(MessageType::class, ['message_id' => 'id'])->one()->type;
+        if($type === 'secure') {
+            SecureMessageUserLeft::inform($this->message, $this->user);
+        }
+        else {
+            MessageUserLeft::inform($this->message, $this->user);
+        }
     }
 }

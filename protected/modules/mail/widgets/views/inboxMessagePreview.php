@@ -38,9 +38,11 @@ use yii\helpers\Html;
                     <span><?= Html::encode($message->title) ?></span>
                     <span class="new-message-badge"></span>
                 </h5>
-                <div class="mail-last-entry">
-                    <?= $messageText ?>
-                </div>
+                <?php if ($type == 'normal'): ?>
+                    <div class="mail-last-entry">
+                        <?= $messageText ?>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>

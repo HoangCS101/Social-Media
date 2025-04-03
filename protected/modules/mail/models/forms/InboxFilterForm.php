@@ -140,7 +140,6 @@ class InboxFilterForm extends QueryFilter
         if(!empty($this->term)) {
             $messageEntryContentSubQuery = MessageEntry::find()->where('message_entry.message_id = message.id')
                 ->andWhere($this->createTermLikeCondition('message_entry.content'));
-
             $this->query->andWhere(new OrCondition([
                 new ExistsCondition('EXISTS', $messageEntryContentSubQuery),
                 $this->createTermLikeCondition('message.title'),

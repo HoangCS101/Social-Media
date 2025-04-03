@@ -13,7 +13,7 @@ use humhub\modules\mail\models\forms\ReplyForm;
 use humhub\modules\mail\models\forms\SecureReplyForm;
 use humhub\modules\mail\models\Message;
 use humhub\modules\mail\models\MessageEntry;
-use humhub\modules\mail\models\SecureMessageEntry;
+use humhub\modules\mail\models\TemporaryMessageEntry;
 use humhub\modules\mail\models\UserMessage;
 use humhub\modules\mail\Module;
 use humhub\modules\mail\permissions\SendMail;

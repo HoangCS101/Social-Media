@@ -10,6 +10,7 @@ namespace humhub\modules\mail\widgets;
 use humhub\components\Widget;
 use humhub\libs\Html;
 use humhub\modules\mail\models\AbstractMessageEntry;
+use humhub\modules\mail\models\AbstractSecureMessageEntry;
 use humhub\modules\mail\models\MessageEntry;
 use humhub\modules\user\models\User;
 use Yii;
@@ -51,6 +52,15 @@ class ConversationStateBadge extends Widget
                     : Yii::t('MailModule.base', '{username} joined the conversation.', ['username' => $this->username]);
 
             case AbstractMessageEntry::TYPE_USER_LEFT:
+                return $this->isOwn()
+                    ? Yii::t('MailModule.base', 'You left the conversation.')
+                    : Yii::t('MailModule.base', '{username} left the conversation.', ['username' => $this->username]);
+            case AbstractSecureMessageEntry::TYPE_USER_JOINED:
+                return $this->isOwn()
+                    ? Yii::t('MailModule.base', 'You joined the conversation.')
+                    : Yii::t('MailModule.base', '{username} joined the conversation.', ['username' => $this->username]);
+
+            case AbstractSecureMessageEntry::TYPE_USER_LEFT:
                 return $this->isOwn()
                     ? Yii::t('MailModule.base', 'You left the conversation.')
                     : Yii::t('MailModule.base', '{username} left the conversation.', ['username' => $this->username]);

@@ -189,6 +189,12 @@ class MessageNotification extends BaseObject
                 : Yii::t('MailModule.base', '{username} joined the conversation.', ['username' => $this->entry->user->displayName]);
         }
 
+        if ($this->entry->type === AbstractSecureMessageEntry::TYPE_USER_JOINED) {
+            return $this->entry->user->is($user)
+                ? Yii::t('MailModule.base', 'You joined the conversation.')
+                : Yii::t('MailModule.base', '{username} joined the conversation.', ['username' => $this->entry->user->displayName]);
+        }
+
         return RichTextToEmailHtmlConverter::process($this->entry->content, [
             RichTextToEmailHtmlConverter::OPTION_RECEIVER_USER => $user,
             RichTextToHtmlConverter::OPTION_LINK_AS_TEXT => true,
@@ -242,6 +248,12 @@ class MessageNotification extends BaseObject
         $params = ['{senderName}' => $this->getEntrySender()->displayName];
 
         if ($this->entry->type === AbstractMessageEntry::TYPE_USER_JOINED) {
+            return $this->entry->user->is($user)
+                ? Yii::t('MailModule.base', 'You joined the conversation.')
+                : Yii::t('MailModule.base', '{username} joined the conversation.', ['username' => $this->entry->user->displayName]);
+        }
+
+        if ($this->entry->type === AbstractSecureMessageEntry::TYPE_USER_JOINED) {
             return $this->entry->user->is($user)
                 ? Yii::t('MailModule.base', 'You joined the conversation.')
                 : Yii::t('MailModule.base', '{username} joined the conversation.', ['username' => $this->entry->user->displayName]);

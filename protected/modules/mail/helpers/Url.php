@@ -92,7 +92,8 @@ class Url extends \yii\helpers\Url
 
     public static function toMessenger(Message $message = null, $scheme = false)
     {
-        $route = $message ? ['/mail/mail/index', 'id' => $message->id] : ['/mail/mail/index'];
+        $type = $message?->getType();
+        $route = $message ? ['/mail/mail/index', 'id' => $message->id, 'type' => $type] : ['/mail/mail/index'];
         return static::to($route, $scheme);
     }
 
