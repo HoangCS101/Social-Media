@@ -130,11 +130,11 @@ class InboxFilterForm extends QueryFilter
     /**
      * @inheritDoc
      */
-    public function apply()
+    public function apply(string $type = 'normal')
     {
 
         $participantsExistsSubQuery = MessageType::find()->where('message_type.message_id = message.id')
-                    ->andWhere(['message_type.type' =>$this->type]);
+                    ->andWhere(['message_type.type' =>$type]);
         $this->query->andWhere(new ExistsCondition('EXISTS', $participantsExistsSubQuery));
 
         if(!empty($this->term)) {
@@ -188,8 +188,7 @@ class InboxFilterForm extends QueryFilter
      */
     public function getPage($type)
     {
-        $this->type = $type;
-        $this->apply();
+        $this->apply($type);
         $module = Module::getModuleInstance();
         $pageSize = $this->from ? $module->inboxUpdatePageSize : $module->inboxInitPageSize;
         $result = $this->query->limit($pageSize)->all();

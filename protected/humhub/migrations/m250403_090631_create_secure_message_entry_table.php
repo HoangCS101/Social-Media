@@ -16,7 +16,7 @@ class m250403_090631_create_secure_message_entry_table extends Migration
             'id' => $this->primaryKey(),
             'message_id' => $this->integer(10)->notNull(),
             'user_id' => $this->integer(10)->notNull(),
-            'type' => $this->string()->defaultValue('0'),
+            'type' => $this->integer()->defaultValue(0),
             'created_at' => $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP'),
             'created_by' => $this->integer(10)->notNull(),
             'updated_by' => $this->integer(10)->notNull(),

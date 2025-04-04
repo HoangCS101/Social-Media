@@ -120,7 +120,7 @@ class Message extends ActiveRecord
 
     public function getSecureEntries() {
         /*TODO */
-        return [];
+        return $this->hasMany(SecureMessageEntry::class, ['message_id' => 'id']);
     }
 
     /**

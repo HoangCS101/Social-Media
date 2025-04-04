@@ -195,6 +195,14 @@ class MessageNotification extends BaseObject
                 : Yii::t('MailModule.base', '{username} joined the conversation.', ['username' => $this->entry->user->displayName]);
         }
 
+        if ($this->entry->type === AbstractSecureMessageEntry::TYPE_MESSAGE) {
+            return RichTextToEmailHtmlConverter::process('You receive new secure message', [
+                RichTextToEmailHtmlConverter::OPTION_RECEIVER_USER => $user,
+                RichTextToHtmlConverter::OPTION_LINK_AS_TEXT => true,
+                RichTextToHtmlConverter::OPTION_CACHE_KEY => 'mail_entry_message_' . $this->entry->id,
+            ]);
+        }
+
         return RichTextToEmailHtmlConverter::process($this->entry->content, [
             RichTextToEmailHtmlConverter::OPTION_RECEIVER_USER => $user,
             RichTextToHtmlConverter::OPTION_LINK_AS_TEXT => true,

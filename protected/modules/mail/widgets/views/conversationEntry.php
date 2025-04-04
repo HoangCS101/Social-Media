@@ -37,7 +37,7 @@ use humhub\modules\user\widgets\Image;
         <div class="d-flex flex-row <?= $isOwnMessage ? 'justify-end' : '' ?>">
             <?= ConversationEntryMenu::widget(['entry' => $entry]) ?>
             
-            <div 
+            <div  
                 class="<?= $contentClass ?>" 
                 style="
                     background-color: <?= $showUser? '#fff': '#234dffcc'?> !important; 

@@ -77,37 +77,19 @@ class MailController extends Controller
      */
     public function actionShow($id, $type)
     {
-        if($type == 'secure') {
-            $message = ($id instanceof Message) ? $id : $this->getSecureMessage($id);
-            $this->checkMessagePermissions($message);
-    
-            // Marks message as seen
-            $message->seen(Yii::$app->user->id);
-            
-            return $this->renderAjax('conversation', [
-                'message' => $message,
-                'type' => $type,
-                'messageCount' => UserMessage::getNewMessageCount(),
-                'replyForm' => $type === 'secure'? new ReplyForm(['model' => $message]) : new SecureReplyForm(['model' => $message]),
-                'fileHandlers' => FileHandlerCollection::getByType([FileHandlerCollection::TYPE_IMPORT, FileHandlerCollection::TYPE_CREATE]),
-            ]);
-        } 
-        else {
-            $message = ($id instanceof Message) ? $id : $this->getMessage($id); 
-            $this->checkMessagePermissions($message);
-    
-            // Marks message as seen
-            $message->seen(Yii::$app->user->id);
+        $message = ($id instanceof Message) ? $id : $this->getMessage($id);
+        $this->checkMessagePermissions($message);
+
+        // Marks message as seen
+        $message->seen(Yii::$app->user->id);
         
-            return $this->renderAjax('conversation', [
-                'message' => $message,
-                'type' => $type,
-                'messageCount' => UserMessage::getNewMessageCount(),
-                'replyForm' => $type === 'secure'? new ReplyForm(['model' => $message]) : new SecureReplyForm(['model' => $message]),
-                'fileHandlers' => FileHandlerCollection::getByType([FileHandlerCollection::TYPE_IMPORT, FileHandlerCollection::TYPE_CREATE]),
-            ]);
-        }
-        
+        return $this->renderAjax('conversation', [
+            'message' => $message,
+            'type' => $type,
+            'messageCount' => UserMessage::getNewMessageCount(),
+            'replyForm' => $type === 'secure'? new ReplyForm(['model' => $message]) : new SecureReplyForm(['model' => $message]),
+            'fileHandlers' => FileHandlerCollection::getByType([FileHandlerCollection::TYPE_IMPORT, FileHandlerCollection::TYPE_CREATE]),
+        ]);
     }
 
     public function actionSeen()
@@ -293,7 +275,7 @@ class MailController extends Controller
         return $this->asJson($result);
     }
 
-    private function checkMessagePermissions($message)
+    private function checkMessagePermissions($message ,)
     {
         if ($message == null) {
             throw new HttpException(404, 'Could not find message!');

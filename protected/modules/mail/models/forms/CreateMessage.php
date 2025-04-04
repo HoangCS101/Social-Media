@@ -227,17 +227,22 @@ class CreateMessage extends Model
     private function saveMessageEntry()
     {
         if($this->secure) {
-            $entry = SecureMessageEntry::createForMessage($this->messageInstance, Yii::$app->user->getIdentity(), $this->message);
-
+            $entry = SecureMessageEntry::createForMessage($this->messageInstance, Yii::$app->user->getIdentity());
+            if ($entry->hasAttribute('content')) {
+                unset($entry->content);
+            }   
         }
         else {
             $entry = MessageEntry::createForMessage($this->messageInstance, Yii::$app->user->getIdentity(), $this->message);
         }
+        
+            
+
         $result = $entry->save();
         if ($result) {
             $entry->fileManager->attach($this->files);
         }
-        $entry->notify(true);
+        // $entry->notify(true);
         return true; 
     }
 

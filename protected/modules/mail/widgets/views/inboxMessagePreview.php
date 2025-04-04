@@ -32,7 +32,7 @@ use yii\helpers\Html;
             <div class="media-body text-break">
                 <h4 class="media-heading">
                     <?= Html::encode($messageTitle) . ' ' . $message->getPinIcon() ?>
-                    <time><?= $messageTime ?></time>
+                    <time><?= $messageTime ?></time> 
                 </h4>
                 <h5>
                     <span><?= Html::encode($message->title) ?></span>

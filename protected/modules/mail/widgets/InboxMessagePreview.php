@@ -100,7 +100,7 @@ class InboxMessagePreview extends Widget
 
     public function getMessagePreview(): string
     {
-        if($this->type == 'secure') return '';
+        if($this->type == 'secure') return 'You can see this message';
         switch ($this->getLastEntry()->type) {
             case AbstractMessageEntry::TYPE_USER_JOINED:
                 return $this->isOwnLastEntry()

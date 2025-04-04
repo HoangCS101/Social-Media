@@ -65,15 +65,14 @@ class SecureMessageEntry extends AbstractSecureMessageEntry
     public function notify(bool $isNewConversation = false)
     {
         $message = new MessageEntry([
-            'id' => $this->id,
             'message_id' => $this->message_id,
             'user_id' => $this->user_id,
-            'content' => null,
             'type' => $this->type,
+            'content' => null,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'created_by' => $this->created_by,
-            'updated_at' => $this->updated_at,
+            'updated_by' => $this->updated_by,
         ]);
         $messageNotification = new MessageNotification($this->message, $message);
         $messageNotification->isNewConversation = $isNewConversation;
