@@ -13,7 +13,7 @@ use humhub\modules\mail\models\forms\ReplyForm;
 use humhub\modules\mail\models\forms\SecureReplyForm;
 use humhub\modules\mail\models\Message;
 use humhub\modules\mail\models\MessageEntry;
-use humhub\modules\mail\models\TemporaryMessageEntry;
+use humhub\modules\mail\models\SecureMessageEntry;
 use humhub\modules\mail\models\UserMessage;
 use humhub\modules\mail\Module;
 use humhub\modules\mail\permissions\SendMail;
@@ -120,15 +120,15 @@ class MailController extends Controller
         ]));
     }
 
-    public function actionLoadMore($id, $from)
+    public function actionLoadMore($id)
     {
         $message = ($id instanceof Message) ? $id : $this->getMessage($id);
 
         $this->checkMessagePermissions($message);
 
-        $entries = $message->getEntryPage($from);
+        $entries = $message->getEntryPage();
 
-        $result = Messages::widget(['message' => $message, 'from' => $from]);
+        $result = Messages::widget(['message' => $message, 'from' => null]);
 
         return $this->asJson([
             'result' => $result,
@@ -450,7 +450,7 @@ class MailController extends Controller
      */
     public function actionEditEntry($id)
     {
-        $entry = MessageEntry::findOne(['id' => $id]);
+        $entry = MessageEntry::findOne(['id' => $id]) ?? SecureMessageEntry::findOne(['id' => $id]);
 
         if (!$entry) {
             throw new HttpException(404);
@@ -485,7 +485,7 @@ class MailController extends Controller
     public function actionDeleteEntry($id)
     {
         $this->forcePostRequest();
-        $entry = MessageEntry::findOne(['id' => $id]);
+        $entry = MessageEntry::findOne(['id' => $id]) ?? SecureMessageEntry::findOne(['id' => $id]);
 
         if (!$entry) {
             throw new HttpException(404);
