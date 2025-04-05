@@ -5,6 +5,7 @@ namespace humhub\modules\mail\models\forms;
 use humhub\modules\mail\models\Message;
 use humhub\modules\mail\models\MessageType;
 use humhub\modules\mail\models\MessageEntry;
+use humhub\modules\mail\models\SecureMessageEntry;
 use humhub\modules\mail\models\UserMessage;
 use humhub\modules\mail\models\UserMessageTag;
 use humhub\modules\user\models\UserKey;
@@ -136,10 +137,15 @@ class InboxFilterForm extends QueryFilter
         $participantsExistsSubQuery = MessageType::find()->where('message_type.message_id = message.id')
                     ->andWhere(['message_type.type' =>$type]);
         $this->query->andWhere(new ExistsCondition('EXISTS', $participantsExistsSubQuery));
-
+        
         if(!empty($this->term)) {
-            $messageEntryContentSubQuery = MessageEntry::find()->where('message_entry.message_id = message.id')
+            if($type === 'normal') {
+                $messageEntryContentSubQuery = MessageEntry::find()->where('message_entry.message_id = message.id')
                 ->andWhere($this->createTermLikeCondition('message_entry.content'));
+            }
+            else {
+                $messageEntryContentSubQuery = SecureMessageEntry::find()->where('message_entry.message_id = message.id');
+            }
             $this->query->andWhere(new OrCondition([
                 new ExistsCondition('EXISTS', $messageEntryContentSubQuery),
                 $this->createTermLikeCondition('message.title'),

@@ -74,7 +74,10 @@ class Message extends ActiveRecord
 
     public function getEntryUpdates($from = null)
     {
-        $query = $this->hasMany(MessageEntry::class, ['message_id' => 'id']);
+        $query = $this->type === 'secure' 
+        ? $this->hasMany(SecureMessageEntry::class, ['message_id' => 'id']) 
+        : $this->hasMany(MessageEntry::class, ['message_id' => 'id']);
+
         $query->addOrderBy(['created_at' => SORT_ASC]);
 
         if ($from) {
@@ -86,11 +89,11 @@ class Message extends ActiveRecord
 
     /**
      * @param int|null $from
-     * @return MessageEntry[]
+     * @return MessageEntry[]|SecureMessageEntry[]
      */
     public function getEntryPage($from = null)
     {
-        if($this->getType() === 'secure' ) {
+        if($this->type === 'secure' ) {
             $query = $this->getSecureEntries();
         }
         else {

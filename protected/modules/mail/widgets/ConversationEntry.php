@@ -48,15 +48,28 @@ class ConversationEntry extends JsWidget
      */
     public function run()
     {
-        if ($this->entry->type === MessageEntry::type()) {
+        // echo "<pre>";
+
+        // $this->showDateBadge();
+        // echo "</pre>";
+        echo "<pre>";
+        var_dump($this->entry);
+        echo "</pre>";
+        // exit; 
+        if ($this->entry->type === MessageEntry::type() || $this->entry->type === MessageEntry::type()) {
             return $this->runMessage();
         }
+
+        // if ($this->entry->type === SecureMessageEntry::type()) {
+        //     return $this->runMessage();
+        // }
 
         return $this->runState();
     }
 
     public function runMessage(): string
     {
+        
         $showUser = $this->showUser();
 
         return $this->render('conversationEntry', [

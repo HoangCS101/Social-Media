@@ -81,7 +81,7 @@ abstract class AbstractSecureMessageEntry extends ActiveRecord
         return [
             [['message_id', 'user_id'], 'required'],
             [['message_id', 'user_id', 'created_by', 'updated_by'], 'integer'],
-            // [['type'], 'string', 'max' => 50], // Giới hạn độ dài type
+            // [['type'], 'int'], // Giới hạn độ dài type
             [['created_at', 'updated_at'], 'safe'],
             [['message_id'], 'exist', 'skipOnError' => true, 'targetClass' => Message::class, 'targetAttribute' => ['message_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
