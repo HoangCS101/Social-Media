@@ -4,6 +4,7 @@ use humhub\libs\Html;
 use humhub\modules\content\widgets\richtext\RichText;
 use humhub\modules\file\widgets\ShowFiles;
 use humhub\modules\mail\models\MessageEntry;
+use humhub\modules\mail\models\SecureMessageEntry;
 use humhub\modules\mail\widgets\ConversationDateBadge;
 use humhub\modules\mail\widgets\ConversationEntryMenu;
 use humhub\modules\mail\widgets\MessageEntryTime;
@@ -24,6 +25,7 @@ use humhub\modules\user\widgets\Image;
 <?php endif; ?>
 
 <?= Html::beginTag('div', $options) ?>
+
 <div class="d-flex flex-row">
     <?php if ($showUser) : ?>
         <span class="author-image pull-left mr-2">
@@ -66,6 +68,4 @@ use humhub\modules\user\widgets\Image;
         <?php endif; ?>
     </div>
 </div>
-
-
 <?= Html::endTag('div') ?>

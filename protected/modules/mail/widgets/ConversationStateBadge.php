@@ -12,6 +12,7 @@ use humhub\libs\Html;
 use humhub\modules\mail\models\AbstractMessageEntry;
 use humhub\modules\mail\models\AbstractSecureMessageEntry;
 use humhub\modules\mail\models\MessageEntry;
+use humhub\modules\mail\models\SecureMessageEntry;
 use humhub\modules\user\models\User;
 use Yii;
 
@@ -20,7 +21,7 @@ use Yii;
  */
 class ConversationStateBadge extends Widget
 {
-    public MessageEntry $entry;
+    public MessageEntry|SecureMessageEntry $entry;
     public array $options = ['class' => 'conversation-entry-badge conversation-state-badge'];
 
     /**

@@ -11,6 +11,7 @@ namespace humhub\modules\mail\widgets;
 use humhub\libs\Html;
 use humhub\modules\mail\helpers\Url;
 use humhub\modules\mail\models\MessageEntry;
+use humhub\modules\mail\models\SecureMessageEntry;
 use humhub\widgets\JsWidget;
 use Yii;
 
@@ -22,17 +23,17 @@ class ConversationEntry extends JsWidget
     public $jsWidget = 'mail.ConversationEntry';
 
     /**
-     * @var MessageEntry
+     * @var MessageEntry|SecureMessageEntry
      */
     public $entry;
 
     /**
-     * @var MessageEntry
+     * @var MessageEntry|SecureMessageEntry
      */
     public $prevEntry;
 
     /**
-     * @var MessageEntry
+     * @var MessageEntry|SecureMessageEntry
      */
     public $nextEntry;
 

@@ -10,6 +10,7 @@ namespace humhub\modules\mail\widgets;
 use humhub\components\Widget;
 use humhub\modules\mail\helpers\Url;
 use humhub\modules\mail\models\MessageEntry;
+use humhub\modules\mail\models\SecureMessageEntry;
 use humhub\widgets\ModalButton;
 use Yii;
 
@@ -18,7 +19,7 @@ use Yii;
  */
 class ConversationEntryMenu extends Widget
 {
-    public MessageEntry $entry;
+    public MessageEntry|SecureMessageEntry $entry;
 
     private array $menus = [];
 

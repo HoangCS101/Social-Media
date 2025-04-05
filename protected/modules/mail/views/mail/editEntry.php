@@ -6,6 +6,7 @@ use humhub\modules\file\widgets\FilePreview;
 use humhub\modules\file\widgets\UploadButton;
 use humhub\modules\file\widgets\UploadProgress;
 use humhub\modules\mail\models\MessageEntry;
+use humhub\modules\mail\models\SecureMessageEntry;
 use humhub\modules\mail\widgets\MailRichtextEditor;
 use humhub\widgets\Button;
 use humhub\widgets\ModalButton;
