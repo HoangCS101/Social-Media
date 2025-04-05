@@ -200,11 +200,11 @@ class UserController extends Controller
                         'class' => 'form-control',
                         'label' => Yii::t('UserModule.base', 'Force password change upon next login'),
                     ],
-                    'mustRegisterSecureChat' => [
-                        'type' => 'checkbox',
-                        'class' => 'form-control',
-                        'label' => 'Register secure chat account',
-                    ],
+                    // 'mustRegisterSecureChat' => [
+                    //     'type' => 'checkbox',
+                    //     'class' => 'form-control',
+                    //     'label' => 'Register secure chat account',
+                    // ],
                 ],
             ];
         }
@@ -274,12 +274,12 @@ class UserController extends Controller
 
         if ($registration->submitted('save') && $registration->validate() && $registration->register()) {
             // if($registration->enableRegisterSecureChat) {
-                $result = $this->registerIdentity($registration->getUser()->id);
+                // $result = $this->registerIdentity($registration->getUser()->id);
 
-                if (isset($result['privateKey'])) {
-                    $registration->getUser()->private_key = $result['privateKey'];
+                // if (isset($result['privateKey'])) {
+                    // $registration->getUser()->private_key = $result['privateKey'];
                     $registration->getUser()->save();
-                }
+                // }
             // }
             return $this->redirect(['edit', 'id' => $registration->getUser()->id]);
         }
@@ -465,21 +465,21 @@ class UserController extends Controller
         return array_merge($userColumns, $profileColumns);
     }
 
-    private function registerIdentity($userId) {
-        $client = new Client();
-        $response = $client->createRequest()
-            ->setMethod('POST')
-            ->setUrl('http://nodejs-server:3000/register')
-            ->setData(['userId' => $userId])
-            ->send();
+    // private function registerIdentity($userId) {
+    //     $client = new Client();
+    //     $response = $client->createRequest()
+    //         ->setMethod('POST')
+    //         ->setUrl('http://nodejs-server:3000/register')
+    //         ->setData(['userId' => $userId])
+    //         ->send();
 
-        if ($response->isOk) {
-            $data = $response->data;
-            file_put_contents("certs/{$userId}.pem", $data['certificate']);
-            file_put_contents("certs/{$userId}-key.pem", $data['privateKey']);
-            return $data;
-        }
-        return ['success' => false, 'error' => 'Registration failed'];
-    }
+    //     if ($response->isOk) {
+    //         $data = $response->data;
+    //         file_put_contents("certs/{$userId}.pem", $data['certificate']);
+    //         file_put_contents("certs/{$userId}-key.pem", $data['privateKey']);
+    //         return $data;
+    //     }
+    //     return ['success' => false, 'error' => 'Registration failed'];
+    // }
 
 }

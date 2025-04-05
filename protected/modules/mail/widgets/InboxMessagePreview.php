@@ -12,6 +12,7 @@ use humhub\modules\mail\models\AbstractMessageEntry;
 use humhub\modules\mail\models\AbstractSecureMessageEntry;
 use humhub\modules\mail\models\Message;
 use humhub\modules\mail\models\MessageEntry;
+use humhub\modules\mail\models\SecureMessageEntry;
 use humhub\modules\mail\models\UserMessage;
 use humhub\modules\user\models\User;
 use Yii;
@@ -29,7 +30,6 @@ class InboxMessagePreview extends Widget
         }
 
         return $this->render('inboxMessagePreview', [
-            'type' => $this->type,
             'message' => $this->userMessage->message,
             'messageTitle' => $this->getMessageTitle(),
             'messageText' => $this->getMessagePreview(),
@@ -100,7 +100,7 @@ class InboxMessagePreview extends Widget
 
     public function getMessagePreview(): string
     {
-        if($this->type == 'secure') return 'You can see this message';
+        if($this->message->getType() === 'secure') return 'This message can\'t see';
         switch ($this->getLastEntry()->type) {
             case AbstractMessageEntry::TYPE_USER_JOINED:
                 return $this->isOwnLastEntry()
@@ -120,6 +120,8 @@ class InboxMessagePreview extends Widget
                 return $this->isOwnLastEntry()
                     ? Yii::t('MailModule.base', 'You left the conversation.')
                     : Yii::t('MailModule.base', '{username} left the conversation.', ['username' => $this->getUsername()]);
+            // case AbstractSecureMessageEntry::TYPE_MESSAGE:
+            //     return 'This message can\'t see';
         }
 
         if ($this->isGroupChat()) {
@@ -159,7 +161,7 @@ class InboxMessagePreview extends Widget
         return Yii::$app->formatter->asDate($datetime, 'short');
     }
 
-    public function getLastEntry(): ?MessageEntry
+    public function getLastEntry(): MessageEntry|SecureMessageEntry|null
     {
         return $this->getMessage()->getLastEntry();
     }

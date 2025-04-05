@@ -31,7 +31,7 @@ use yii\helpers\Html;
  */
 class Message extends ActiveRecord
 {
-    private ?MessageEntry $_lastEntry = null;
+    private MessageEntry|SecureMessageEntry|null $_lastEntry = null;
     private ?int $_userCount = null;
     // public string $type = '';
 
@@ -210,16 +210,18 @@ class Message extends ActiveRecord
      * Returns the last message of this conversation
      * @return MessageEntry|null
      */
-    public function getLastEntry(): ?MessageEntry
+    public function getLastEntry(): MessageEntry|SecureMessageEntry|null
     {
         if ($this->_lastEntry === null) {
-            $this->_lastEntry = MessageEntry::find()
+            $entryClass = $this->type === 'normal' ? MessageEntry::class : SecureMessageEntry::class;
+    
+            $this->_lastEntry = $entryClass::find()
                 ->where(['message_id' => $this->id])
                 ->orderBy('created_at DESC')
                 ->limit(1)
                 ->one();
         }
-
+    
         return $this->_lastEntry;
     }
 
@@ -231,7 +233,14 @@ class Message extends ActiveRecord
      */
     public function getLastActiveParticipant(bool $includeMe = false): User
     {
-        $query = MessageEntry::find()->where(['message_id' => $this->id])->orderBy('created_at DESC')->limit(1);
+        if($this->type === 'secure') {
+            $query = SecureMessageEntry::find()->where(['message_id' => $this->id])->orderBy('created_at DESC')->limit(1);
+
+        }
+        else {
+            $query = MessageEntry::find()->where(['message_id' => $this->id])->orderBy('created_at DESC')->limit(1);
+
+        }
 
         if (!$includeMe) {
             $query->andWhere(['<>', 'user_id', Yii::$app->user->id]);
@@ -254,13 +263,25 @@ class Message extends ActiveRecord
      */
     public function deleteEntry($entry)
     {
-        if ($entry->message->id == $this->id) {
-            if($this->getEntries()->count() > 1) {
-                $entry->delete();
-            } else {
-                $this->delete();
+        if($this->type === 'secure') {
+            if ($entry->message->id == $this->id) {
+                if($this->getSecureEntries()->count() > 1) {
+                    $entry->delete();
+                } else {
+                    $this->delete();
+                }
             }
         }
+        else {
+            if ($entry->message->id == $this->id) {
+                if($this->getEntries()->count() > 1) {
+                    $entry->delete();
+                } else {
+                    $this->delete();
+                }
+            }
+        }
+        
     }
 
     /**
@@ -348,10 +369,16 @@ class Message extends ActiveRecord
      */
     public function delete()
     {
-        foreach (MessageEntry::findAll(array('message_id' => $this->id)) as $messageEntry) {
-            $messageEntry->delete();
+        if($this->type === 'secure') {
+            foreach (SecureMessageEntry::findAll(array('message_id' => $this->id)) as $messageEntry) {
+                $messageEntry->delete();
+            }
         }
-
+        else {
+            foreach (MessageEntry::findAll(array('message_id' => $this->id)) as $messageEntry) {
+                $messageEntry->delete();
+            }
+        }
         foreach (UserMessage::findAll(array('message_id' => $this->id)) as $userMessage) {
             $userMessage->delete();
         }
