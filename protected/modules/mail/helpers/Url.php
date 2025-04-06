@@ -4,6 +4,7 @@ namespace humhub\modules\mail\helpers;
 
 use humhub\modules\mail\models\Message;
 use humhub\modules\mail\models\MessageEntry;
+use humhub\modules\mail\models\SecureMessageEntry;
 
 class Url extends \yii\helpers\Url
 {
@@ -15,9 +16,15 @@ class Url extends \yii\helpers\Url
         return static::to($route);
     }
 
-    public static function toDeleteMessageEntry(MessageEntry $entry)
+    public static function toDeleteMessageEntry(MessageEntry|SecureMessageEntry $entry)
     {
-        return static::to(['/mail/mail/delete-entry', 'id' => $entry->id]);
+        if($entry instanceof SecureMessageEntry) {
+
+            return static::to(['/mail/mail/delete-entry', 'id' => $entry->id, 'type' => 'secure']);
+        }
+        else {
+            return static::to(['/mail/mail/delete-entry', 'id' => $entry->id, 'type' => 'normal']);
+        }
     }
 
     public static function toLoadMessage(string $type)
@@ -30,9 +37,15 @@ class Url extends \yii\helpers\Url
         return static::to(['/mail/mail/update']);
     }
 
-    public static function toEditMessageEntry(MessageEntry $entry)
+    public static function toEditMessageEntry(MessageEntry|SecureMessageEntry $entry)
     {
-        return static::to(['/mail/mail/edit-entry', 'id' => $entry->id]);
+        if($entry instanceof SecureMessageEntry) {
+
+            return static::to(['/mail/mail/edit-entry', 'id' => $entry->id, 'type' => 'secure']);
+        }
+        else {
+            return static::to(['/mail/mail/edit-entry', 'id' => $entry->id, 'type' => 'normal']);
+        }
     }
 
     public static function toEditConversationTags(Message $message)

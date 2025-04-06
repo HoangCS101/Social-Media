@@ -120,15 +120,15 @@ class MailController extends Controller
         ]));
     }
 
-    public function actionLoadMore($id)
+    public function actionLoadMore($id, $from = null)
     {
         $message = ($id instanceof Message) ? $id : $this->getMessage($id);
 
         $this->checkMessagePermissions($message);
 
-        $entries = $message->getEntryPage();
+        $entries = $message->getEntryPage($from);
 
-        $result = Messages::widget(['message' => $message, 'from' => null]);
+        $result = Messages::widget(['message' => $message, 'from' => $from]);
 
         return $this->asJson([
             'result' => $result,
@@ -448,9 +448,9 @@ class MailController extends Controller
      * @return string|\yii\web\Response
      * @throws HttpException
      */
-    public function actionEditEntry($id)
+    public function actionEditEntry($id, $type)
     {
-        $entry = MessageEntry::findOne(['id' => $id]) ?? SecureMessageEntry::findOne(['id' => $id]);
+        $entry = $type === 'normal' ? MessageEntry::findOne(['id' => $id]) : SecureMessageEntry::findOne(['id' => $id]);
 
         if (!$entry) {
             throw new HttpException(404);
@@ -482,10 +482,10 @@ class MailController extends Controller
      *
      * Users can delete the own message entries.
      */
-    public function actionDeleteEntry($id)
+    public function actionDeleteEntry($id, $type)
     {
         $this->forcePostRequest();
-        $entry = MessageEntry::findOne(['id' => $id]) ?? SecureMessageEntry::findOne(['id' => $id]);
+        $entry = $type === 'normal' ? MessageEntry::findOne(['id' => $id]) : SecureMessageEntry::findOne(['id' => $id]);
 
         if (!$entry) {
             throw new HttpException(404);

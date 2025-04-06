@@ -93,7 +93,8 @@ class Message extends ActiveRecord
      */
     public function getEntryPage($from = null)
     {
-        if($this->type === 'secure' ) {
+        $type = $this->type;
+        if($type === 'secure' ) {
             $query = $this->getSecureEntries();
         }
         else {
@@ -102,7 +103,12 @@ class Message extends ActiveRecord
         $query->addOrderBy(['created_at' => SORT_DESC]);
 
         if ($from) {
-            $query->andWhere(['<', 'message_entry.id', $from]);
+            if ($type === 'secure') {
+                $query->andWhere(['<', 'secure_message_entry.id', $from]);
+            }
+            else {
+                $query->andWhere(['<', 'message_entry.id', $from]);
+            }
         }
 
         $module = Module::getModuleInstance();

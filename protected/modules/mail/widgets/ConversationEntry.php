@@ -37,6 +37,8 @@ class ConversationEntry extends JsWidget
      */
     public $nextEntry;
 
+    public $secure = false;
+
     public bool $showDateBadge = true;
 
     public array $userColors = ['#34568B', '#FF6F61', '#6B5B95', '#88B04B', '#92A8D1', '#955251', '#B565A7', '#009B77',
@@ -52,14 +54,15 @@ class ConversationEntry extends JsWidget
 
         // $this->showDateBadge();
         // echo "</pre>";
-        echo "<pre>";
-        var_dump($this->entry);
-        echo "</pre>";
         // exit; 
-        if ($this->entry->type === MessageEntry::type() || $this->entry->type === MessageEntry::type()) {
-            return $this->runMessage();
+
+        if ($this->entry instanceof SecureMessageEntry) {
+            $this->secure = true;
         }
 
+        if ($this->entry->type === MessageEntry::type()) {
+            return $this->runMessage();
+        }
         // if ($this->entry->type === SecureMessageEntry::type()) {
         //     return $this->runMessage();
         // }
@@ -73,6 +76,7 @@ class ConversationEntry extends JsWidget
         $showUser = $this->showUser();
 
         return $this->render('conversationEntry', [
+            'secure' => $this->secure,
             'entry' => $this->entry,
             'contentClass' => $this->getContentClass(),
             'showUser' => $showUser,
