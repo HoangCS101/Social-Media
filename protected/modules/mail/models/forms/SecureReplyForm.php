@@ -4,7 +4,7 @@ namespace humhub\modules\mail\models\forms;
 
 use humhub\modules\mail\helpers\Url;
 use humhub\modules\mail\models\Message;
-use humhub\modules\mail\models\MessageEntry;
+use humhub\modules\mail\models\SecureMessageEntry;
 use yii\httpclient\Client;
 use Yii;
 use yii\base\Model;
@@ -26,7 +26,7 @@ class SecureReplyForm extends Model
     public $message;
 
     /**
-     * @var MessageEntry
+     * @var SecureMessageEntry
      */
     public $reply;
 
@@ -72,33 +72,36 @@ class SecureReplyForm extends Model
         if (!$this->validate()) {
             return false;
         }
-        $nodeServerUrl = 'http://node-server/api/getSecureMessage';
-        $client = new \yii\httpclient\Client();
+        // $nodeServerUrl = 'http://node-server/api/getSecureMessage';
+        // $client = new \yii\httpclient\Client();
 
-        try {
-            $response = $client->post($nodeServerUrl, [
-                'message_id' => $this->model->id,
-                'user_id' => Yii::$app->user->id,
-            ])->send();
+        // try {
+        //     $response = $client->post($nodeServerUrl, [
+        //         'message_id' => $this->model->id,
+        //         'user_id' => Yii::$app->user->id,
+        //     ])->send();
     
-            if (!$response->isOk) {
+        //     if (!$response->isOk) {
                 
-                Yii::error("Failed to fetch secure message from Fabric: " . $response->content, __METHOD__);
-                return false;
-            }
+        //         Yii::error("Failed to fetch secure message from Fabric: " . $response->content, __METHOD__);
+        //         return false;
+        //     }
             
     
-        } catch (\Exception $e) {
-            Yii::error("Error when calling Node.js API: " . $e->getMessage(), __METHOD__);
-        }
-        $this->reply = new MessageEntry([
-            'message_id' => $response->id,
+        // } catch (\Exception $e) {
+        //     Yii::error("Error when calling Node.js API: " . $e->getMessage(), __METHOD__);
+        // }
+        $this->reply = new SecureMessageEntry([
+            'message_id' => $this->model->id,
             'user_id' => Yii::$app->user->id,
-            'content' => $this->message,
         ]);
 
-        // $this->reply->notify();
-        $this->reply->fileManager->attach(Yii::$app->request->post('fileList'));
+        if ($this->reply->save()) {
+            $this->reply->refresh(); // Update created_by date, otherwise db expression is set...
+            // $this->reply->notify();
+            $this->reply->fileManager->attach(Yii::$app->request->post('fileList'));
+            return true;
+        }
     
         return false;
     }

@@ -87,7 +87,7 @@ class MailController extends Controller
             'message' => $message,
             'type' => $type,
             'messageCount' => UserMessage::getNewMessageCount(),
-            'replyForm' => $type === 'secure'? new ReplyForm(['model' => $message]) : new SecureReplyForm(['model' => $message]),
+            'replyForm' => $type === 'normal'? new ReplyForm(['model' => $message]) : new SecureReplyForm(['model' => $message]),
             'fileHandlers' => FileHandlerCollection::getByType([FileHandlerCollection::TYPE_IMPORT, FileHandlerCollection::TYPE_CREATE]),
         ]);
     }
