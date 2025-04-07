@@ -25,7 +25,6 @@ humhub\modules\wiki\assets\Assets::register($this);
                 'buttons' => WikiMenu::LINK_REVERT,
                 'revision' => $revision1
             ]) ?>
-
             <div class="row">
                 <div class="col-xs-6">
                     <strong>

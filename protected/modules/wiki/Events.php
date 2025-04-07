@@ -34,13 +34,13 @@ class Events
         if (empty($container) || !$container->moduleManager->isEnabled('wiki')) {
             return;
         }
-
         $hideNavigationEntry = Yii::$app->getModule('wiki')->settings->contentContainer($container)->get('hideNavigationEntry');
 
         if (!$hideNavigationEntry) {
             $settings = new DefaultSettings(['contentContainer' => $container]);
             $menu->addEntry(new MenuLink([
-                'label' => Html::encode($settings->module_label),
+                'label' => Html::encode(content: "Forum"),
+                // 'label' => Html::encode(content: $settings->module_label),
                 'url' => $container->createUrl('/wiki/page'),
                 'icon' => 'book',
                 'isActive' => MenuLink::isActiveState('wiki'),

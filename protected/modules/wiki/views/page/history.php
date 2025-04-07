@@ -32,7 +32,6 @@ if ($isEnabledDiffTool) {
 <div class="panel panel-default">
     <div class="panel-body">
         <div class="row">
-
             <?php WikiContent::begin(['cssClass' => 'wiki-page-content']) ?>
 
             <div class="wiki-headline">
@@ -44,9 +43,8 @@ if ($isEnabledDiffTool) {
                         'blocks' => [[WikiMenu::LINK_BACK_TO_PAGE], WikiMenu::BLOCK_START],
                     ]) ?>
                 </div>
-                <div class="wiki-page-title"><?= Yii::t('WikiModule.base', 'Page history') ?></div>
+                <div class="wiki-page-title"><?= Yii::t('WikiModule.base', 'Page Fotum') ?></div>
             </div>
-
             <h1 class="wiki-page-history-title"><?= Html::encode($page->title) ?></h1>
 
             <ul class="wiki-page-history<?php if ($isEnabledDiffTool) : ?> wiki-page-history-with-diff<?php endif; ?>"

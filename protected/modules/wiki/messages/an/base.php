@@ -14,7 +14,7 @@ return [
     '({n,plural,=1{+1 subpage}other{+{count} subpages}})' => '',
     '<strong>Confirm</strong> page reverting' => '',
     '<strong>Warning!</strong><br><br>Another user has updated this page since you have started editing it. Please confirm that you want to overwrite those changes.<br>:linkToCompare' => '',
-    '<strong>Wiki</strong> link' => '',
+    '<strong>Forum</strong> link' => '',
     '<strong>Wiki</strong> module configuration' => '',
     'Add Page' => '',
     'Adds a wiki to this space.' => '',

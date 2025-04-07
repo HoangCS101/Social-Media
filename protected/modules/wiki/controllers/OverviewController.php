@@ -68,10 +68,34 @@ class OverviewController extends BaseController
 
     private function getLastEditedDataProvider(): ActiveDataProvider
     {
+
+        $wikiPages11 = WikiPage::find()
+            ->select(['wiki_page.*', 'COALESCE(forum_vote.total_vote, 0) AS total_vote'])
+            ->leftJoin('forum_vote', 'wiki_page.id = forum_vote.forum_id')
+            ->orderBy(['total_vote' => SORT_DESC, 'wiki_page.id' => SORT_ASC])
+            ->asArray()
+            ->all();
+
+
         return new ActiveDataProvider([
             'query' => WikiPage::find()
-                ->contentContainer($this->contentContainer)
-                ->readable(),
+            ->select([
+                'wiki_page.*',
+                'COALESCE(forum_vote.total_vote, 0) AS total_vote',
+                '(CASE 
+                    WHEN content.updated_at >= DATE_SUB(NOW(), INTERVAL 2 DAY) THEN 1 
+                    ELSE 0 
+                END) AS is_recent'
+            ])
+            ->leftJoin('forum_vote', 'wiki_page.id = forum_vote.forum_id')
+            ->orderBy([
+                'is_recent' => SORT_DESC, // Ưu tiên bài trong 2 ngày đầu tiên
+                'content.updated_at' => SORT_DESC, // Sau đó sắp xếp theo ngày cập nhật mới nhất
+                'total_vote' => SORT_DESC, // Cuối cùng là tổng vote
+                'wiki_page.id' => SORT_ASC // Để đảm bảo thứ tự ổn định
+            ])
+            ->contentContainer($this->contentContainer)
+            ->readable(),
             'pagination' => ['pageSize' => 10],
             'sort' => [
                 'attributes' => [

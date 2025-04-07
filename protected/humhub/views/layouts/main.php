@@ -74,9 +74,10 @@ AppAsset::register($this);
             font-size: 14px;
         }
 
-        /* button.btn {
+
+        button.btn . {
             padding: 0px;
-        } */
+        }
     </style>
 
 </head>
@@ -119,6 +120,42 @@ AppAsset::register($this);
     </div>
 
     <?php $this->endBody() ?>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let voteCount = 0; // Giá trị ban đầu
+
+            const upvoteBtn = document.getElementById("upvote");
+            const downvoteBtn = document.getElementById("downvote");
+            const voteElement = document.getElementById("vote-count");
+
+            upvoteBtn.addEventListener("click", function () {
+                voteCount++; // Tăng điểm
+                updateVoteCount();
+            });
+
+            downvoteBtn.addEventListener("click", function () {
+                voteCount--; // Giảm điểm
+                updateVoteCount();
+            });
+
+            function updateVoteCount() {
+                voteElement.textContent = voteCount;
+
+                // Thay đổi màu chữ theo số điểm
+                if (voteCount > 0) {
+                    voteElement.classList.remove("text-gray-800", "text-red-500");
+                    voteElement.classList.add("text-green-500");
+                } else if (voteCount < 0) {
+                    voteElement.classList.remove("text-gray-800", "text-green-500");
+                    voteElement.classList.add("text-red-500");
+                } else {
+                    voteElement.classList.remove("text-green-500", "text-red-500");
+                    voteElement.classList.add("text-gray-800");
+                }
+            }
+        });
+    </script>
+
 </body>
 
 </html>

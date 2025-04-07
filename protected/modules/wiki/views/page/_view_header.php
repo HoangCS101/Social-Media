@@ -20,37 +20,35 @@ if (empty($buttons)) {
 }
 ?>
 
-<div class="wiki-headline">
-    <div class="wiki-headline-top">
-        <?= WikiPath::widget(['page' => $page]) ?>
-        <?= WikiMenu::widget([
-            'object' => $page,
-            'buttons' => $buttons,
-            'revision' => $revision ?? null
-        ]) ?>
-    </div>
+<div class="wiki-headline flex flex-wrap px-3 justify-between">
 
-    <?php if (!isset($displayTitle) || $displayTitle) : ?>
+    <?php if (!isset($displayTitle) || $displayTitle): ?>
         <div class="wiki-page-title"><?= Html::encode($page->title) ?></div>
     <?php endif; ?>
-
     <div class="wiki-content-info">
-        <small>
+        <small class="text-[16px]">
             <?= Yii::t('WikiModule.base', 'Created by {author}', ['author' => Html::containerLink($page->content->createdBy)]) . ', ' ?>
             <?= Yii::t('WikiModule.base', 'last update {dateTime}', ['dateTime' => TimeAgo::widget(['timestamp' => $page->content->updated_at])]) ?>
-            <?= Link::to('(' . Yii::t('WikiModule.base', 'History') . ')', Url::toWikiHistory($page)) ?>
         </small>
 
-        <?php if ($page->is_home) : ?>
+        <?php if ($page->is_home): ?>
             <?= Icon::get('home')->tooltip(Yii::t('ContentModule.widgets_views_label', 'Home'))->color('success') ?>
         <?php endif; ?>
 
-        <?php if ($page->content->isPublic()) : ?>
+        <?php if ($page->content->isPublic()): ?>
             <?= Icon::get('globe')->tooltip(Yii::t('ContentModule.widgets_views_label', 'Public'))->color('info') ?>
         <?php endif; ?>
 
-        <?php if ($page->admin_only) : ?>
+        <?php if ($page->admin_only): ?>
             <?= Icon::get('lock')->tooltip(Yii::t('ContentModule.widgets_views_label', 'Protected')) ?>
         <?php endif; ?>
+    </div>
+
+    <div class="wiki-headline-top">
+        <?= WikiMenu::widget([
+            'object' => $page,
+            'buttons' => $buttons,
+            'revision' => $revision ?? null,
+        ]) ?>
     </div>
 </div>
