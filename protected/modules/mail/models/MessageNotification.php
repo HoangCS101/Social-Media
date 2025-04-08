@@ -24,7 +24,7 @@ class MessageNotification extends BaseObject
     public $message;
 
     /**
-     * @var MessageEntry
+     * @var SecureMessageEntry|MessageEntry
      */
     public $entry;
 
@@ -38,7 +38,7 @@ class MessageNotification extends BaseObject
      */
     public $isNewConversation = false;
 
-    public function __construct(Message $message, MessageEntry $entry = null)
+    public function __construct(Message $message, MessageEntry|SecureMessageEntry $entry = null)
     {
         $this->message = $message;
         $this->entry = $entry ?? $this->message->lastEntry;

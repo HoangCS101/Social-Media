@@ -52,9 +52,9 @@ use humhub\modules\user\widgets\Image;
                         <div class="author-label" style="color: <?= Html::encode($userColor) ?>">
                             <?= Html::encode($entry->user->displayName) ?>
                         </div>
-                        <p style="color: #000; width: auto"><?= Html::encode($secure ? 'SECURE': $entry->content) ?></p>
+                        <p style="color: #000; width: auto"><?= Html::encode($content) ?></p>
                     <?php else : ?>
-                        <p style="color: #fff; width: auto"><?= Html::encode($secure ? 'SECURE': $entry->content) ?></p>
+                        <p style="color: #fff; width: auto"><?= Html::encode($content) ?></p>
                     <?php endif; ?>
 
                     <?= ShowFiles::widget(['object' => $entry]) ?>

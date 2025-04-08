@@ -13,6 +13,7 @@ use humhub\modules\mail\helpers\Url;
 use humhub\modules\mail\models\MessageEntry;
 use humhub\modules\mail\models\SecureMessageEntry;
 use humhub\widgets\JsWidget;
+use yii\base\Security;
 use Yii;
 
 class ConversationEntry extends JsWidget
@@ -52,7 +53,7 @@ class ConversationEntry extends JsWidget
     {
         // echo "<pre>";
 
-        // $this->showDateBadge();
+        // $this->entry;
         // echo "</pre>";
         // exit; 
 
@@ -84,10 +85,23 @@ class ConversationEntry extends JsWidget
             'userColor' => $showUser ? $this->getUserColor() : null,
             'showDateBadge' => $this->showDateBadge(),
             'options' => $this->getOptions(),
-            'isOwnMessage' => $this->isOwnMessage()
+            'isOwnMessage' => $this->isOwnMessage(),
+            'content' => $this->getMessageContent(),
         ]);
     }
 
+    public function getMessageContent() {
+        if($this->secure) {
+            if($this->entry->getDecryptedContent()) return $this->entry->getDecryptedContent();
+            if($this->entry->content) {
+                $security = new Security();
+                return $security->decryptByPassword(base64_decode($this->entry->content), $this->entry->key);
+            }
+        }
+        else {
+            return $this->entry->content;
+        }
+    }
     public function runState(): string
     {
         return $this->render('conversationState', [

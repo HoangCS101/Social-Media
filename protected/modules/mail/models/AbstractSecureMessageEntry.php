@@ -4,6 +4,7 @@ namespace humhub\modules\mail\models;
 
 use Yii;
 use DateTime;
+use yii\base\Security;
 use humhub\components\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
 use yii\behaviors\BlameableBehavior;
@@ -39,6 +40,7 @@ abstract class AbstractSecureMessageEntry extends ActiveRecord
     public const TYPE_USER_LEFT = 2;
 
     protected bool $requiredContent = false;
+    private ?string $decrypted_content = null;
 
     /**
      * Get type of the message entry
@@ -81,14 +83,14 @@ abstract class AbstractSecureMessageEntry extends ActiveRecord
     /*
     * @inheritdoc
     */
-    public static function createForMessage(Message $message, User $user, string $message): self
+    public static function createForMessage(Message $message, User $user, ?string $content = null): self
     {
         // Attach Message Entry
         return new static([
             'message_id' => $message->id,
             'user_id' => $user->id,
             'type' => static::type(),
-            'content' => $message
+            'content' => $content
         ]);
     }
 
@@ -101,6 +103,14 @@ abstract class AbstractSecureMessageEntry extends ActiveRecord
             // Updates the updated_at attribute
             $this->message->save();
         }
+        if ($insert && !empty($this->content)) {
+            $security = new Security();
+            $key = $security->generateRandomString(32);
+            $this->key = $key;
+            $encrypted = $security->encryptByPassword($this->content, $key);
+            $this->content = base64_encode($encrypted);
+        }
+
 
         return parent::beforeSave($insert);
     }
@@ -132,6 +142,24 @@ abstract class AbstractSecureMessageEntry extends ActiveRecord
         }
 
         parent::afterDelete();
+    }
+
+    public function afterFind()
+    {
+        parent::afterFind();
+
+        if (!empty($this->content) && !empty($this->key)) {
+            try {
+                $security = new Security();
+                $this->decrypted_content = $security->decryptByPassword(base64_decode($this->content), $this->key);
+            } catch (\Throwable $e) {
+                $this->decrypted_content = null;
+            }
+        }
+    }
+
+    public function getDecryptedContent() {
+        return $this->decrypted_content;
     }
 
     public function getUser(): ActiveQuery

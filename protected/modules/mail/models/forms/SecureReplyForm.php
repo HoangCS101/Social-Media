@@ -72,32 +72,43 @@ class SecureReplyForm extends Model
         if (!$this->validate()) {
             return false;
         }
-        // $nodeServerUrl = 'http://node-server/api/getSecureMessage';
-        // $client = new \yii\httpclient\Client();
+        
 
-        // try {
-        //     $response = $client->post($nodeServerUrl, [
-        //         'message_id' => $this->model->id,
-        //         'user_id' => Yii::$app->user->id,
-        //     ])->send();
-    
-        //     if (!$response->isOk) {
-                
-        //         Yii::error("Failed to fetch secure message from Fabric: " . $response->content, __METHOD__);
-        //         return false;
-        //     }
-            
-    
-        // } catch (\Exception $e) {
-        //     Yii::error("Error when calling Node.js API: " . $e->getMessage(), __METHOD__);
-        // }
         $this->reply = new SecureMessageEntry([
             'message_id' => $this->model->id,
             'user_id' => Yii::$app->user->id,
+            'content' => $this->message
         ]);
 
         if ($this->reply->save()) {
             $this->reply->refresh(); // Update created_by date, otherwise db expression is set...
+
+            // try {
+            //     $client = new Client();
+            //     $response = $client->createRequest()
+            //         ->setMethod('POST')
+            //         ->setUrl('http://localhost:3000/api/messages')
+            //         ->addHeaders(['content-type' => 'application/json'])
+            //         ->setContent(json_encode([
+            //             'messageId' => $this->reply->id,
+            //             'chatboxId' => $this->model->id,
+            //             'userId' => Yii::$app->user->id,
+            //             'content' => $this->reply->content,
+            //             'type' => $this->reply->type,
+            //             'createdAt' => $this->reply->createdAt
+            //         ]))
+            //         ->send();
+        
+            //     if (!$response->isOk) {
+                    
+            //         Yii::error("Failed to fetch secure message from Fabric: " . $response->content, __METHOD__);
+            //         return false;
+            //     }
+                
+        
+            // } catch (\Exception $e) {
+            //     Yii::error("Error when calling Node.js API: " . $e->getMessage(), __METHOD__);
+            // }
             // $this->reply->notify();
             $this->reply->fileManager->attach(Yii::$app->request->post('fileList'));
             return true;

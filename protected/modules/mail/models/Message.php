@@ -8,6 +8,9 @@ use humhub\modules\ui\icon\widgets\Icon;
 use humhub\modules\user\models\User;
 use Yii;
 use yii\helpers\Html;
+use yii\httpclient\Client;
+use yii\web\BadRequestHttpException;
+use yii\base\Security;
 
 /**
  * This class represents a single conversation.
@@ -95,27 +98,92 @@ class Message extends ActiveRecord
     {
         $type = $this->type;
         if($type === 'secure' ) {
-            $query = $this->getSecureEntries();
+            // $chatboxId = $this->id; // ví dụ bạn có chatboxId từ model
+            // $client = new Client();
+            // $response = $client->createRequest()
+            //     ->setMethod('GET')
+            //     ->setUrl("http://localhost:3000/api/messages/{$chatboxId}")
+            //     ->send();
+
+            // if ($response->isOk) {
+            //     $bcEntries = $response->data; // Dữ liệu từ Node.js API
+            //     $query = $this->getSecureEntries();
+            //     $query->addOrderBy(['created_at' => SORT_DESC]);
+            //     if ($from) {
+            //         $query->andWhere(['<', 'secure_message_entry.id', $from]);
+            //     }
+            //     $module = Module::getModuleInstance();
+            //     $limit = $from ? $module->conversationUpdatePageSize : $module->conversationInitPageSize;
+            //     $query->limit($limit);
+        
+            //     $dbEntries = $query->all();
+
+
+            //     if (count($bcEntries) !== count($dbEntries)) {
+            //         throw new BadRequestHttpException('Mismatch between API and DB message counts.');
+            //     }
+        
+            //     $final = [];
+
+            //     $map = [];
+            //     foreach ($bcEntries as $bcEntry) {
+            //         $map[$bcEntry['messageId']] = $bcEntry;
+            //     }
+        
+            //     foreach ($dbEntries as $dbEntry) {
+            //         if (!isset($map[$dbEntry->id])) {
+            //             throw new BadRequestHttpException("API entry not found for message ID {$dbEntry->id}");
+            //         }
+            //         $bcEntry = $map[$dbEntry->id];
+        
+            //         // So sánh từng trường cơ bản
+            //         if (
+            //             $dbEntry->message_id != $bcEntry['chatboxId'] ||
+            //             $dbEntry->user_id != $bcEntry['userId'] ||
+            //             $dbEntry->created_at != $bcEntry['created_at']
+            //         ) {
+            //             throw new BadRequestHttpException("Data mismatch at message ID {$dbEntry->id}");
+            //         }
+        
+            //         // Giải mã content dùng key từ DB
+            //         $security = new Security();
+            //         $this->decrypted_content = $security->decryptByPassword($this->content, $this->key);        
+            //         $final[] = $dbEntry;
+            //     }
+
+                $query = $this->getSecureEntries();
+                $query->addOrderBy(['created_at' => SORT_DESC]);
+                if ($from) {
+                    $query->andWhere(['<', 'secure_message_entry.id', $from]);
+                }
+                $module = Module::getModuleInstance();
+                $limit = $from ? $module->conversationUpdatePageSize : $module->conversationInitPageSize;
+                $query->limit($limit);
+        
+                $dbEntries = $query->all();
+        
+                return array_reverse($dbEntries);
+
+            // } else {
+            //     throw new BadRequestHttpException('Failed to fetch messages from Node API');
+            //     return [];
+            // }
+
+            
         }
         else {
             $query = $this->getEntries();
-        }
-        $query->addOrderBy(['created_at' => SORT_DESC]);
-
-        if ($from) {
-            if ($type === 'secure') {
-                $query->andWhere(['<', 'secure_message_entry.id', $from]);
+            $query->addOrderBy(['created_at' => SORT_DESC]);
+            if ($from) {
+                
+                    $query->andWhere(['<', 'message_entry.id', $from]);
             }
-            else {
-                $query->andWhere(['<', 'message_entry.id', $from]);
-            }
+            $module = Module::getModuleInstance();
+            $limit = $from ? $module->conversationUpdatePageSize : $module->conversationInitPageSize;
+            $query->limit($limit);
+
+            return array_reverse($query->all());
         }
-
-        $module = Module::getModuleInstance();
-        $limit = $from ? $module->conversationUpdatePageSize : $module->conversationInitPageSize;
-        $query->limit($limit);
-
-        return array_reverse($query->all());
         
     }
 
