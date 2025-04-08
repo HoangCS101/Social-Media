@@ -32,6 +32,7 @@ use yii\db\ActiveQuery;
 class SecureMessageEntry extends AbstractSecureMessageEntry
 {
 
+
     /*
     * @inheritdoc
     */

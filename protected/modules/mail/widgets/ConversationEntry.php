@@ -73,6 +73,7 @@ class ConversationEntry extends JsWidget
     public function runMessage(): string
     {
         
+        
         $showUser = $this->showUser();
 
         return $this->render('conversationEntry', [

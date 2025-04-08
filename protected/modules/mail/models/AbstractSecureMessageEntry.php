@@ -81,13 +81,14 @@ abstract class AbstractSecureMessageEntry extends ActiveRecord
     /*
     * @inheritdoc
     */
-    public static function createForMessage(Message $message, User $user): self
+    public static function createForMessage(Message $message, User $user, string $message): self
     {
         // Attach Message Entry
         return new static([
             'message_id' => $message->id,
             'user_id' => $user->id,
             'type' => static::type(),
+            'content' => $message
         ]);
     }
 

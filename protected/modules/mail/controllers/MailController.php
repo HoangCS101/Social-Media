@@ -169,6 +169,8 @@ class MailController extends Controller
                 ]);
             }
 
+            
+
             return $this->asJson([
                 'success' => false,
                 'error' => [
@@ -538,70 +540,6 @@ class MailController extends Controller
         return null;
     }
 
-    private function getSecureMessage($id, $throw = false): ? Message
-    {
-        $user = Yii::$app->user->identity;
-        if (!$user) {
-            if ($throw) {
-                throw new HttpException('User not authenticated');
-            }
-            return null;
-        }
-
-        // Lấy secret key từ UserKey DB
-        $userKey = UserKey::findOne(['user_id' => $user->id]);
-        if (!$userKey || empty($userKey->secret_key)) {
-            if ($throw) {
-                throw new HttpException('User doesn\'t register to access secure chat');
-            }
-            return null;
-        }
-
-        $secretKey = $userKey->secret_key;
-
-        // Gửi request đến Fabric Node Server
-        $fabricUrl = 'http://fabric-node-server/api/message/' . $id;
-        $client = new Client();
-
-        try {
-            $response = $client->createRequest()
-                ->setMethod('GET')
-                ->setUrl($fabricUrl)
-                ->setData(['secret_key' => $secretKey])
-                // ->setHeaders(['Authorization' => "Bearer {$secretKey}"])
-                ->send();
-
-            if (!$response->isOk) {
-                if ($throw) {
-                    throw new HttpException('Failed to fetch message: ' . $response->content);
-                }
-                return null;
-            }
-
-            $data = $response->data;
-            if (empty($data['message'])) {
-                if ($throw) {
-                    throw new HttpException('Message not found');
-                }
-                return null;
-            }
-
-            // Tạo một instance của Message từ dữ liệu nhận được
-            return new Message([
-                'id' => $data['id'],
-                'content' => $data['message'],
-                'sender_id' => $data['sender_id'],
-                'receiver_id' => $data['receiver_id'],
-                'created_at' => strtotime($data['created_at']),
-            ]);
-        } catch (HttpException $e) {
-            if ($throw) {
-                throw $e;
-            }
-            return null;
-        }
-
-    }
 
     private function getNextReadMessage($id): ?Message
     {

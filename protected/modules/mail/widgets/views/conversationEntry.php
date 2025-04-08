@@ -35,7 +35,7 @@ use humhub\modules\user\widgets\Image;
             ]) ?>
         </span>
     <?php endif; ?>
-    <div class="media flex-column pt-0 mt-0">
+    <div class="media flex-column pt-0 mt-0 items-end">
         <div class="d-flex flex-row <?= $isOwnMessage ? 'justify-end' : '' ?>">
             <?= ConversationEntryMenu::widget(['entry' => $entry]) ?>
             

@@ -12,9 +12,15 @@ use humhub\modules\ui\view\components\View;
 ?>
 
 <?= Html::beginTag('div', $options) ?>
-<ul class="nav nav-tabs">
+<ul class="nav nav-tabs mb-0">
     <?php foreach ($entries as $entry): ?>
-        <li class=`<?php if ($entry->getIsActive()): ?>class="active"<?php endif; ?> >
+        <?php 
+            $classes = 'w-50 text-center';
+            if ($entry->getIsActive()) {
+                $classes .= ' active';
+            }
+        ?>
+        <li class="<?= $classes ?>">
             <?= $entry->render() ?>
         </li>
     <?php endforeach; ?>

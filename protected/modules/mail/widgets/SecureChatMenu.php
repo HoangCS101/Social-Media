@@ -16,6 +16,7 @@ use humhub\modules\ui\menu\widgets\TabMenu;
 
 class SecureChatMenu extends TabMenu
 {
+    public $template = '@ui/menu/widgets/views/sub-tab-menu.php';
     /**
      * @inheritdoc
      */
@@ -44,7 +45,7 @@ class SecureChatMenu extends TabMenu
             // 'htmlOptions' => ['class' => 'w-50']
         ]));
 
-        Html::addCssClass($this->options, 'pb-0');
+        $this->template = '@ui/menu/widgets/views/chat-tab-menu.php';
         parent::init();
     }
 
