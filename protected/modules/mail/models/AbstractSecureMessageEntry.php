@@ -161,6 +161,9 @@ abstract class AbstractSecureMessageEntry extends ActiveRecord
     public function getDecryptedContent() {
         return $this->decrypted_content;
     }
+    public function setDecryptedContent($value) {
+        $this->decrypted_content = $value;
+    }
 
     public function getUser(): ActiveQuery
     {

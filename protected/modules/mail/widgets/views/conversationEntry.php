@@ -52,20 +52,30 @@ use humhub\modules\user\widgets\Image;
                         <div class="author-label" style="color: <?= Html::encode($userColor) ?>">
                             <?= Html::encode($entry->user->displayName) ?>
                         </div>
-                        <p style="color: #000; width: auto"><?= Html::encode($content) ?></p>
+                        <p style="color: #000; width: auto; font-size: 16px"><?= Html::encode($content) ?></p>
                     <?php else : ?>
-                        <p style="color: #fff; width: auto"><?= Html::encode($content) ?></p>
+                        <p style="color: #fff; width: auto; font-size: 16px"><?= Html::encode($content) ?></p>
                     <?php endif; ?>
-
                     <?= ShowFiles::widget(['object' => $entry]) ?>
                 </div>
             </div>
         </div>
-        <?php if ($isOwnMessage) : ?>
-            <?= MessageEntryTime::widget(['entry' => $entry, 'options' => ['class' => 'ml-auto']]) ?>
-        <?php else : ?>
-            <?= MessageEntryTime::widget(['entry' => $entry, 'options' => ['class' => 'mr-auto']]) ?>
-        <?php endif; ?>
+        <div class="flex items-center"> 
+            <?php if ($isOwnMessage) : ?>
+                <?= MessageEntryTime::widget(['entry' => $entry, 'options' => ['class' => 'ml-auto text-[12px]']]) ?>
+
+                <?php if ($status) : ?>
+                    <p style="color: green; font-size: 12px; width: auto"><?= Html::encode(' - Saved') ?></p>
+                <?php else : ?>
+                    <p style="color: red; font-size: 12px; width: auto"><?= Html::encode(' - Error') ?></p>
+                <?php endif; ?>
+
+            <?php else : ?>
+                <?= MessageEntryTime::widget(['entry' => $entry, 'options' => ['class' => 'mr-auto text-[12px]']]) ?>
+            <?php endif; ?>
+        </div>
+
+
     </div>
 </div>
 <?= Html::endTag('div') ?>

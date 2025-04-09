@@ -8,6 +8,7 @@ use humhub\modules\file\handler\FileHandlerCollection;
 use humhub\modules\mail\helpers\Url;
 use humhub\modules\mail\models\forms\CreateMessage;
 use humhub\modules\mail\models\forms\SecureCreateMessage;
+use app\jobs\CheckBlockchainStatusJob;
 use humhub\modules\mail\models\forms\InviteParticipantForm;
 use humhub\modules\mail\models\forms\ReplyForm;
 use humhub\modules\mail\models\forms\SecureReplyForm;
@@ -146,11 +147,15 @@ class MailController extends Controller
         if($type === 'normal') {
             $replyForm = new ReplyForm(['model' => $message]);
             if ($replyForm->load(Yii::$app->request->post()) && $replyForm->save()) {
+                $reply = $replyForm->reply;
+                
+
                 return $this->asJson([
                     'success' => true,
-                    'content' => ConversationEntry::widget(['entry' => $replyForm->reply, 'showDateBadge' => $replyForm->reply->isFirstToday()]),
+                    'content' => ConversationEntry::widget(['status' => 'Pending', 'entry' => $reply, 'showDateBadge' => $reply->isFirstToday()]),
                 ]);
             }
+            
 
             return $this->asJson([
                 'success' => false,
@@ -163,9 +168,18 @@ class MailController extends Controller
         else {
             $replyForm = new SecureReplyForm(['model' => $message]);
             if ($replyForm->load(Yii::$app->request->post()) && $replyForm->save()) {
+                $reply = $replyForm->reply;
+                //Gọi job ở đây       
+                // Yii::$app->queue->push(new CheckBlockchainStatusJob([
+                //     'reply' => $reply
+                // ]));
+                $success = $this->executeSaveOnBC($reply);
+        
+                
                 return $this->asJson([
                     'success' => true,
-                    'content' => ConversationEntry::widget(['entry' => $replyForm->reply, 'showDateBadge' => $replyForm->reply->isFirstToday()]),
+                    'status' => $success,
+                    'content' => ConversationEntry::widget(['status' => 'Pending', 'entry' => $reply, 'showDateBadge' => $reply->isFirstToday()]),
                 ]);
             }
 
@@ -178,8 +192,6 @@ class MailController extends Controller
                 ],
             ]);
         }
-        
-        
     }
 
     /**
@@ -360,6 +372,9 @@ class MailController extends Controller
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $entry = SecureMessageEntry::findOne(['message_id' => $model->messageInstance->id]);
+            $this->executeSaveOnBC($entry);
+
             $type = $model->secure ? 'secure': 'normal';
             return $this->htmlRedirect(['index', 'id' => $model->messageInstance->id, 'type' => $type]);
         }
@@ -554,4 +569,156 @@ class MailController extends Controller
             ])
             ->one();
     }
+
+    private function executeSaveOnBC(SecureMessageEntry $reply)
+    {
+        $client = new Client();
+
+        for ($k = 0; $k < 3; $k++) {
+            $response = $this->setMessageEntryToBC($client, $reply);
+            if ($response && isset($response->jobId)) {
+                $jobId = (int)$response->jobId;
+
+                for ($i = 0; $i < 3; $i++) {
+                    sleep(1); 
+
+                    $result = $this->checkStatusSavingInBC($client, $jobId);
+                    if ($result && isset($result->transactionIds) && count($result->transactionIds) > 0) {
+                        Yii::info("Blockchain save successful for jobId: $jobId, tx count: " . count($result->transactionIds), __METHOD__);
+                        $reply->content = null;
+                        $reply->save();
+                        return true;
+                    } 
+                        
+                    Yii::warning("Job $jobId has no transactions yet (attempt $i)", __METHOD__);
+                }
+
+                Yii::error("Job $jobId failed to send after 3 retries.", __METHOD__);
+            } 
+                
+            Yii::warning("Blockchain API did not return jobId (attempt $k)", __METHOD__);
+        }
+
+        Yii::error("Failed to initiate blockchain save after 3 attempts.", __METHOD__);
+        $reply->content = null;
+        $reply->save();
+        return false;
+    }
+
+
+    private function setMessageEntryToBC(Client $client, SecureMessageEntry $reply)
+    {
+        try {
+            $response = $client->createRequest()
+                ->setMethod('POST')
+                ->setUrl('http://localhost:3000/api/messages')
+                ->addHeaders([
+                    'content-type' => 'application/json',
+                    'x-api-key' => '5b656047-b9a6-4902-9d95-698c1c602ccf' // Thay 'your-api-key-here' bằng giá trị thực tế của bạn
+                ])
+                ->setContent(json_encode([
+                    'id' => $reply->id,
+                    'messageId' => $reply->message->id,
+                    'userId' => $reply->user->id,
+                    'content' => $reply->content,
+                    'type' => $reply->type,
+                    'createdAt' => $reply->created_at
+                ]))
+                ->send();
+
+            if ($response->isOk) {
+                return json_decode($response->content);
+            }
+
+            Yii::error("Failed to post message to blockchain API: " . $response->content, __METHOD__);
+            return null;
+
+        } catch (\Exception $e) {
+            Yii::error("Error when calling Node.js API: " . $e->getMessage(), __METHOD__);
+            return null;
+        }
+    }
+
+    private function updateMessageEntryToBC(Client $client, SecureMessageEntry $reply, $modify = false)
+    {
+        try {
+            $response = $client->createRequest()
+                ->setMethod('PUT')
+                ->setUrl('http://localhost:3000/api/messages')
+                ->addHeaders([
+                    'content-type' => 'application/json',
+                    'x-api-key' => '5b656047-b9a6-4902-9d95-698c1c602ccf' // Thay 'your-api-key-here' bằng giá trị thực tế của bạn
+                ])
+                ->setContent(json_encode([
+                    'id' => $reply->id,
+                    'messageId' => $reply->message->id,
+                    'userId' => $reply->user->id,
+                    'content' => $reply->content,
+                    'type' => $reply->type,
+                    'createdAt' => $reply->created_at
+                ]))
+                ->send();
+
+            if ($response->isOk) {
+                return json_decode($response->content);
+            } else {
+                Yii::error("Failed to post message to blockchain API: " . $response->content, __METHOD__);
+                return null;
+            }
+        } catch (\Exception $e) {
+            Yii::error("Error when calling Node.js API: " . $e->getMessage(), __METHOD__);
+            return null;
+        }
+    }
+
+    // private function deleteMessageEntryToBC(Client $client, SecureMessageEntry $reply, $modify = false)
+    // {
+    //     try {
+    //         $response = $client->createRequest()
+    //             ->setMethod('DELETE')
+    //             ->setUrl('http://localhost:3000/api/messages')
+    //             ->addHeaders([
+    //                 'content-type' => 'application/json',
+    //                 'x-api-key' => '5b656047-b9a6-4902-9d95-698c1c602ccf' // Thay 'your-api-key-here' bằng giá trị thực tế của bạn
+    //             ])
+    //             ->send();
+
+    //         if ($response->isOk) {
+    //             return json_decode($response->content);
+    //         } else {
+    //             Yii::error("Failed to post message to blockchain API: " . $response->content, __METHOD__);
+    //             return null;
+    //         }
+    //     } catch (\Exception $e) {
+    //         Yii::error("Error when calling Node.js API: " . $e->getMessage(), __METHOD__);
+    //         return null;
+    //     }
+    // }
+
+    private function checkStatusSavingInBC(Client $client, int $jobId)
+    {
+        try {
+            $response = $client->createRequest()
+                ->setMethod('GET')
+                ->addHeaders([
+                    'content-type' => 'application/json',
+                    'x-api-key' => '5b656047-b9a6-4902-9d95-698c1c602ccf' // Thay 'your-api-key-here' bằng giá trị thực tế của bạn
+                ])
+                ->setUrl("http://localhost:3000/api/jobs/{$jobId}")
+                ->send();
+
+            if ($response->isOk) {
+                return json_decode($response->content);
+            } 
+
+            Yii::warning("Status check failed for jobId $jobId: " . $response->content, __METHOD__);
+            return null;
+
+        } catch (\Exception $e) {
+            Yii::error("Error when checking status of job $jobId: " . $e->getMessage(), __METHOD__);
+            return null;
+        }
+    }
+
+    
 }

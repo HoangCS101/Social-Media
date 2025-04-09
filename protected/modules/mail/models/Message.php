@@ -94,98 +94,161 @@ class Message extends ActiveRecord
      * @param int|null $from
      * @return MessageEntry[]|SecureMessageEntry[]
      */
-    public function getEntryPage($from = null)
-    {
-        $type = $this->type;
-        if($type === 'secure' ) {
-            // $chatboxId = $this->id; // ví dụ bạn có chatboxId từ model
-            // $client = new Client();
-            // $response = $client->createRequest()
-            //     ->setMethod('GET')
-            //     ->setUrl("http://localhost:3000/api/messages/{$chatboxId}")
-            //     ->send();
-
-            // if ($response->isOk) {
-            //     $bcEntries = $response->data; // Dữ liệu từ Node.js API
-            //     $query = $this->getSecureEntries();
-            //     $query->addOrderBy(['created_at' => SORT_DESC]);
-            //     if ($from) {
-            //         $query->andWhere(['<', 'secure_message_entry.id', $from]);
-            //     }
-            //     $module = Module::getModuleInstance();
-            //     $limit = $from ? $module->conversationUpdatePageSize : $module->conversationInitPageSize;
-            //     $query->limit($limit);
-        
-            //     $dbEntries = $query->all();
+    // public function getEntryPage($from = null)
+    // {
+    //     $type = $this->type;
+    //     if($type === 'secure' ) {
+            
+    //         $bcEntries = $this->fetchMessageFromBC();
+    //         if (!is_array($bcEntries)) {
+    //             $bcEntries = [$bcEntries];
+    //         }
+            
+    //         $query = $this->getSecureEntries();
+    //         $query->addOrderBy(['created_at' => SORT_DESC]);
+    //         if ($from) {
+    //             $query->andWhere(['<', 'secure_message_entry.id', $from]);
+    //         }
+    //         $module = Module::getModuleInstance();
+    //         $limit = $from ? $module->conversationUpdatePageSize : $module->conversationInitPageSize;
+    //         $query->limit($limit);
+    
+    //         $dbEntries = $query->all();
 
 
-            //     if (count($bcEntries) !== count($dbEntries)) {
-            //         throw new BadRequestHttpException('Mismatch between API and DB message counts.');
-            //     }
-        
-            //     $final = [];
+    //         if (count($bcEntries) !== count($dbEntries)) {
+    //             throw new BadRequestHttpException('Mismatch between API and DB message counts.');
+    //         }
+    
+    //         $final = [];
 
-            //     $map = [];
-            //     foreach ($bcEntries as $bcEntry) {
-            //         $map[$bcEntry['messageId']] = $bcEntry;
-            //     }
-        
-            //     foreach ($dbEntries as $dbEntry) {
-            //         if (!isset($map[$dbEntry->id])) {
-            //             throw new BadRequestHttpException("API entry not found for message ID {$dbEntry->id}");
-            //         }
-            //         $bcEntry = $map[$dbEntry->id];
-        
-            //         // So sánh từng trường cơ bản
-            //         if (
-            //             $dbEntry->message_id != $bcEntry['chatboxId'] ||
-            //             $dbEntry->user_id != $bcEntry['userId'] ||
-            //             $dbEntry->created_at != $bcEntry['created_at']
-            //         ) {
-            //             throw new BadRequestHttpException("Data mismatch at message ID {$dbEntry->id}");
-            //         }
-        
-            //         // Giải mã content dùng key từ DB
-            //         $security = new Security();
-            //         $this->decrypted_content = $security->decryptByPassword($this->content, $this->key);        
-            //         $final[] = $dbEntry;
-            //     }
+    //         $map = [];
+    //         foreach ($bcEntries as $bcEntry) {
+    //             $map[$bcEntry['messageId']] = $bcEntry;
+    //         }
+    
+    //         foreach ($dbEntries as $dbEntry) {
+    //             if (!isset($map[$dbEntry->id])) {
+    //                 throw new BadRequestHttpException("API entry not found for message ID {$dbEntry->id}");
+    //             }
+    //             $bcEntry = $map[$dbEntry->id];
+    
+    //             // So sánh từng trường cơ bản
+    //             if (
+    //                 $dbEntry->message_id != $bcEntry['chatboxId'] ||
+    //                 $dbEntry->user_id != $bcEntry['userId'] ||
+    //                 $dbEntry->created_at != $bcEntry['created_at']
+    //             ) {
+    //                 throw new BadRequestHttpException("Data mismatch at message ID {$dbEntry->id}");
+    //             }
+    
+    //             // Giải mã content dùng key từ DB
+    //             $security = new Security();
+    //             $this->decrypted_content = $security->decryptByPassword($this->content, $this->key);        
+    //             $final[] = $dbEntry;
+    //         }
+    //         return array_reverse($final);
 
-                $query = $this->getSecureEntries();
-                $query->addOrderBy(['created_at' => SORT_DESC]);
-                if ($from) {
-                    $query->andWhere(['<', 'secure_message_entry.id', $from]);
-                }
-                $module = Module::getModuleInstance();
-                $limit = $from ? $module->conversationUpdatePageSize : $module->conversationInitPageSize;
-                $query->limit($limit);
-        
-                $dbEntries = $query->all();
-        
-                return array_reverse($dbEntries);
+    //         // $query = $this->getSecureEntries();
+    //         // $query->addOrderBy(['created_at' => SORT_DESC]);
+    //         // if ($from) {
+    //         //     $query->andWhere(['<', 'secure_message_entry.id', $from]);
+    //         // }
+    //         // $module = Module::getModuleInstance();
+    //         // $limit = $from ? $module->conversationUpdatePageSize : $module->conversationInitPageSize;
+    //         // $query->limit($limit);
+    
+    //         // $dbEntries = $query->all();
+    
+    //         // return array_reverse($dbEntries);
 
-            // } else {
-            //     throw new BadRequestHttpException('Failed to fetch messages from Node API');
-            //     return [];
-            // }
 
             
-        }
-        else {
-            $query = $this->getEntries();
-            $query->addOrderBy(['created_at' => SORT_DESC]);
-            if ($from) {
+    //     }
+    //     else {
+    //         $query = $this->getEntries();
+    //         $query->addOrderBy(['created_at' => SORT_DESC]);
+    //         if ($from) {
                 
-                    $query->andWhere(['<', 'message_entry.id', $from]);
-            }
-            $module = Module::getModuleInstance();
-            $limit = $from ? $module->conversationUpdatePageSize : $module->conversationInitPageSize;
-            $query->limit($limit);
+    //                 $query->andWhere(['<', 'message_entry.id', $from]);
+    //         }
+    //         $module = Module::getModuleInstance();
+    //         $limit = $from ? $module->conversationUpdatePageSize : $module->conversationInitPageSize;
+    //         $query->limit($limit);
 
-            return array_reverse($query->all());
-        }
+    //         return array_reverse($query->all());
+    //     }
         
+    // }
+
+    public function getEntryPage($from = null)
+{
+    $type = $this->type;
+    if ($type === 'secure') {
+
+        $bcEntries = $this->fetchMessageFromBC();
+
+        $query = $this->getSecureEntries();
+        $query->addOrderBy(['created_at' => SORT_DESC]);
+        if ($from) {
+            $query->andWhere(['<', 'secure_message_entry.id', $from]);
+        }
+
+        $module = Module::getModuleInstance();
+        $limit = $from ? $module->conversationUpdatePageSize : $module->conversationInitPageSize;
+        $query->limit($limit);
+
+        $dbEntries = $query->all();
+
+        if (count($bcEntries) !== count($dbEntries)) {
+            throw new BadRequestHttpException('Mismatch between Fabric and DB message counts.');
+        }
+
+        $final = [];
+        $map = [];
+        foreach ($bcEntries as $bcEntry) {
+            $map[$bcEntry->id] = $bcEntry;
+        }
+
+        foreach ($dbEntries as $dbEntry) {
+            if (!isset($map[$dbEntry->id])) {
+                throw new BadRequestHttpException("API entry not found for message ID {$dbEntry->id}");
+            }
+
+            $bcEntry = $map[$dbEntry->id];
+
+            if (
+                $dbEntry->message_id != $bcEntry->messageId ||
+                $dbEntry->user_id != $bcEntry->userId ||
+                $dbEntry->created_at != $bcEntry->createdAt
+            ) {
+                throw new BadRequestHttpException("Data mismatch at message ID {$dbEntry->id}");
+            }
+
+            $security = new Security();
+            $dbEntry->setDecryptedContent($security->decryptByPassword($bcEntry->content, $dbEntry->key));
+            $final[] = $dbEntry;
+        }
+
+        return array_reverse($final);
+
+    } else {
+        $query = $this->getEntries();
+        $query->addOrderBy(['created_at' => SORT_DESC]);
+        if ($from) {
+            $query->andWhere(['<', 'message_entry.id', $from]);
+        }
+
+        $module = Module::getModuleInstance();
+        $limit = $from ? $module->conversationUpdatePageSize : $module->conversationInitPageSize;
+        $query->limit($limit);
+
+        return array_reverse($query->all());
     }
+}
+
+
+
 
     /**
      * @return \yii\db\ActiveQuery
@@ -548,6 +611,36 @@ class Message extends ActiveRecord
         }
 
         return false;
+    }
+
+    private function fetchMessageFromBC() {
+        try {
+        $chatboxId = $this->id; // ví dụ bạn có chatboxId từ model
+            $client = new Client();
+            $response = $client->createRequest()
+                ->setMethod('GET')
+                ->addHeaders([
+                    'content-type' => 'application/json',
+                    'x-api-key' => '5b656047-b9a6-4902-9d95-698c1c602ccf' // Thay 'your-api-key-here' bằng giá trị thực tế của bạn
+                ])
+                ->setUrl("http://localhost:3000/api/messages/{$chatboxId}")
+                ->send();
+
+            if (!$response->isOk) {
+                Yii::error("Failed to post message to blockchain API: " . $response->content, __METHOD__);
+                throw new BadRequestHttpException('Failed to fetch messages from Node API');
+                return [];
+            } 
+            // Yii::error("Failed to post message to blockchain API: " . $response->content, __METHOD__);
+            return json_decode($response->content, true);
+        }
+        catch (\Exception $e) {
+            Yii::error("Failed to post message to blockchain API: " . $response->content, __METHOD__);
+            throw new BadRequestHttpException('Failed to fetch messages from Node API');
+            return [];
+        }
+
+
     }
 
     public function isPinned($userId = null): bool
