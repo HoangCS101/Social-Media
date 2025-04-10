@@ -72,11 +72,55 @@ humhub.module("mail.ConversationView", function (module, require, $) {
 
     ConversationView.prototype.reply = function (evt) {
         var that = this;
+
+        // Tạo FormData từ form hiện tại
+
         client
             .submit(evt)
             .then(function (response) {
+                if (!response.success) {
+                    module.log.error(response, true);
+                    return;
+                }
+                return that.appendEntry(response.content).then(function () {
+                    that.$.find(".time").timeago(); // somehow this is not triggered after reply
+                    var richtext = that.getReplyRichtext();
+                    if (richtext) {
+                        richtext.$.trigger("clear");
+                    }
+                    var filePreview = that.getReplyFilePreview();
+                    if (filePreview.length) {
+                        filePreview.hide();
+                        filePreview.children("ul.files").html("");
+                    }
+                    that.scrollToBottom();
+                    if (!view.isSmall()) {
+                        that.focus();
+                    }
+                    Widget.instance("#inbox").updateEntries([
+                        that.getActiveMessageId(),
+                    ]);
+                    that.setLivePollInterval();
+
+                    return client.post(that.options.handleSaveUrl, {
+                        id: $(response.content).data("entry-id"),
+                    });
+                });
+            })
+            .then(function (response) {
                 if (response.success) {
-                    that.appendEntry(response.content).then(function () {
+                    var $newContent = $(response.content);
+                    var entryId = $newContent.data("entry-id");
+                    var $oldEntry = that.$.find(
+                        '[data-entry-id="' + entryId + '"]'
+                    );
+
+                    if ($oldEntry.length) {
+                        $oldEntry.remove();
+                    }
+
+                    module.loader.init($newContent);
+                    that.appendEntry($newContent).then(function () {
                         that.$.find(".time").timeago(); // somehow this is not triggered after reply
                         var richtext = that.getReplyRichtext();
                         if (richtext) {

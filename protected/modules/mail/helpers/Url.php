@@ -146,6 +146,11 @@ class Url extends \yii\helpers\Url
         return static::to(['/mail/mail/reply', 'id' => $message->id, 'type' => $type]);
     }
 
+    public static function toHandleSave()
+    {
+        return static::to(['/mail/mail/handle-save']);
+    }
+
     public static function toInboxLoadMore()
     {
         return static::to(['/mail/inbox/load-more']);
@@ -159,5 +164,10 @@ class Url extends \yii\helpers\Url
     public static function toLoadMoreMessages()
     {
         return static::to(['/mail/mail/load-more']);
+    }
+
+    public static function toHandleApi()
+    {
+        return static::to(['/mail/mail/handle-api']);
     }
 }

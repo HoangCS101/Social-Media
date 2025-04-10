@@ -62,12 +62,18 @@ use humhub\modules\user\widgets\Image;
         </div>
         <div class="flex items-center"> 
             <?php if ($isOwnMessage) : ?>
-                <?= MessageEntryTime::widget(['entry' => $entry, 'options' => ['class' => 'ml-auto text-[12px]']]) ?>
-
-                <?php if ($status) : ?>
-                    <p style="color: green; font-size: 12px; width: auto"><?= Html::encode(' - Saved') ?></p>
+                <?php if ($secure) : ?>
+                    <?php if ($entry->status === 'pending') : ?>
+                        <p style="color: blue; font-size: 12px; width: auto"><?= Html::encode('Pending') ?></p>
+                    <?php elseif ($entry->status === 'failed') : ?>
+                        <?= MessageEntryTime::widget(['entry' => $entry, 'options' => ['class' => 'ml-auto text-[12px]']]) ?>
+                        <p style="color: red; font-size: 12px; width: auto"><?= Html::encode(' - Failed') ?></p>
+                    <?php else : ?>
+                        <?= MessageEntryTime::widget(['entry' => $entry, 'options' => ['class' => 'ml-auto text-[12px]']]) ?>
+                        <p style="color: green; font-size: 12px; width: auto"><?= Html::encode(' - Saved') ?></p>
+                    <?php endif; ?>
                 <?php else : ?>
-                    <p style="color: red; font-size: 12px; width: auto"><?= Html::encode(' - Error') ?></p>
+                    <?= MessageEntryTime::widget(['entry' => $entry, 'options' => ['class' => 'ml-auto text-[12px]']]) ?>
                 <?php endif; ?>
 
             <?php else : ?>

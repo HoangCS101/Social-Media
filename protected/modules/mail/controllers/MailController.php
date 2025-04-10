@@ -152,7 +152,7 @@ class MailController extends Controller
 
                 return $this->asJson([
                     'success' => true,
-                    'content' => ConversationEntry::widget(['status' => 'Pending', 'entry' => $reply, 'showDateBadge' => $reply->isFirstToday()]),
+                    'content' => ConversationEntry::widget(['entry' => $reply, 'showDateBadge' => $reply->isFirstToday()]),
                 ]);
             }
             
@@ -169,21 +169,11 @@ class MailController extends Controller
             $replyForm = new SecureReplyForm(['model' => $message]);
             if ($replyForm->load(Yii::$app->request->post()) && $replyForm->save()) {
                 $reply = $replyForm->reply;
-                //Gọi job ở đây       
-                // Yii::$app->queue->push(new CheckBlockchainStatusJob([
-                //     'reply' => $reply
-                // ]));
-                $success = $this->executeSaveOnBC($reply);
-        
-                
                 return $this->asJson([
                     'success' => true,
-                    'status' => $success,
-                    'content' => ConversationEntry::widget(['status' => 'Pending', 'entry' => $reply, 'showDateBadge' => $reply->isFirstToday()]),
+                    'content' => ConversationEntry::widget([ 'entry' => $reply, 'showDateBadge' => $reply->isFirstToday()]),
                 ]);
             }
-
-            
 
             return $this->asJson([
                 'success' => false,
@@ -193,6 +183,28 @@ class MailController extends Controller
             ]);
         }
     }
+
+    public function actionHandleSave()
+    {
+        $id = Yii::$app->request->post('id');
+
+        $reply = SecureMessageEntry::findOne(['id' => $id]);
+
+        $success = $this->executeSaveOnBC($reply);
+        if($success) {
+            return $this->asJson([
+                'success' => true,
+                'content' => ConversationEntry::widget([ 'entry' => $reply, 'showDateBadge' => $reply->isFirstToday()]),
+            ]);
+        }
+        else {
+            return $this->asJson([
+                'success' => true,
+                'content' => ConversationEntry::widget(['entry' => $reply, 'showDateBadge' => $reply->isFirstToday()]),
+            ]);
+        }   
+    }
+
 
     /**
      * @param $id
@@ -494,6 +506,7 @@ class MailController extends Controller
         ]);
     }
 
+
     /**
      * Delete Entry Id
      *
@@ -528,6 +541,7 @@ class MailController extends Controller
         $json = ['newMessages' => UserMessage::getNewMessageCount()];
         return $this->asJson($json);
     }
+
 
     /**
      * Returns the Message Model by given Id
@@ -574,34 +588,37 @@ class MailController extends Controller
     {
         $client = new Client();
 
-        for ($k = 0; $k < 3; $k++) {
-            $response = $this->setMessageEntryToBC($client, $reply);
-            if ($response && isset($response->jobId)) {
-                $jobId = (int)$response->jobId;
+        // for ($k = 0; $k < 3; $k++) {
+        $response = $this->setMessageEntryToBC($client, $reply);
+        if ($response && isset($response->jobId)) {
+            $jobId = (int)$response->jobId;
 
-                for ($i = 0; $i < 3; $i++) {
-                    sleep(1); 
+            for ($i = 0; $i < 3; $i++) {
+                sleep(1); 
 
-                    $result = $this->checkStatusSavingInBC($client, $jobId);
-                    if ($result && isset($result->transactionIds) && count($result->transactionIds) > 0) {
-                        Yii::info("Blockchain save successful for jobId: $jobId, tx count: " . count($result->transactionIds), __METHOD__);
-                        $reply->content = null;
-                        $reply->save();
-                        return true;
-                    } 
-                        
-                    Yii::warning("Job $jobId has no transactions yet (attempt $i)", __METHOD__);
-                }
+                $result = $this->checkStatusSavingInBC($client, $jobId);
+                if ($result && isset($result->transactionIds) && count($result->transactionIds) > 0) {
+                    Yii::info("Blockchain save successful for jobId: $jobId, tx count: " . count($result->transactionIds), __METHOD__);
+                    $reply->content = null;
+                    $reply->status = 'saved';
+                    $reply->save();
+                    return true;
+                } 
+                    
+                Yii::warning("Job $jobId has no transactions yet (attempt $i)", __METHOD__);
+            }
 
-                Yii::error("Job $jobId failed to send after 3 retries.", __METHOD__);
-            } 
+            // Yii::error("Job $jobId failed to send after 3 retries.", __METHOD__);
+        } 
                 
-            Yii::warning("Blockchain API did not return jobId (attempt $k)", __METHOD__);
-        }
+            // Yii::warning("Blockchain API did not return jobId (attempt $k)", __METHOD__);
+        // }
 
-        Yii::error("Failed to initiate blockchain save after 3 attempts.", __METHOD__);
-        $reply->content = null;
+        Yii::error("Failed to save blockchain", __METHOD__);
+        $reply->status = 'failed';
         $reply->save();
+        // $reply->content = null;
+        // $reply->save();
         return false;
     }
 

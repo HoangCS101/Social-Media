@@ -67,6 +67,7 @@ class SecureReplyForm extends Model
         return Url::toReply($this->model, 'secure');
     }
 
+
     public function save()
     {
         if (!$this->validate()) {

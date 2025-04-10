@@ -200,19 +200,26 @@ class Message extends ActiveRecord
 
         $dbEntries = $query->all();
 
-        if (count($bcEntries) !== count($dbEntries)) {
-            throw new BadRequestHttpException('Mismatch between Fabric and DB message counts.');
-        }
+        // if (count($bcEntries) !== count($dbEntries)) {
+        //     throw new BadRequestHttpException('Mismatch between Fabric and DB message counts.');
+        // }
 
         $final = [];
         $map = [];
+        $security = new Security();
+
         foreach ($bcEntries as $bcEntry) {
             $map[$bcEntry->id] = $bcEntry;
         }
 
         foreach ($dbEntries as $dbEntry) {
+            if($dbEntry->status === 'pending' || $dbEntry->status === 'failed') {
+                $final[] = $dbEntry;
+                continue;
+            }
+
             if (!isset($map[$dbEntry->id])) {
-                throw new BadRequestHttpException("API entry not found for message ID {$dbEntry->id}");
+                throw new BadRequestHttpException("Not have this message in bc {$dbEntry->id}");
             }
 
             $bcEntry = $map[$dbEntry->id];
@@ -225,7 +232,6 @@ class Message extends ActiveRecord
                 throw new BadRequestHttpException("Data mismatch at message ID {$dbEntry->id}");
             }
 
-            $security = new Security();
             $dbEntry->setDecryptedContent($security->decryptByPassword($bcEntry->content, $dbEntry->key));
             $final[] = $dbEntry;
         }
@@ -615,7 +621,7 @@ class Message extends ActiveRecord
 
     private function fetchMessageFromBC() {
         try {
-        $chatboxId = $this->id; // ví dụ bạn có chatboxId từ model
+            $chatboxId = $this->id; // ví dụ bạn có chatboxId từ model
             $client = new Client();
             $response = $client->createRequest()
                 ->setMethod('GET')
@@ -627,7 +633,7 @@ class Message extends ActiveRecord
                 ->send();
 
             if (!$response->isOk) {
-                Yii::error("Failed to post message to blockchain API: " . $response->content, __METHOD__);
+                Yii::error("Failed to fetch message to blockchain API: " . $response->content, __METHOD__);
                 throw new BadRequestHttpException('Failed to fetch messages from Node API');
                 return [];
             } 
@@ -635,8 +641,8 @@ class Message extends ActiveRecord
             return json_decode($response->content, true);
         }
         catch (\Exception $e) {
-            Yii::error("Failed to post message to blockchain API: " . $response->content, __METHOD__);
-            throw new BadRequestHttpException('Failed to fetch messages from Node API');
+            Yii::error("Failed to fetch message to blockchain API: ");
+            // throw new BadRequestHttpException('Failed to fetch messages from Node API');
             return [];
         }
 
