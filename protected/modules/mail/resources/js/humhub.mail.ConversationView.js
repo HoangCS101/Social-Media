@@ -73,8 +73,6 @@ humhub.module("mail.ConversationView", function (module, require, $) {
     ConversationView.prototype.reply = function (evt) {
         var that = this;
 
-        // Tạo FormData từ form hiện tại
-
         client
             .submit(evt)
             .then(function (response) {
@@ -101,13 +99,16 @@ humhub.module("mail.ConversationView", function (module, require, $) {
                         that.getActiveMessageId(),
                     ]);
                     that.setLivePollInterval();
-
-                    return client.post(that.options.handleSaveUrl, {
-                        id: $(response.content).data("entry-id"),
-                    });
+                    if (response.secure) {
+                        return client.post(that.options.handleSaveUrl, {
+                            data: { id: response.entryId },
+                        });
+                    }
+                    return;
                 });
             })
             .then(function (response) {
+                if (!response) return;
                 if (response.success) {
                     var $newContent = $(response.content);
                     var entryId = $newContent.data("entry-id");
@@ -118,8 +119,6 @@ humhub.module("mail.ConversationView", function (module, require, $) {
                     if ($oldEntry.length) {
                         $oldEntry.remove();
                     }
-
-                    module.loader.init($newContent);
                     that.appendEntry($newContent).then(function () {
                         that.$.find(".time").timeago(); // somehow this is not triggered after reply
                         var richtext = that.getReplyRichtext();

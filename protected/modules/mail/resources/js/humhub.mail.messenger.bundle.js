@@ -87,19 +87,59 @@ humhub.module("mail.ConversationView", function (module, require, $) {
                 }
             });
     };
-
     ConversationView.prototype.reply = function (evt) {
         var that = this;
+
+        // Tạo FormData từ form hiện tại
+
         client
             .submit(evt)
             .then(function (response) {
+                if (!response.success) {
+                    module.log.error(response, true);
+                    return;
+                }
+                return that.appendEntry(response.content).then(function () {
+                    that.$.find(".time").timeago(); // somehow this is not triggered after reply
+                    var richtext = that.getReplyRichtext();
+                    if (richtext) {
+                        richtext.$.trigger("clear");
+                    }
+                    var filePreview = that.getReplyFilePreview();
+                    if (filePreview.length) {
+                        filePreview.hide();
+                        filePreview.children("ul.files").html("");
+                    }
+                    that.scrollToBottom();
+                    if (!view.isSmall()) {
+                        that.focus();
+                    }
+                    Widget.instance("#inbox").updateEntries([
+                        that.getActiveMessageId(),
+                    ]);
+                    that.setLivePollInterval();
+                    if (response.secure) {
+                        return client.post(that.options.handleSaveUrl, {
+                            data: { id: response.entryId },
+                        });
+                    }
+                    return;
+                });
+            })
+            .then(function (response) {
+                if (!response) return;
                 if (response.success) {
-                    that.appendEntry(response.content).then(function () {
+                    var $newContent = $(response.content);
+                    var entryId = $newContent.data("entry-id");
+                    var $oldEntry = that.$.find(
+                        '[data-entry-id="' + entryId + '"]'
+                    );
+
+                    if ($oldEntry.length) {
+                        $oldEntry.remove();
+                    }
+                    that.appendEntry($newContent).then(function () {
                         that.$.find(".time").timeago(); // somehow this is not triggered after reply
-                        var string =
-                            "Message sent from " + that.getActiveMessageId();
-                        conn.send(string);
-                        console.log(string);
                         var richtext = that.getReplyRichtext();
                         if (richtext) {
                             richtext.$.trigger("clear");
@@ -117,7 +157,7 @@ humhub.module("mail.ConversationView", function (module, require, $) {
                         Widget.instance("#inbox").updateEntries([
                             that.getActiveMessageId(),
                         ]);
-                        // that.setLivePollInterval();
+                        that.setLivePollInterval();
                     });
                 } else {
                     module.log.error(response, true);
@@ -131,6 +171,50 @@ humhub.module("mail.ConversationView", function (module, require, $) {
                 evt.finish();
             });
     };
+
+    // ConversationView.prototype.reply = function (evt) {
+    //     var that = this;
+    //     client
+    //         .submit(evt)
+    //         .then(function (response) {
+    //             if (response.success) {
+    //                 that.appendEntry(response.content).then(function () {
+    //                     that.$.find(".time").timeago(); // somehow this is not triggered after reply
+    //                     var string =
+    //                         "Message sent from " + that.getActiveMessageId();
+    //                     conn.send(string);
+    //                     console.log(string);
+    //                     var richtext = that.getReplyRichtext();
+    //                     if (richtext) {
+    //                         richtext.$.trigger("clear");
+    //                     }
+    //                     var filePreview = that.getReplyFilePreview();
+    //                     if (filePreview.length) {
+    //                         filePreview.hide();
+    //                         filePreview.children("ul.files").html("");
+    //                     }
+    //                     that.scrollToBottom();
+    //                     if (!view.isSmall()) {
+    //                         // prevent autofocus on mobile
+    //                         that.focus();
+    //                     }
+    //                     Widget.instance("#inbox").updateEntries([
+    //                         that.getActiveMessageId(),
+    //                     ]);
+    //                     // that.setLivePollInterval();
+    //                 });
+    //             } else {
+    //                 module.log.error(response, true);
+    //             }
+    //         })
+    //         .catch(function (e) {
+    //             module.log.error(e, true);
+    //         })
+    //         .finally(function (e) {
+    //             loader.reset($(".reply-button"));
+    //             evt.finish();
+    //         });
+    // };
 
     ConversationView.prototype.setLivePollInterval = function () {
         require("live").setDelay(5);
@@ -718,11 +802,17 @@ humhub.module("mail.inbox", function (module, require, $) {
 
     ConversationList.prototype.updateActiveItem = function () {
         this.$.find(".entry").removeClass("selected");
+        var messageId = getRoot().getActiveMessageId();
+        var messageType = getRoot().options.messageType;
 
         // Set new selection
         if (getRoot()) {
             var $selected = this.$.find(
-                '[data-message-id="' + getRoot().getActiveMessageId() + '"]'
+                '[data-message-id="' +
+                    messageId +
+                    '"][data-message-type="' +
+                    messageType +
+                    '"]'
             );
             if ($selected.length) {
                 $selected.removeClass("unread").addClass("selected");

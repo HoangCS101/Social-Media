@@ -30,7 +30,6 @@ $filterModel = new InboxFilterForm();
 
         <?= SecureChatMenu::widget([
             'filter' => $filterModel,
-            'options' => ['class' => '[&>ul]:pb-0 [&>li]:w-1/2']
         ]); ?>
 
         <div id="inbox-list-container">

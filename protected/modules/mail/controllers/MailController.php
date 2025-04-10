@@ -151,6 +151,7 @@ class MailController extends Controller
                 
 
                 return $this->asJson([
+                    'secure' => false,
                     'success' => true,
                     'content' => ConversationEntry::widget(['entry' => $reply, 'showDateBadge' => $reply->isFirstToday()]),
                 ]);
@@ -170,7 +171,9 @@ class MailController extends Controller
             if ($replyForm->load(Yii::$app->request->post()) && $replyForm->save()) {
                 $reply = $replyForm->reply;
                 return $this->asJson([
+                    'secure' => true,
                     'success' => true,
+                    'entryId' => $reply->id,
                     'content' => ConversationEntry::widget([ 'entry' => $reply, 'showDateBadge' => $reply->isFirstToday()]),
                 ]);
             }
@@ -617,8 +620,6 @@ class MailController extends Controller
         Yii::error("Failed to save blockchain", __METHOD__);
         $reply->status = 'failed';
         $reply->save();
-        // $reply->content = null;
-        // $reply->save();
         return false;
     }
 

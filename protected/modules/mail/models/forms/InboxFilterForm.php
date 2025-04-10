@@ -144,7 +144,7 @@ class InboxFilterForm extends QueryFilter
                 ->andWhere($this->createTermLikeCondition('message_entry.content'));
             }
             else {
-                $messageEntryContentSubQuery = SecureMessageEntry::find()->where('message_entry.message_id = message.id');
+                $messageEntryContentSubQuery = SecureMessageEntry::find()->where('secure_message_entry.message_id = message.id and secure_message_entry.status != "failed"');
             }
             $this->query->andWhere(new OrCondition([
                 new ExistsCondition('EXISTS', $messageEntryContentSubQuery),
