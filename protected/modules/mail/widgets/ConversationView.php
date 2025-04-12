@@ -45,7 +45,9 @@ class ConversationView extends JsWidget
             'load-update-url' => Url::toUpdateMessage(),
             'load-more-url' => Url::toLoadMoreMessages(),
             'mark-seen-url' => Url::toNotificationSeen(),
-            'handle-save-url' => Url::toHandleSave()
+            'handle-create-url' => Url::toHandleSave('create'),
+            'handle-update-url' => Url::toHandleSave('update'),
+            'handle-delete-url' => Url::toHandleSave('delete'),
         ];
     }
 }

@@ -119,7 +119,7 @@ humhub.module("mail.ConversationView", function (module, require, $) {
                     ]);
                     that.setLivePollInterval();
                     if (response.secure) {
-                        return client.post(that.options.handleSaveUrl, {
+                        return client.post(that.options.handleCreateUrl, {
                             data: { id: response.entryId },
                         });
                     }
@@ -668,6 +668,7 @@ humhub.module("mail.inbox", function (module, require, $) {
         }
 
         this.$.on("click", ".entry", function () {
+            console.log("Entry clicked:", this);
             that.$.find(".entry").removeClass("selected");
             $(this).addClass("selected");
         });
@@ -803,16 +804,11 @@ humhub.module("mail.inbox", function (module, require, $) {
     ConversationList.prototype.updateActiveItem = function () {
         this.$.find(".entry").removeClass("selected");
         var messageId = getRoot().getActiveMessageId();
-        var messageType = getRoot().options.messageType;
 
         // Set new selection
         if (getRoot()) {
             var $selected = this.$.find(
-                '[data-message-id="' +
-                    messageId +
-                    '"][data-message-type="' +
-                    messageType +
-                    '"]'
+                '[data-message-id="' + messageId + '"]'
             );
             if ($selected.length) {
                 $selected.removeClass("unread").addClass("selected");
@@ -918,9 +914,29 @@ humhub.module("mail.conversation", function (module, require, $) {
                         setTimeout(function () {
                             entry.replace(response.content);
                         }, 300);
+                        return client.post(
+                            "/index.php?r=mail%2Fmail%2Fhandle-save&op=update",
+                            {
+                                data: { id: evt.$trigger.data("entry-id") },
+                            }
+                        );
+                    }
+                }
+
+                module.log.error(null, true);
+            })
+            .then(function (response) {
+                if (response.success) {
+                    var entry = getEntry(evt.$trigger.data("entry-id"));
+                    if (entry) {
+                        setTimeout(function () {
+                            entry.replace(response.content);
+                        }, 300);
                     }
 
-                    return;
+                    return client.post(this.options.handleUpdateUrl, {
+                        data: { id: evt.$trigger.data("entry-id") },
+                    });
                 }
 
                 module.log.error(null, true);

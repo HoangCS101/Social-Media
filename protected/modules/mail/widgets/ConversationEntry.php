@@ -55,7 +55,7 @@ class ConversationEntry extends JsWidget
 
         // $this->entry;
         // echo "</pre>";
-        // exit; 
+        // // exit; 
         if ($this->entry instanceof SecureMessageEntry) {
             $this->secure = true;
         }
@@ -63,9 +63,6 @@ class ConversationEntry extends JsWidget
         if ($this->entry->type === MessageEntry::type()) {
             return $this->runMessage();
         }
-        // if ($this->entry->type === SecureMessageEntry::type()) {
-        //     return $this->runMessage();
-        // }
 
         return $this->runState();
     }
@@ -93,9 +90,9 @@ class ConversationEntry extends JsWidget
         if($this->secure) {
             if($this->entry->getDecryptedContent()) return $this->entry->getDecryptedContent();
             if($this->entry->content) {
-                $security = new Security();
-                return $security->decryptByPassword(base64_decode($this->entry->content), $this->entry->key);
+                return $this->entry->decrypt($this->entry->content, $this->entry->key);
             }
+            return 'ERROR';
         }
         else {
             return $this->entry->content;

@@ -25,7 +25,7 @@ use yii\bootstrap\ActiveForm;
 
 <?php $form = ActiveForm::begin() ?>
 <div class="modal-body mail-edit-message">
-    <?= $form->field($entry, 'content')->widget(
+    <?= $form->field($entry, 'decryptedContent')->widget(
         MailRichtextEditor::class, [
         'placeholder' => Yii::t('MailModule.base', 'Edit message...')])->label(false) ?>
 

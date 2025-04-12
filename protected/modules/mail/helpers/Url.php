@@ -146,9 +146,9 @@ class Url extends \yii\helpers\Url
         return static::to(['/mail/mail/reply', 'id' => $message->id, 'type' => $type]);
     }
 
-    public static function toHandleSave()
+    public static function toHandleSave(string $op)
     {
-        return static::to(['/mail/mail/handle-save']);
+        return static::to(['/mail/mail/handle-save', 'op' => $op]);
     }
 
     public static function toInboxLoadMore()

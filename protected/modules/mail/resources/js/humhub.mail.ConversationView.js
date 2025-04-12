@@ -100,7 +100,7 @@ humhub.module("mail.ConversationView", function (module, require, $) {
                     ]);
                     that.setLivePollInterval();
                     if (response.secure) {
-                        return client.post(that.options.handleSaveUrl, {
+                        return client.post(that.options.handleCreateUrl, {
                             data: { id: response.entryId },
                         });
                     }

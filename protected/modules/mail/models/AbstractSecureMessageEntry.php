@@ -104,11 +104,15 @@ abstract class AbstractSecureMessageEntry extends ActiveRecord
             $this->message->save();
         }
         if ($insert && !empty($this->content)) {
-            $security = new Security();
-            $key = $security->generateRandomString(32);
+            $key = bin2hex(random_bytes(16));
             $this->key = $key;
-            $encrypted = $security->encryptByPassword($this->content, $key);
-            $this->content = base64_encode($encrypted);
+            $this->content = $this->encrypt($this->content, $key);
+        }
+        
+        if (!$insert && $this->isAttributeChanged('content')) {
+            $key = bin2hex(random_bytes(16));
+            $this->key = $key;
+            $this->content = $this->encrypt($this->content, $key);
         }
 
 
@@ -150,8 +154,7 @@ abstract class AbstractSecureMessageEntry extends ActiveRecord
 
         if (!empty($this->content) && !empty($this->key)) {
             try {
-                $security = new Security();
-                $this->decrypted_content = $security->decryptByPassword(base64_decode($this->content), $this->key);
+                $this->decrypted_content = $this->decrypt($this->content, $this->key);
             } catch (\Throwable $e) {
                 $this->decrypted_content = null;
             }
@@ -173,6 +176,26 @@ abstract class AbstractSecureMessageEntry extends ActiveRecord
     public function getMessage(): ActiveQuery
     {
         return $this->hasOne(Message::class, ['id' => 'message_id']);
+    }
+
+    function encrypt($data, $key) {
+        $method = 'AES-256-CBC';
+        $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($method));
+    
+        $encrypted = openssl_encrypt($data, $method, $key, 0, $iv);
+    
+        return base64_encode($iv . $encrypted); // Gộp IV + ciphertext
+    }
+    
+    function decrypt($data, $key) {
+        $method = 'AES-256-CBC';
+        $raw = base64_decode($data);
+    
+        $ivLength = openssl_cipher_iv_length($method);
+        $iv = substr($raw, 0, $ivLength);
+        $ciphertext = substr($raw, $ivLength);
+    
+        return openssl_decrypt($ciphertext, $method, $key, 0, $iv);
     }
 }
 

@@ -149,7 +149,6 @@ class MailController extends Controller
             if ($replyForm->load(Yii::$app->request->post()) && $replyForm->save()) {
                 $reply = $replyForm->reply;
                 
-
                 return $this->asJson([
                     'secure' => false,
                     'success' => true,
@@ -187,13 +186,14 @@ class MailController extends Controller
         }
     }
 
-    public function actionHandleSave()
+
+    public function actionHandleSave(string $op)
     {
         $id = Yii::$app->request->post('id');
 
         $reply = SecureMessageEntry::findOne(['id' => $id]);
 
-        $success = $this->executeSaveOnBC($reply);
+        $success = $this->executeSaveOnBC($reply, $op);
         if($success) {
             return $this->asJson([
                 'success' => true,
@@ -206,6 +206,49 @@ class MailController extends Controller
                 'content' => ConversationEntry::widget(['entry' => $reply, 'showDateBadge' => $reply->isFirstToday()]),
             ]);
         }   
+    }
+
+
+    public function actionResend($id, $type = 'secure')
+    {
+        $id = Yii::$app->request->post('id');
+
+        $reply = SecureMessageEntry::findOne(['id' => $id]);
+
+        $success = $this->executeSaveOnBC($reply, 'create');
+        if($success) {
+            return $this->asJson([
+                'success' => true,
+                'content' => ConversationEntry::widget([ 'entry' => $reply, 'showDateBadge' => $reply->isFirstToday()]),
+            ]);
+        }
+        else {
+            return $this->asJson([
+                'success' => true,
+                'content' => ConversationEntry::widget(['entry' => $reply, 'showDateBadge' => $reply->isFirstToday()]),
+            ]);
+        }   
+
+    }
+
+    public function actionDeleteFailure($id)
+    {
+        $entry = SecureMessageEntry::findOne(['id' => $id]);
+
+        if (!$entry) {
+            throw new HttpException(404);
+        }
+
+        // Check if message entry exists and it´s by this user
+        if (!$entry->canEdit()) {
+            throw new HttpException(403);
+        }
+
+        $entry->message->deleteEntry($entry);
+
+        return $this->asJson([
+            'success' => true,
+        ]);
     }
 
 
@@ -388,7 +431,7 @@ class MailController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $entry = SecureMessageEntry::findOne(['message_id' => $model->messageInstance->id]);
-            $this->executeSaveOnBC($entry);
+            $this->executeSaveOnBC($entry, 'create');
 
             $type = $model->secure ? 'secure': 'normal';
             return $this->htmlRedirect(['index', 'id' => $model->messageInstance->id, 'type' => $type]);
@@ -492,7 +535,10 @@ class MailController extends Controller
             throw new HttpException(403);
         }
 
-        if ($entry->load(Yii::$app->request->post()) && $entry->save()) {
+        if ($entry->load(Yii::$app->request->post())) {
+            $entry->content = Yii::$app->request->post('SecureMessageEntry')['decryptedContent'];
+            $entry->status = 'pending';
+            $entry->save();
             $entry->fileManager->attach(Yii::$app->request->post('MessageEntry')['files'] ?? null);
             return $this->asJson([
                 'success' => true,
@@ -587,29 +633,42 @@ class MailController extends Controller
             ->one();
     }
 
-    private function executeSaveOnBC(SecureMessageEntry $reply)
+    private function executeSaveOnBC(SecureMessageEntry $reply, $op)
     {
         $client = new Client();
 
         // for ($k = 0; $k < 3; $k++) {
-        $response = $this->setMessageEntryToBC($client, $reply);
+        if($op === 'create') {
+            $response = $this->setMessageEntryToBC($client, $reply);
+        }
+
+        if($op === 'update') {
+            $response = $this->updateMessageEntryToBC($client, $reply);
+        }
+
+        if($op === 'delete') {
+            $response = $this->deleteMessageEntryToBC($client, $reply);
+        }
+
         if ($response && isset($response->jobId)) {
             $jobId = (int)$response->jobId;
 
-            for ($i = 0; $i < 3; $i++) {
-                sleep(1); 
+            sleep(3); 
 
-                $result = $this->checkStatusSavingInBC($client, $jobId);
-                if ($result && isset($result->transactionIds) && count($result->transactionIds) > 0) {
-                    Yii::info("Blockchain save successful for jobId: $jobId, tx count: " . count($result->transactionIds), __METHOD__);
+            $result = $this->getJobSavingInBC($client, $jobId);
+            if ($result && isset($result->transactionIds) && count($result->transactionIds) > 0) {
+                Yii::info("Blockchain save successful for jobId: $jobId, tx count: " . count($result->transactionIds), __METHOD__);
+                $lastTxId = end($result->transactionIds);
+                $success = $this->checkStatusSavingInBC($client, $lastTxId);
+                if($success) {
                     $reply->content = null;
                     $reply->status = 'saved';
                     $reply->save();
                     return true;
-                } 
-                    
-                Yii::warning("Job $jobId has no transactions yet (attempt $i)", __METHOD__);
-            }
+                }
+            } 
+                
+            // Yii::warning("Job $jobId has no transactions yet (attempt $i)", __METHOD__);
 
             // Yii::error("Job $jobId failed to send after 3 retries.", __METHOD__);
         } 
@@ -632,7 +691,7 @@ class MailController extends Controller
                 ->setUrl('http://localhost:3000/api/messages')
                 ->addHeaders([
                     'content-type' => 'application/json',
-                    'x-api-key' => '5b656047-b9a6-4902-9d95-698c1c602ccf' // Thay 'your-api-key-here' bằng giá trị thực tế của bạn
+                    'x-api-key' => $_ENV['X_API_KEY'] // Thay 'your-api-key-here' bằng giá trị thực tế của bạn
                 ])
                 ->setContent(json_encode([
                     'id' => $reply->id,
@@ -665,7 +724,7 @@ class MailController extends Controller
                 ->setUrl('http://localhost:3000/api/messages')
                 ->addHeaders([
                     'content-type' => 'application/json',
-                    'x-api-key' => '5b656047-b9a6-4902-9d95-698c1c602ccf' // Thay 'your-api-key-here' bằng giá trị thực tế của bạn
+                    'x-api-key' => $_ENV['X_API_KEY'] // Thay 'your-api-key-here' bằng giá trị thực tế của bạn
                 ])
                 ->setContent(json_encode([
                     'id' => $reply->id,
@@ -680,6 +739,30 @@ class MailController extends Controller
             if ($response->isOk) {
                 return json_decode($response->content);
             } else {
+                Yii::error("Failed to update message to blockchain API: " . $response->content, __METHOD__);
+                return null;
+            }
+        } catch (\Exception $e) {
+            Yii::error("Error when calling Node.js API: " . $e->getMessage(), __METHOD__);
+            return null;
+        }
+    }
+
+    private function deleteMessageEntryToBC(Client $client, SecureMessageEntry $reply, $modify = false)
+    {
+        try {
+            $response = $client->createRequest()
+                ->setMethod('DELETE')
+                ->setUrl('http://localhost:3000/api/messages')
+                ->addHeaders([
+                    'content-type' => 'application/json',
+                    'x-api-key' => $_ENV['X_API_KEY'] // Thay 'your-api-key-here' bằng giá trị thực tế của bạn
+                ])
+                ->send();
+
+            if ($response->isOk) {
+                return json_decode($response->content);
+            } else {
                 Yii::error("Failed to post message to blockchain API: " . $response->content, __METHOD__);
                 return null;
             }
@@ -689,44 +772,21 @@ class MailController extends Controller
         }
     }
 
-    // private function deleteMessageEntryToBC(Client $client, SecureMessageEntry $reply, $modify = false)
-    // {
-    //     try {
-    //         $response = $client->createRequest()
-    //             ->setMethod('DELETE')
-    //             ->setUrl('http://localhost:3000/api/messages')
-    //             ->addHeaders([
-    //                 'content-type' => 'application/json',
-    //                 'x-api-key' => '5b656047-b9a6-4902-9d95-698c1c602ccf' // Thay 'your-api-key-here' bằng giá trị thực tế của bạn
-    //             ])
-    //             ->send();
-
-    //         if ($response->isOk) {
-    //             return json_decode($response->content);
-    //         } else {
-    //             Yii::error("Failed to post message to blockchain API: " . $response->content, __METHOD__);
-    //             return null;
-    //         }
-    //     } catch (\Exception $e) {
-    //         Yii::error("Error when calling Node.js API: " . $e->getMessage(), __METHOD__);
-    //         return null;
-    //     }
-    // }
-
-    private function checkStatusSavingInBC(Client $client, int $jobId)
+    private function getJobSavingInBC(Client $client, int $jobId)
     {
         try {
             $response = $client->createRequest()
                 ->setMethod('GET')
                 ->addHeaders([
                     'content-type' => 'application/json',
-                    'x-api-key' => '5b656047-b9a6-4902-9d95-698c1c602ccf' // Thay 'your-api-key-here' bằng giá trị thực tế của bạn
+                    'x-api-key' => $_ENV['X_API_KEY'] // Thay 'your-api-key-here' bằng giá trị thực tế của bạn
                 ])
                 ->setUrl("http://localhost:3000/api/jobs/{$jobId}")
                 ->send();
 
             if ($response->isOk) {
                 return json_decode($response->content);
+
             } 
 
             Yii::warning("Status check failed for jobId $jobId: " . $response->content, __METHOD__);
@@ -735,6 +795,34 @@ class MailController extends Controller
         } catch (\Exception $e) {
             Yii::error("Error when checking status of job $jobId: " . $e->getMessage(), __METHOD__);
             return null;
+        }
+    }
+
+    private function checkStatusSavingInBC(Client $client, string $transactionId)
+    {
+        try {
+            $response = $client->createRequest()
+                ->setMethod('GET')
+                ->addHeaders([
+                    'content-type' => 'application/json',
+                    'x-api-key' => $_ENV['X_API_KEY'] // Thay 'your-api-key-here' bằng giá trị thực tế của bạn
+                ])
+                ->setUrl("http://localhost:3000/api/transactions/{$transactionId}")
+                ->send();
+
+            if ($response->isOk) {
+                $content = json_decode($response->content);
+                if($content && $content->validationCode && $content->validationCode === 'VALID') {
+                    return true;
+                }
+            } 
+
+            Yii::warning("Status check failed for jobId $transactionId: " . $response->content, __METHOD__);
+            return false;
+
+        } catch (\Exception $e) {
+            Yii::error("Error when checking status of job $transactionId: " . $e->getMessage(), __METHOD__);
+            return false;
         }
     }
 

@@ -5,11 +5,13 @@ use humhub\modules\content\widgets\richtext\RichText;
 use humhub\modules\file\widgets\ShowFiles;
 use humhub\modules\mail\models\MessageEntry;
 use humhub\modules\mail\models\SecureMessageEntry;
+use humhub\modules\mail\helpers\Url;
 use humhub\modules\mail\widgets\ConversationDateBadge;
 use humhub\modules\mail\widgets\ConversationEntryMenu;
 use humhub\modules\mail\widgets\MessageEntryTime;
 use humhub\modules\ui\view\components\View;
 use humhub\modules\user\widgets\Image;
+
 
 /* @var $this View */
 /* @var $entry MessageEntry */
@@ -67,7 +69,16 @@ use humhub\modules\user\widgets\Image;
                         <p style="color: blue; font-size: 12px; width: auto"><?= Html::encode('Pending') ?></p>
                     <?php elseif ($entry->status === 'failed') : ?>
                         <?= MessageEntryTime::widget(['entry' => $entry, 'options' => ['class' => 'ml-auto text-[12px]']]) ?>
-                        <p style="color: red; font-size: 12px; width: auto"><?= Html::encode(' - Failed') ?></p>
+                        <p style="color: red; font-size: 12px; width: auto; margin: 0px 4px"><?= Html::encode('- Failed') ?></p>
+                        <!-- <div class="flex gap-1 text-[12px] ml-2">
+                            <span 
+                                class="text-blue-500 cursor-pointer hover:underline" 
+                                data-action-click="resend"
+                                data-action-url="<?= Url::to(['/message/resend', 'id' => $entry->id]) ?>">
+                                Resend
+                            </span>
+                            <span class="text-blue-500 cursor-pointer hover:underline" onclick="deleteMessage(<?= $entry->id ?>)">Delete</span>
+                        </div> -->
                     <?php else : ?>
                         <?= MessageEntryTime::widget(['entry' => $entry, 'options' => ['class' => 'ml-auto text-[12px]']]) ?>
                         <p style="color: green; font-size: 12px; width: auto"><?= Html::encode(' - Saved') ?></p>

@@ -100,7 +100,9 @@ class Message extends ActiveRecord
     $type = $this->type;
     if ($type === 'secure') {
 
-        // $bcEntries = $this->fetchMessageFromBC();
+        $bcEntries = $this->fetchMessageFromBC();
+
+        // $bcEntries = [];
 
         $query = $this->getSecureEntries();
         $query->addOrderBy(['created_at' => SORT_DESC]);
@@ -114,43 +116,41 @@ class Message extends ActiveRecord
 
         $dbEntries = $query->all();
 
-        // if (count($bcEntries) !== count($dbEntries)) {
-        //     throw new BadRequestHttpException('Mismatch between Fabric and DB message counts.');
-        // }
-
         $final = $dbEntries;
         $map = [];
-        // $security = new Security();
 
-        // foreach ($bcEntries as $bcEntry) {
-        //     $map[$bcEntry->id] = $bcEntry;
-        // }
+        foreach ($bcEntries as $bcEntry) {
+            $map[$bcEntry->id] = $bcEntry;
+        }
 
-        // foreach ($dbEntries as $dbEntry) {
-        //     if($dbEntry->status === 'pending' || $dbEntry->status === 'failed') {
-        //         $final[] = $dbEntry;
-        //         continue;
-        //     }
+        foreach ($dbEntries as $dbEntry) {
+            if($dbEntry->status === 'pending' || $dbEntry->status === 'failed') {
+                $final[] = $dbEntry;
+                continue;
+            }
 
-        //     if (!isset($map[$dbEntry->id])) {
-        //         throw new BadRequestHttpException("Not have this message in bc {$dbEntry->id}");
-        //     }
+            if (!isset($map[$dbEntry->id])) {
+                // throw new BadRequestHttpException("Not have this message in bc {$dbEntry->id}");
+                $final[] = $dbEntry;
+                continue;
+            }
 
-        //     $bcEntry = $map[$dbEntry->id];
+            $bcEntry = $map[$dbEntry->id];
 
-        //     if (
-        //         $dbEntry->message_id != $bcEntry->messageId ||
-        //         $dbEntry->user_id != $bcEntry->userId ||
-        //         $dbEntry->created_at != $bcEntry->createdAt
-        //     ) {
-        //         throw new BadRequestHttpException("Data mismatch at message ID {$dbEntry->id}");
-        //     }
+            if (
+                $dbEntry->message_id != $bcEntry->messageId ||
+                $dbEntry->user_id != $bcEntry->userId ||
+                $dbEntry->created_at != $bcEntry->createdAt
+            ) {
+                throw new BadRequestHttpException("Data mismatch at message ID {$dbEntry->id}");
+            }
+            if(!$dbEntry->getDecryptedContent()) {
+                $dbEntry->setDecryptedContent($dbEntry->decrypt($bcEntry, $dbEntry->key));
+            }
+            $final[] = $dbEntry;
+        }
 
-        //     $dbEntry->setDecryptedContent($security->decryptByPassword($bcEntry->content, $dbEntry->key));
-        //     $final[] = $dbEntry;
-        // }
-
-        return array_reverse($final);
+        return array_reverse($dbEntries);
 
     } else {
         $query = $this->getEntries();
@@ -541,15 +541,18 @@ class Message extends ActiveRecord
                 ->setMethod('GET')
                 ->addHeaders([
                     'content-type' => 'application/json',
-                    'x-api-key' => '5b656047-b9a6-4902-9d95-698c1c602ccf' // Thay 'your-api-key-here' bằng giá trị thực tế của bạn
+                    'x-api-key' => $_ENV['X_API_KEY'] // Thay 'your-api-key-here' bằng giá trị thực tế của bạn
                 ])
                 ->setUrl("http://localhost:3000/api/messages/{$chatboxId}")
+                ->setOptions([
+                    'timeout' => 1, // giây
+                    'connect_timeout' => 1 // kết nối tối đa 2 giây
+                ])
                 ->send();
 
             if (!$response->isOk) {
                 Yii::error("Failed to fetch message to blockchain API: " . $response->content, __METHOD__);
                 throw new BadRequestHttpException('Failed to fetch messages from Node API');
-                return [];
             } 
             // Yii::error("Failed to post message to blockchain API: " . $response->content, __METHOD__);
             return json_decode($response->content, true);
