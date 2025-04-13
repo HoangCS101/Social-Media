@@ -33,7 +33,10 @@ class SecureChatMenu extends TabMenu
             'sortOrder' => 100,
             'isActive' => ($currentType === 'normal'),
             'isVisible' => true,
-            'htmlOptions' => ['class' => 'line']
+            'htmlOptions' => [
+                'class' => 'line',
+                'data-action-click' => 'mail.inbox.switchType' // <== thêm action click
+            ]
         ]));
 
         $this->addEntry(new MenuLink([
@@ -42,7 +45,10 @@ class SecureChatMenu extends TabMenu
             'sortOrder' => 200,
             'isActive' => ($currentType === 'secure'),
             'isVisible' => true,
-            // 'htmlOptions' => ['class' => 'w-50']
+            'htmlOptions' => [
+                'class' => 'line',
+                'data-action-click' => 'mail.inbox.switchType' // <== thêm action click
+            ]
         ]));
 
         $this->template = '@ui/menu/widgets/views/chat-tab-menu.php';

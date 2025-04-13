@@ -721,7 +721,7 @@ class MailController extends Controller
         try {
             $response = $client->createRequest()
                 ->setMethod('PUT')
-                ->setUrl('http://localhost:3000/api/messages')
+                ->setUrl("http://localhost:3000/api/messages/{$reply->id}")
                 ->addHeaders([
                     'content-type' => 'application/json',
                     'x-api-key' => $_ENV['X_API_KEY'] // Thay 'your-api-key-here' bằng giá trị thực tế của bạn
@@ -753,7 +753,7 @@ class MailController extends Controller
         try {
             $response = $client->createRequest()
                 ->setMethod('DELETE')
-                ->setUrl('http://localhost:3000/api/messages')
+                ->setUrl("http://localhost:3000/api/messages/{$reply->id}")
                 ->addHeaders([
                     'content-type' => 'application/json',
                     'x-api-key' => $_ENV['X_API_KEY'] // Thay 'your-api-key-here' bằng giá trị thực tế của bạn

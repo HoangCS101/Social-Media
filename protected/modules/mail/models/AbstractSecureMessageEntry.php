@@ -109,7 +109,7 @@ abstract class AbstractSecureMessageEntry extends ActiveRecord
             $this->content = $this->encrypt($this->content, $key);
         }
         
-        if (!$insert && $this->isAttributeChanged('content')) {
+        if (!$insert && $this->isAttributeChanged('content') && !empty($this->content)) {
             $key = bin2hex(random_bytes(16));
             $this->key = $key;
             $this->content = $this->encrypt($this->content, $key);
@@ -179,9 +179,11 @@ abstract class AbstractSecureMessageEntry extends ActiveRecord
     }
 
     function encrypt($data, $key) {
+        if (empty($data)) {
+            throw new \InvalidArgumentException('Data to encrypt cannot be null or empty');
+        }
         $method = 'AES-256-CBC';
         $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($method));
-    
         $encrypted = openssl_encrypt($data, $method, $key, 0, $iv);
     
         return base64_encode($iv . $encrypted); // Gộp IV + ciphertext

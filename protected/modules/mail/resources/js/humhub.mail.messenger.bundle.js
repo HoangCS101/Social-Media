@@ -933,10 +933,6 @@ humhub.module("mail.conversation", function (module, require, $) {
                             entry.replace(response.content);
                         }, 300);
                     }
-
-                    return client.post(this.options.handleUpdateUrl, {
-                        data: { id: evt.$trigger.data("entry-id") },
-                    });
                 }
 
                 module.log.error(null, true);

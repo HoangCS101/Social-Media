@@ -102,7 +102,8 @@ class Message extends ActiveRecord
 
         $bcEntries = $this->fetchMessageFromBC();
 
-        // $bcEntries = [];
+//         var_dump($bcEntries);
+// exit;
 
         $query = $this->getSecureEntries();
         $query->addOrderBy(['created_at' => SORT_DESC]);
@@ -116,11 +117,11 @@ class Message extends ActiveRecord
 
         $dbEntries = $query->all();
 
-        $final = $dbEntries;
+        $final = [];
         $map = [];
 
         foreach ($bcEntries as $bcEntry) {
-            $map[$bcEntry->id] = $bcEntry;
+            $map[$bcEntry['id']] = $bcEntry;
         }
 
         foreach ($dbEntries as $dbEntry) {
@@ -138,14 +139,14 @@ class Message extends ActiveRecord
             $bcEntry = $map[$dbEntry->id];
 
             if (
-                $dbEntry->message_id != $bcEntry->messageId ||
-                $dbEntry->user_id != $bcEntry->userId ||
-                $dbEntry->created_at != $bcEntry->createdAt
+                $dbEntry->message_id != $bcEntry['messageId'] ||
+                $dbEntry->user_id != $bcEntry['userId']||
+                $dbEntry->created_at != $bcEntry['createdAt']
             ) {
                 throw new BadRequestHttpException("Data mismatch at message ID {$dbEntry->id}");
             }
             if(!$dbEntry->getDecryptedContent()) {
-                $dbEntry->setDecryptedContent($dbEntry->decrypt($bcEntry, $dbEntry->key));
+                $dbEntry->setDecryptedContent($dbEntry->decrypt($bcEntry['content'], $dbEntry->key));
             }
             $final[] = $dbEntry;
         }
@@ -543,7 +544,7 @@ class Message extends ActiveRecord
                     'content-type' => 'application/json',
                     'x-api-key' => $_ENV['X_API_KEY'] // Thay 'your-api-key-here' bằng giá trị thực tế của bạn
                 ])
-                ->setUrl("http://localhost:3000/api/messages/{$chatboxId}")
+                ->setUrl("http://localhost:3000/api/messages/by-message-id/{$chatboxId}")
                 ->setOptions([
                     'timeout' => 1, // giây
                     'connect_timeout' => 1 // kết nối tối đa 2 giây
