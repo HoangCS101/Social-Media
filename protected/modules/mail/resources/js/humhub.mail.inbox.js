@@ -5,6 +5,8 @@ humhub.module("mail.inbox", function (module, require, $) {
     var loader = require("ui.loader");
     var client = require("client");
 
+    module.initOnPjaxLoad = true;
+
     var ConversationFilter = Filter.extend();
 
     ConversationFilter.prototype.triggerChange = function () {
@@ -39,13 +41,13 @@ humhub.module("mail.inbox", function (module, require, $) {
         this.initHeight();
 
         var that = this;
-        this.filter
-            .off("afterChange.inbox")
-            .on("afterChange.inbox", function () {
-                that.reload().then(function () {
-                    that.updateActiveItem();
-                });
-            });
+        // this.filter
+        //     .off("afterChange.inbox")
+        //     .on("afterChange.inbox", function () {
+        //         that.reload().then(function () {
+        //             that.updateActiveItem();
+        //         });
+        //     });
 
         if (view.isLarge()) {
             this.$.niceScroll({
@@ -255,7 +257,14 @@ humhub.module("mail.inbox", function (module, require, $) {
         }
     };
 
-    var switchType = function () {};
+    // var switchType = function () {
+    //     var root = getRoot();
+    //     if (root && root.conversationList) {
+    //         root.conversationList.reload().then(function () {
+    //             root.conversationList.updateActiveItem();
+    //         });
+    //     }
+    // };
 
     var setTagFilter = function (evt) {
         Widget.instance("#inbox")
@@ -285,5 +294,6 @@ humhub.module("mail.inbox", function (module, require, $) {
         Filter: ConversationFilter,
         setTagFilter: setTagFilter,
         toggleInbox: toggleInbox,
+        // switchType: switchType,
     });
 });

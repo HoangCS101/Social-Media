@@ -125,8 +125,15 @@ class Message extends ActiveRecord
         }
 
         foreach ($dbEntries as $dbEntry) {
-            if($dbEntry->status === 'pending' || $dbEntry->status === 'failed') {
+            if($dbEntry->status === 'pending') {
                 $final[] = $dbEntry;
+                continue;
+            }
+
+            if($dbEntry->status === 'failed') {
+                if($dbEntry->user_id === Yii::$app->user->id) {
+                    $final[] = $dbEntry;
+                }
                 continue;
             }
 
@@ -151,7 +158,7 @@ class Message extends ActiveRecord
             $final[] = $dbEntry;
         }
 
-        return array_reverse($dbEntries);
+        return array_reverse($final);
 
     } else {
         $query = $this->getEntries();

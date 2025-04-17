@@ -35,7 +35,6 @@ class SecureChatMenu extends TabMenu
             'isVisible' => true,
             'htmlOptions' => [
                 'class' => 'line',
-                'data-action-click' => 'mail.inbox.switchType' // <== thêm action click
             ]
         ]));
 
@@ -47,7 +46,7 @@ class SecureChatMenu extends TabMenu
             'isVisible' => true,
             'htmlOptions' => [
                 'class' => 'line',
-                'data-action-click' => 'mail.inbox.switchType' // <== thêm action click
+                // 'data-action-click' => 'mail.inbox.switchType' // <== thêm action click
             ]
         ]));
 

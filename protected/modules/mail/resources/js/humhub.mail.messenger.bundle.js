@@ -8,6 +8,8 @@ humhub.module("mail.ConversationView", function (module, require, $) {
     var view = require("ui.view");
     var conn;
 
+    module.initOnPjaxLoad = true;
+
     var ConversationView = Widget.extend();
 
     ConversationView.prototype.init = function () {
@@ -308,6 +310,7 @@ humhub.module("mail.ConversationView", function (module, require, $) {
             .then(function (response) {
                 that.setActiveMessageId(messageId);
                 console.log("Switch to message ", that.getActiveMessageId());
+
                 that.options.isLast = false;
 
                 var inbox = Widget.instance("#inbox");
@@ -613,6 +616,7 @@ humhub.module("mail.inbox", function (module, require, $) {
     var view = require("ui.view");
     var loader = require("ui.loader");
     var client = require("client");
+    module.initOnPjaxLoad = true;
 
     var ConversationFilter = Filter.extend();
 
@@ -648,13 +652,6 @@ humhub.module("mail.inbox", function (module, require, $) {
         this.initHeight();
 
         var that = this;
-        this.filter
-            .off("afterChange.inbox")
-            .on("afterChange.inbox", function () {
-                that.reload().then(function () {
-                    that.updateActiveItem();
-                });
-            });
 
         if (view.isLarge()) {
             this.$.niceScroll({
@@ -673,6 +670,15 @@ humhub.module("mail.inbox", function (module, require, $) {
             $(this).addClass("selected");
         });
     };
+
+    // var switchType = function () {
+    //     var root = getRoot();
+    //     if (root && root.conversationList) {
+    //         root.conversationList.reload().then(function () {
+    //             root.conversationList.updateActiveItem();
+    //         });
+    //     }
+    // };
 
     ConversationList.prototype.initHeight = function () {
         const offsetTop = this.$.offset().top;
@@ -894,6 +900,7 @@ humhub.module("mail.inbox", function (module, require, $) {
         Filter: ConversationFilter,
         setTagFilter: setTagFilter,
         toggleInbox: toggleInbox,
+        // switchType: switchType,
     });
 });
 

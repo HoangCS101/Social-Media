@@ -251,8 +251,8 @@ humhub.module("mail.ConversationView", function (module, require, $) {
                 that.setActiveMessageId(messageId);
                 that.options.isLast = false;
 
-                var inbox = Widget.instance("#inbox");
-                inbox.updateActiveItem();
+                // var inbox = Widget.instance("#inbox");
+                // inbox.updateActiveItem();
                 inbox.hide();
 
                 // Replace history state only if triggered by message preview item
