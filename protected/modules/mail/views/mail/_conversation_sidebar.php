@@ -10,6 +10,7 @@ use humhub\modules\ui\icon\widgets\Icon;
 
 $canStartConversation = Yii::$app->user->can(StartConversation::class);
 
+
 // $type = Yii::$app->request->get('type', 'normal');
 $filterModel = new InboxFilterForm();
 ?>
@@ -31,10 +32,13 @@ $filterModel = new InboxFilterForm();
         <?= SecureChatMenu::widget([
             'filter' => $filterModel,
         ]); ?>
-
-        <div id="inbox-list-container">
-            <?= $this->render('_inboxList', ['type' => $type, 'filter' => $filterModel]); ?>
-        </div>
+        <?php if ($type === 'secure' && !$isLoggedFabric): ?>
+                <?= $this->render('_inboxPassword'); ?>
+        <?php else : ?>
+            <div id="inbox-list-container">
+                <?= $this->render('_inboxList', ['type' => $type, 'filter' => $filterModel]); ?>
+            </div>
+        <?php endif ?>
     </div>
     
 </div>

@@ -27,6 +27,17 @@ class Url extends \yii\helpers\Url
         }
     }
 
+    public static function toHandleDeleteMessageEntry(MessageEntry|SecureMessageEntry $entry)
+    {
+        if($entry instanceof SecureMessageEntry) {
+
+            return static::to(['/mail/mail/handle-delete', 'id' => $entry->id, 'type' => 'secure']);
+        }
+        else {
+            return static::to(['/mail/mail/handle-delete', 'id' => $entry->id, 'type' => 'normal']);
+        }
+    }
+
     public static function toLoadMessage(string $type)
     {
         return static::to(['/mail/mail/show', 'type' => $type]);
@@ -166,8 +177,9 @@ class Url extends \yii\helpers\Url
         return static::to(['/mail/mail/load-more']);
     }
 
-    public static function toHandleApi()
+    public static function toLoginSecureChat()
     {
-        return static::to(['/mail/mail/handle-api']);
+        return static::to(['/mail/secure/login']);
     }
+
 }

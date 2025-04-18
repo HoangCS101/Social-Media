@@ -243,7 +243,12 @@ humhub.module("mail.ConversationView", function (module, require, $) {
 
     ConversationView.prototype.reload = function () {
         if (this.getActiveMessageId()) {
-            this.loadMessage(this.getActiveMessageId());
+            if (
+                !this.options.isLoggedFabric ||
+                this.options.messageType === "normal"
+            ) {
+                this.loadMessage(this.getActiveMessageId());
+            }
         }
     };
 
@@ -313,7 +318,7 @@ humhub.module("mail.ConversationView", function (module, require, $) {
 
                 that.options.isLast = false;
 
-                // var inbox = Widget.instance("#inbox");
+                var inbox = Widget.instance("#inbox");
                 // inbox.updateActiveItem();
                 inbox.hide();
 
@@ -957,15 +962,16 @@ humhub.module("mail.conversation", function (module, require, $) {
             return;
         }
 
+        modal.global.close();
+        setTimeout(function () {
+            entry.remove();
+        }, 1000);
+
         client
             .post(entry.options.deleteUrl)
             .then(function (response) {
-                modal.global.close();
-
-                if (response.success) {
-                    setTimeout(function () {
-                        entry.remove();
-                    }, 1000);
+                if (!response.success) {
+                    module.log.error(response, true);
                 }
             })
             .catch(function (e) {

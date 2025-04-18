@@ -127,6 +127,7 @@ class ConversationEntry extends JsWidget
         return [
             'entry-id' => $this->entry->id,
             'delete-url' => Url::toDeleteMessageEntry($this->entry),
+            'handle-delete-url' => Url::toHandleDeleteMessageEntry($this->entry)
         ];
     }
 

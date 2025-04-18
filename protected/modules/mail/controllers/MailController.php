@@ -67,10 +67,18 @@ class MailController extends Controller
      */
     public function actionIndex($id = null, $type = 'normal')
     {
-        return $this->render('index', [
-            'messageId' => $id,
-            'messageType' => $type 
-        ]);
+        if($type == 'normal') {
+            return $this->render('index', [
+                'messageId' => $id,
+                'messageType' => $type 
+            ]);
+        }
+        else {
+            return $this->render('index', [
+                'messageId' => $id,
+                'messageType' => $type 
+            ]);
+        }
     }
 
     /**
@@ -576,7 +584,8 @@ class MailController extends Controller
         }
 
         $entry->message->deleteEntry($entry);
-
+        $this->executeSaveOnBC($entry, 'delete');
+        
         return $this->asJson([
             'success' => true,
         ]);
@@ -763,7 +772,7 @@ class MailController extends Controller
             if ($response->isOk) {
                 return json_decode($response->content);
             } else {
-                Yii::error("Failed to post message to blockchain API: " . $response->content, __METHOD__);
+                Yii::error("Failed to delete message on blockchain API: " . $response->content, __METHOD__);
                 return null;
             }
         } catch (\Exception $e) {

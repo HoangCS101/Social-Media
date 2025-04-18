@@ -178,7 +178,12 @@ humhub.module("mail.ConversationView", function (module, require, $) {
 
     ConversationView.prototype.reload = function () {
         if (this.getActiveMessageId()) {
-            this.loadMessage(this.getActiveMessageId());
+            if (
+                !this.options.isLoggedFabric ||
+                this.options.messageType === "normal"
+            ) {
+                this.loadMessage(this.getActiveMessageId());
+            }
         }
     };
 
@@ -251,7 +256,7 @@ humhub.module("mail.ConversationView", function (module, require, $) {
                 that.setActiveMessageId(messageId);
                 that.options.isLast = false;
 
-                // var inbox = Widget.instance("#inbox");
+                var inbox = Widget.instance("#inbox");
                 // inbox.updateActiveItem();
                 inbox.hide();
 

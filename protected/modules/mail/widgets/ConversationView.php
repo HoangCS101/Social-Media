@@ -34,6 +34,7 @@ class ConversationView extends JsWidget
      */
     public $messageId;
     public $messageType;
+    public $isLoggedFabric;
 
 
     public function getData()
@@ -41,6 +42,7 @@ class ConversationView extends JsWidget
         return [
             'message-type' => $this->messageType,
             'message-id' => $this->messageId,
+            'is-logged-fabric' => $this->isLoggedFabric,
             'load-message-url' => Url::toLoadMessage($this->messageType),
             'load-update-url' => Url::toUpdateMessage(),
             'load-more-url' => Url::toLoadMoreMessages(),

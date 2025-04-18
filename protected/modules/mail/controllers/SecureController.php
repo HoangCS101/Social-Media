@@ -41,28 +41,150 @@ use yii\web\NotFoundHttpException;
  */
 class SecureController extends Controller
 {
-    private function getUserApiKey()
+    private function loginFabric($id, $password)
     {
-        $userId = Yii::$app->user->id;
-        $userKey = UserKey::find()->where(['user_id' => $userId])->one();
-        return $userKey ? $userKey->api_key : null;
-    }
+        $key = UserKey::findOne(['user_id' => $id])->secret_key;
+        $decrypted = Yii::$app->security->encryptByPassword($key, $password);
+        $response = $this->fetchLoginUserOnBC($id, $decrypted);
+        if (isset($response['api_key'])) {
+            // Lưu api_key vào cookie
+            Yii::$app->response->cookies->add(new \yii\web\Cookie([
+                'name' => 'api_key',
+                'value' => $response['api_key'],
+                'httpOnly' => true,
+                'expire' => time() + 3600 * 24 * 7, // 7 ngày
+            ]));
 
-    public function actionGetMessage()
-    {
-        $apiKey = $this->getUserApiKey();
-        if (!$apiKey) {
-            return $this->asJson(['error' => 'API key not found'])->setStatusCode(403);
+            // Lưu trạng thái isLogged = true vào cookie
+            Yii::$app->response->cookies->add(new \yii\web\Cookie([
+                'name' => 'isLoggedFabric',
+                'value' => true,
+                'expire' => time() + 3600 * 24 * 7,
+            ]));
+        } else {
+            // Xử lý lỗi đăng nhập thất bại nếu cần
         }
 
-        $client = new Client();
-        $response = $client->createRequest()
-            ->setMethod('GET')
-            ->setUrl('http://node-server.com/api/messages')
-            ->setHeaders(['x-api-key' => $apiKey])
-            ->send();
+    }
 
-        return $this->asJson($response->data);
+
+    private function registerUser($password)
+    {
+        $user_pkey = $this->fetchRegisterUserOnBC();
+        $encrypted = Yii::$app->security->encryptByPassword($user_pkey, $password);
+        $userKey = new UserKey();
+        $userKey->user_id = Yii::$app->user->id; // hoặc ID bạn lấy theo cách riêng
+        $userKey->encrypted_pkey = $encrypted;
+
+        if ($userKey->save()) {
+        } else {
+
+        }
+        
+
+    }
+
+    private function enrollAdmin()
+    {
+        $response = $this->fetchEnrollAdminOnBC();
+        $admin_pkey = $response->privateKey;
+        // $encrypted = Yii::$app->security->encryptByPassword($admin_pkey, $password);
+        // $userKey = new UserKey();
+        // $userKey->user_id = Yii::$app->user->id; // hoặc ID bạn lấy theo cách riêng
+        // $userKey->encrypted_pkey = $encrypted;
+
+        // if ($userKey->save()) {
+        // } else {
+
+        // }
+
+    }
+
+
+    private function fetchRegisterUserOnBC()
+    {
+        $client = new Client();
+        try {
+            $response = $client->createRequest()
+                ->setMethod('')
+                ->setUrl('http://localhost:3000/api/ca/register')
+                ->addHeaders([
+                    'content-type' => 'application/json',
+                ])
+                ->setContent(json_encode([
+                        'userId' => Yii::$app->user->id,
+                        'affiliation' =>  "org1.department1",
+                        'admin-pkey' => $_ENV['ADMIN_PRIVATE_KEY'] 
+                ]))
+                ->send();
+
+            if ($response->isOk) {
+                return json_decode($response->content);
+            }
+
+            Yii::error("Failed to register user on blockchain API: " . $response->content, __METHOD__);
+            return null;
+
+        } catch (\Exception $e) {
+            Yii::error("Error when calling Node.js API: " . $e->getMessage(), __METHOD__);
+            return null;
+        }
+    }
+
+    private function fetchEnrollAdminOnBC()
+    {
+        $client = new Client();
+        try {
+            $response = $client->createRequest()
+                ->setMethod('')
+                ->setUrl('http://localhost:3000/api/ca/enroll-admin')
+                ->addHeaders([
+                    'content-type' => 'application/json',
+                    'X-Admin-Key' => $_ENV['ADMIN_API_KEY']
+                ])
+                ->send();
+
+            if ($response->isOk) {
+                return json_decode($response->content);
+            }
+
+            Yii::error("Failed to register user on blockchain API: " . $response->content, __METHOD__);
+            return null;
+
+        } catch (\Exception $e) {
+            Yii::error("Error when calling Node.js API: " . $e->getMessage(), __METHOD__);
+            return null;
+        }
+    }
+
+    private function fetchLoginUserOnBC($id, $key)
+    {
+        $client = new Client();
+        try {
+            $response = $client->createRequest()
+                ->setMethod('')
+                ->setUrl('http://localhost:3000/api/auth/login')
+                ->addHeaders([
+                    'content-type' => 'application/json',
+                ])
+                ->setContent(json_encode([
+                    'userId' => Yii::$app->user->id,
+                    'affiliation' =>  "org1.department1",
+                    'privateKey' => $key
+                ]))
+                ->send();
+
+            if ($response->isOk) {
+                return json_decode($response->content);
+            }
+
+            Yii::error("Failed to register user on blockchain API: " . $response->content, __METHOD__);
+            return null;
+
+        } catch (\Exception $e) {
+            Yii::error("Error when calling Node.js API: " . $e->getMessage(), __METHOD__);
+            return null;
+        }
     }
 
     public function actionStoreMessage()
