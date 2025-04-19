@@ -313,7 +313,7 @@ humhub.module("mail.ConversationView", function (module, require, $) {
 
                 that.options.isLast = false;
 
-                // var inbox = Widget.instance("#inbox");
+                var inbox = Widget.instance("#inbox");
                 // inbox.updateActiveItem();
                 inbox.hide();
 
