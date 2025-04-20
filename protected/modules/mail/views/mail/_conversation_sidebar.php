@@ -6,6 +6,9 @@ use humhub\modules\mail\widgets\NewMessageButton;
 use humhub\modules\mail\widgets\InboxFilter;
 use humhub\modules\mail\widgets\SecureChatMenu;
 use humhub\modules\ui\icon\widgets\Icon;
+use humhub\modules\mail\helpers\Url;
+use humhub\widgets\ModalButton;
+
 
 
 $canStartConversation = Yii::$app->user->can(StartConversation::class);
@@ -32,8 +35,11 @@ $filterModel = new InboxFilterForm();
         <?= SecureChatMenu::widget([
             'filter' => $filterModel,
         ]); ?>
-        <?php if ($type === 'secure' && !$isLoggedFabric): ?>
-                <?= $this->render('_inboxPassword'); ?>
+        <?php if ($type === 'secure' && !$isRegisteredFabric): ?>
+            <?= $this->render('_inboxRegister' ,['model' => $model]); ?>
+            
+        <?php elseif ($type === 'secure' && !$isLoggedFabric): ?>
+                <?= $this->render('_inboxLogin' ,['model' => $model]); ?>
         <?php else : ?>
             <div id="inbox-list-container">
                 <?= $this->render('_inboxList', ['type' => $type, 'filter' => $filterModel]); ?>

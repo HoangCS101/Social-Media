@@ -24,20 +24,28 @@ use humhub\widgets\ModalDialog;
 ]) ?>
     <?php $form = ActiveForm::begin(['enableClientValidation' => false, 'acknowledge' => true]) ?>
 
-    <div class="modal-header">
+    <div class="modal-header justify-between">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 id="myModalLabel" class="modal-title">
-            <?= Yii::t('MailModule.views_mail_create', '<strong>New</strong> message') ?>
+            <?= Yii::t('MailModule.views_mail_create', '<strong>New message</strong>') ?>
         </h4>
     </div>
 
     <div class="modal-body">
-        <?= $form->field($model, 'secure')->checkbox([
-            'label' => Yii::t('MailModule.views_mail_create', 'Enable secure chat'),
-            'uncheck' => false, 
-            'value' => true,
-            'default' => false
-        ]) ?>
+        <?php if ($isRegisteredFabric) :?>
+            <?= $form->field($model, 'secure')->checkbox([
+                'label' => Yii::t('MailModule.views_mail_create', 'Enable secure chat'),
+                'uncheck' => false, 
+                'value' => true,
+                'default' => false
+            ]) ?>
+        <?php else : ?>
+            <div class="alert alert-warning">
+                <?= Yii::t('MailModule.views_mail_create', 'If you want to use secure messaging, please <a href="{url}" target="_blank">register here</a> first.', [
+                    'url' => Url::to(['/fabric/register']) 
+                ]) ?>
+            </div>
+        <?php endif ?>
 
         <?= $form->field($model, 'recipient')->widget(UserPickerField::class,
             [

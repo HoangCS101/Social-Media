@@ -182,4 +182,9 @@ class Url extends \yii\helpers\Url
         return static::to(['/mail/secure/login']);
     }
 
+    public static function toRegisterSecureChat()
+    {
+        return static::to(['/mail/secure/register']);
+    }
+
 }

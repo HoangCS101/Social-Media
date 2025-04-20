@@ -41,47 +41,74 @@ use yii\web\NotFoundHttpException;
  */
 class SecureController extends Controller
 {
-    private function loginFabric($id, $password)
+    public function actionLogin()
     {
+        $password = Yii::$app->request->post('PasswordSecureForm')['password'];
+        $id = Yii::$app->user->id;
         $key = UserKey::findOne(['user_id' => $id])->secret_key;
-        $decrypted = Yii::$app->security->encryptByPassword($key, $password);
-        $response = $this->fetchLoginUserOnBC($id, $decrypted);
-        if (isset($response['api_key'])) {
-            // Lưu api_key vào cookie
+        $decrypted = Yii::$app->security->decryptByPassword(base64_decode($key), $password);
+        $response = $this->fetchLoginUserOnBC($decrypted);
+
+        if ($response->api_key) {
             Yii::$app->response->cookies->add(new \yii\web\Cookie([
-                'name' => 'api_key',
-                'value' => $response['api_key'],
+                'name' => 'apiKey',
+                'value' => $response->api_key,
                 'httpOnly' => true,
-                'expire' => time() + 3600 * 24 * 7, // 7 ngày
+                'expire' => time() + 3600 * 24 * 7, 
             ]));
 
-            // Lưu trạng thái isLogged = true vào cookie
             Yii::$app->response->cookies->add(new \yii\web\Cookie([
                 'name' => 'isLoggedFabric',
                 'value' => true,
                 'expire' => time() + 3600 * 24 * 7,
             ]));
+            return [
+                'success' => true,
+                'message' => 'Login successful.',
+                'user_id' => $id
+            ];
         } else {
-            // Xử lý lỗi đăng nhập thất bại nếu cần
+            Yii::$app->response->statusCode = 403;
+            return ['error' => true, 'message' => 'Blockchain login failed.'];
         }
 
     }
 
 
-    private function registerUser($password)
+    public function actionRegister()
     {
+        $password = Yii::$app->request->post('PasswordSecureForm')['password'];
         $user_pkey = $this->fetchRegisterUserOnBC();
-        $encrypted = Yii::$app->security->encryptByPassword($user_pkey, $password);
+        $encrypted = Yii::$app->security->encryptByPassword($user_pkey->privateKey, $password);
+        if($encrypted === null) {
+            Yii::error("encrypted failed");
+            return [
+                'success' => false,
+                'message' => 'Failed to register encrypted private key.',
+            ];
+        }
+
         $userKey = new UserKey();
-        $userKey->user_id = Yii::$app->user->id; // hoặc ID bạn lấy theo cách riêng
-        $userKey->encrypted_pkey = $encrypted;
+        $userKey->user_id = Yii::$app->user->id;
+        $userKey->secret_key = base64_encode($encrypted);
 
         if ($userKey->save()) {
+            return [
+                'success' => true,
+                'message' => 'User key registered and encrypted successfully.',
+                'data' => [
+                    'user_id' => $userKey->user_id,
+                    'encrypted_pkey' => base64_encode($userKey->secret_key),
+                ]
+            ];
         } else {
-
+            Yii::$app->response->statusCode = 422; // Unprocessable Entity
+            return [
+                'success' => false,
+                'message' => 'Failed to register encrypted private key.',
+                'errors' => $userKey->getErrors(),
+            ];
         }
-        
-
     }
 
     private function enrollAdmin()
@@ -105,18 +132,27 @@ class SecureController extends Controller
     {
         $client = new Client();
         try {
+
             $response = $client->createRequest()
-                ->setMethod('')
+                ->setMethod('POST')
                 ->setUrl('http://localhost:3000/api/ca/register')
                 ->addHeaders([
                     'content-type' => 'application/json',
                 ])
                 ->setContent(json_encode([
-                        'userId' => Yii::$app->user->id,
+                        'userId' => 'liem2hondai',
                         'affiliation' =>  "org1.department1",
-                        'admin-pkey' => $_ENV['ADMIN_PRIVATE_KEY'] 
+                        'admin-pkey' => '-----BEGIN PRIVATE KEY-----
+MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgr2ZrxsyjEVcwkDxt
+/lceepvaIGAX9dUuvJi5WoCEepGhRANCAAS695NQaWn6LZipJBTXoRQjtTgsb+Lm
+7S07IsylOaIuG2xMZ4fuAeujrE49uv7wGhI1eSNXVGtJHt4q9zY0r19R
+-----END PRIVATE KEY-----
+'
                 ]))
                 ->send();
+                
+
+                
 
             if ($response->isOk) {
                 return json_decode($response->content);
@@ -157,12 +193,12 @@ class SecureController extends Controller
         }
     }
 
-    private function fetchLoginUserOnBC($id, $key)
+    private function fetchLoginUserOnBC($key)
     {
         $client = new Client();
         try {
             $response = $client->createRequest()
-                ->setMethod('')
+                ->setMethod('POST')
                 ->setUrl('http://localhost:3000/api/auth/login')
                 ->addHeaders([
                     'content-type' => 'application/json',

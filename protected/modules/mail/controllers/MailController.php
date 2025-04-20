@@ -10,6 +10,7 @@ use humhub\modules\mail\models\forms\CreateMessage;
 use humhub\modules\mail\models\forms\SecureCreateMessage;
 use app\jobs\CheckBlockchainStatusJob;
 use humhub\modules\mail\models\forms\InviteParticipantForm;
+use humhub\modules\mail\models\forms\PasswordSecureForm;
 use humhub\modules\mail\models\forms\ReplyForm;
 use humhub\modules\mail\models\forms\SecureReplyForm;
 use humhub\modules\mail\models\Message;
@@ -67,18 +68,26 @@ class MailController extends Controller
      */
     public function actionIndex($id = null, $type = 'normal')
     {
-        if($type == 'normal') {
-            return $this->render('index', [
-                'messageId' => $id,
-                'messageType' => $type 
-            ]);
+        // if($type == 'normal') {
+        $isRegisteredFabric = false;
+        if($type == 'secure') {
+            $isRegisteredFabric = UserKey::find()->where(['user_id' => Yii::$app->user->id])->exists();
         }
-        else {
-            return $this->render('index', [
-                'messageId' => $id,
-                'messageType' => $type 
-            ]);
-        }
+
+        return $this->render('index', [
+            'messageId' => $id,
+            'messageType' => $type,
+            'model' => $type == 'normal' ? null : new PasswordSecureForm(),
+            'isRegisteredFabric' => $isRegisteredFabric,
+        ]);
+        // }
+        // else {
+        //     return $this->render('index', [
+        //         'messageId' => $id,
+        //         'messageType' => $type,
+                
+        //     ]);
+        // }
     }
 
     /**
@@ -422,7 +431,6 @@ class MailController extends Controller
     public function actionCreate($userGuid = null, ?string $title = null, ?string $message = null, ?bool $secure = false)
     {
         $model = new CreateMessage(['secure' => $secure, 'recipient' => [$userGuid], 'title' => $title, 'message' => $message]);
-
         // Preselect user if userGuid is given
         if ($userGuid) {
             /* @var User $user */
@@ -439,14 +447,19 @@ class MailController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $entry = SecureMessageEntry::findOne(['message_id' => $model->messageInstance->id]);
-            $this->executeSaveOnBC($entry, 'create');
+            if($model->secure) {
+                $this->executeSaveOnBC($entry, 'create');
+            }
 
             $type = $model->secure ? 'secure': 'normal';
             return $this->htmlRedirect(['index', 'id' => $model->messageInstance->id, 'type' => $type]);
         }
 
+        $isRegisteredFabric = UserKey::find()->where(['user_id' => Yii::$app->user->id])->exists();
+
         return $this->renderAjax('create', [
             'model' => $model,
+            'isRegisteredFabric' => $isRegisteredFabric, 
             'fileHandlers' => FileHandlerCollection::getByType([FileHandlerCollection::TYPE_IMPORT, FileHandlerCollection::TYPE_CREATE]),
         ]);
     }
@@ -695,12 +708,20 @@ class MailController extends Controller
     private function setMessageEntryToBC(Client $client, SecureMessageEntry $reply)
     {
         try {
+            $apiKey = Yii::$app->request->cookies->getValue('apiKey');
+        
+            // Kiểm tra nếu apiKey không tồn tại
+            if (!$apiKey) {
+                Yii::error("User haven't logged in secure chat yet", __METHOD__);
+                return null;
+            }
+
             $response = $client->createRequest()
                 ->setMethod('POST')
                 ->setUrl('http://localhost:3000/api/messages')
                 ->addHeaders([
                     'content-type' => 'application/json',
-                    'x-api-key' => $_ENV['X_API_KEY'] // Thay 'your-api-key-here' bằng giá trị thực tế của bạn
+                    'x-api-key' => $apiKey // Thay 'your-api-key-here' bằng giá trị thực tế của bạn
                 ])
                 ->setContent(json_encode([
                     'id' => $reply->id,
@@ -728,12 +749,20 @@ class MailController extends Controller
     private function updateMessageEntryToBC(Client $client, SecureMessageEntry $reply, $modify = false)
     {
         try {
+            $apiKey = Yii::$app->request->cookies->getValue('apiKey');
+        
+            // Kiểm tra nếu apiKey không tồn tại
+            if (!$apiKey) {
+                Yii::error("User haven't logged in secure chat yet", __METHOD__);
+                return null;
+            }
+            
             $response = $client->createRequest()
                 ->setMethod('PUT')
                 ->setUrl("http://localhost:3000/api/messages/{$reply->id}")
                 ->addHeaders([
                     'content-type' => 'application/json',
-                    'x-api-key' => $_ENV['X_API_KEY'] // Thay 'your-api-key-here' bằng giá trị thực tế của bạn
+                    'x-api-key' => $apiKey // Thay 'your-api-key-here' bằng giá trị thực tế của bạn
                 ])
                 ->setContent(json_encode([
                     'id' => $reply->id,
@@ -744,6 +773,10 @@ class MailController extends Controller
                     'createdAt' => $reply->created_at
                 ]))
                 ->send();
+                
+                
+
+            
 
             if ($response->isOk) {
                 return json_decode($response->content);
@@ -760,12 +793,20 @@ class MailController extends Controller
     private function deleteMessageEntryToBC(Client $client, SecureMessageEntry $reply, $modify = false)
     {
         try {
+            $apiKey = Yii::$app->request->cookies->getValue('apiKey');
+        
+            // Kiểm tra nếu apiKey không tồn tại
+            if (!$apiKey) {
+                Yii::error("User haven't logged in secure chat yet", __METHOD__);
+                return null;
+            }
+
             $response = $client->createRequest()
                 ->setMethod('DELETE')
                 ->setUrl("http://localhost:3000/api/messages/{$reply->id}")
                 ->addHeaders([
                     'content-type' => 'application/json',
-                    'x-api-key' => $_ENV['X_API_KEY'] // Thay 'your-api-key-here' bằng giá trị thực tế của bạn
+                    'x-api-key' => $apiKey // Thay 'your-api-key-here' bằng giá trị thực tế của bạn
                 ])
                 ->send();
 
@@ -784,11 +825,20 @@ class MailController extends Controller
     private function getJobSavingInBC(Client $client, int $jobId)
     {
         try {
+
+            $apiKey = Yii::$app->request->cookies->getValue('apiKey');
+        
+            // Kiểm tra nếu apiKey không tồn tại
+            if (!$apiKey) {
+                Yii::error("User haven't logged in secure chat yet", __METHOD__);
+                return null;
+            }
+
             $response = $client->createRequest()
                 ->setMethod('GET')
                 ->addHeaders([
                     'content-type' => 'application/json',
-                    'x-api-key' => $_ENV['X_API_KEY'] // Thay 'your-api-key-here' bằng giá trị thực tế của bạn
+                    'x-api-key' => $apiKey // Thay 'your-api-key-here' bằng giá trị thực tế của bạn
                 ])
                 ->setUrl("http://localhost:3000/api/jobs/{$jobId}")
                 ->send();
@@ -810,11 +860,19 @@ class MailController extends Controller
     private function checkStatusSavingInBC(Client $client, string $transactionId)
     {
         try {
+            $apiKey = Yii::$app->request->cookies->getValue('apiKey');
+        
+            // Kiểm tra nếu apiKey không tồn tại
+            if (!$apiKey) {
+                Yii::error("User haven't logged in secure chat yet", __METHOD__);
+                return null;
+            }
+
             $response = $client->createRequest()
                 ->setMethod('GET')
                 ->addHeaders([
                     'content-type' => 'application/json',
-                    'x-api-key' => $_ENV['X_API_KEY'] // Thay 'your-api-key-here' bằng giá trị thực tế của bạn
+                    'x-api-key' => $apiKey// Thay 'your-api-key-here' bằng giá trị thực tế của bạn
                 ])
                 ->setUrl("http://localhost:3000/api/transactions/{$transactionId}")
                 ->send();
