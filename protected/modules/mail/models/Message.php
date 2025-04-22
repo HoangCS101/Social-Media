@@ -543,13 +543,21 @@ class Message extends ActiveRecord
 
     private function fetchMessageFromBC() {
         try {
+            $apiKey = Yii::$app->request->cookies->getValue('apiKey');
+        
+            // Kiểm tra nếu apiKey không tồn tại
+            if (!$apiKey) {
+                Yii::error("User haven't logged in secure chat yet", __METHOD__);
+                return null;
+            }
+
             $chatboxId = $this->id; // ví dụ bạn có chatboxId từ model
             $client = new Client();
             $response = $client->createRequest()
                 ->setMethod('GET')
                 ->addHeaders([
                     'content-type' => 'application/json',
-                    'x-api-key' => $_ENV['X_API_KEY'] // Thay 'your-api-key-here' bằng giá trị thực tế của bạn
+                    'x-api-key' => $apiKey // Thay 'your-api-key-here' bằng giá trị thực tế của bạn
                 ])
                 ->setUrl("http://localhost:3000/api/messages/by-message-id/{$chatboxId}")
                 ->setOptions([

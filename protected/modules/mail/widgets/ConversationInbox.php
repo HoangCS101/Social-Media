@@ -52,8 +52,7 @@ class ConversationInbox extends JsWidget
             $this->result = $this->filter->getPage($this->type);
         }
         if($this->type == 'secure') {
-            if($this->isLogged)
-            $$this->result = $this->filter->getPage($this->type);
+            $this->result = $this->filter->getPage($this->type);
         }
 
         

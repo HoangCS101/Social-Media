@@ -179,12 +179,12 @@ class Url extends \yii\helpers\Url
 
     public static function toLoginSecureChat()
     {
-        return static::to(['/mail/secure/login']);
+        return static::to(['/mail/mail/login']);
     }
 
     public static function toRegisterSecureChat()
     {
-        return static::to(['/mail/secure/register']);
+        return static::to(['/mail/mail/register']);
     }
 
 }

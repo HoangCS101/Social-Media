@@ -33,16 +33,24 @@ use humhub\widgets\ModalDialog;
 
     <div class="modal-body">
         <?php if ($isRegisteredFabric) :?>
-            <?= $form->field($model, 'secure')->checkbox([
+            <?php if ($isLoggedFabric) :?>
+                <?= $form->field($model, 'secure')->checkbox([
                 'label' => Yii::t('MailModule.views_mail_create', 'Enable secure chat'),
                 'uncheck' => false, 
                 'value' => true,
                 'default' => false
             ]) ?>
+            <?php else : ?>
+                <div class="alert alert-warning">
+                    <?= Yii::t('MailModule.views_mail_create', 'If you want to use secure messaging, please <a href="{url}" target="_blank">login here</a> first.', [
+                        'url' => Url::to(['/mail/mail/index','type' => 'secure']) 
+                    ]) ?>
+                </div>
+            <?php endif ?>
         <?php else : ?>
             <div class="alert alert-warning">
                 <?= Yii::t('MailModule.views_mail_create', 'If you want to use secure messaging, please <a href="{url}" target="_blank">register here</a> first.', [
-                    'url' => Url::to(['/fabric/register']) 
+                    'url' => Url::to(['/mail/mail/index','type' => 'secure']) 
                 ]) ?>
             </div>
         <?php endif ?>

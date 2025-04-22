@@ -36,10 +36,10 @@ $filterModel = new InboxFilterForm();
             'filter' => $filterModel,
         ]); ?>
         <?php if ($type === 'secure' && !$isRegisteredFabric): ?>
-            <?= $this->render('_inboxRegister' ,['model' => $model]); ?>
+            <?= $this->render('inboxRegister' ,['model' => $model]); ?>
             
         <?php elseif ($type === 'secure' && !$isLoggedFabric): ?>
-                <?= $this->render('_inboxLogin' ,['model' => $model]); ?>
+                <?= $this->render('inboxLogin' ,['model' => $model]); ?>
         <?php else : ?>
             <div id="inbox-list-container">
                 <?= $this->render('_inboxList', ['type' => $type, 'filter' => $filterModel]); ?>

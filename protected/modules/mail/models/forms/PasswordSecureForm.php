@@ -6,7 +6,6 @@ use yii\base\Model;
 
 class PasswordSecureForm extends Model
 {
-    public $userId;
     public $password;
 
     public function rules()

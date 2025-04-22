@@ -456,10 +456,13 @@ class MailController extends Controller
         }
 
         $isRegisteredFabric = UserKey::find()->where(['user_id' => Yii::$app->user->id])->exists();
+        $isLoggedFabric = Yii::$app->request->cookies->has('apiKey') && !empty($apiKey);
+
 
         return $this->renderAjax('create', [
             'model' => $model,
             'isRegisteredFabric' => $isRegisteredFabric, 
+            'isLoggedFabric' => $isLoggedFabric,
             'fileHandlers' => FileHandlerCollection::getByType([FileHandlerCollection::TYPE_IMPORT, FileHandlerCollection::TYPE_CREATE]),
         ]);
     }
@@ -653,6 +656,164 @@ class MailController extends Controller
                 'message.updated_at' => SORT_DESC,
             ])
             ->one();
+    }
+    public function actionLogin()
+    {
+        $form = new PasswordSecureForm();
+        if ($form->load(Yii::$app->request->post()) && $form->validate()) {
+            $password = Yii::$app->request->post('PasswordSecureForm')['password'];
+            $id = Yii::$app->user->id;
+            $key = UserKey::findOne(['user_id' => $id])->secret_key;
+            if(!$key) {
+                return $this->asJson(['error' => true, 'message' => 'You haven\'t registered secure chat']);
+            }
+            $decrypted = Yii::$app->security->decryptByPassword(base64_decode($key), $password);
+            $result = $this->fetchLoginUserOnBC($decrypted);
+
+            if ($result && isset($result->apiKey)) {
+                Yii::$app->response->cookies->add(new \yii\web\Cookie([
+                    'name' => 'apiKey',
+                    'value' => $result->apiKey,
+                    'httpOnly' => true,
+                    'expire' => time() + 3600 * 24 * 1, 
+                ]));
+
+                Yii::$app->response->cookies->add(new \yii\web\Cookie([
+                    'name' => 'isLoggedFabric',
+                    'value' => true,
+                    'expire' => time() + 3600 * 24 * 1,
+                ]));
+
+                return $this->redirect(['/mail/mail/index',['type' => 'secure']]);
+
+            } else {
+                Yii::$app->response->statusCode = 401;
+                return $this->asJson([
+                    'success' => false,
+                    'message' => 'Failed to register encrypted private key. Please check your password',
+                ]);
+            }
+        }
+        else {
+            Yii::$app->response->statusCode = 401;
+            return Yii::$app->response->setStatusCode(500)->asJson([
+                'success' => false,
+                'message' => 'The password cannot be blank',
+            ]);
+        }
+        
+
+    }
+
+    //OK
+    public function actionRegister()
+    {
+        $password = Yii::$app->request->post('PasswordSecureForm')['password'];
+        $user_pkey = $this->fetchRegisterUserOnBC();
+        $encrypted = Yii::$app->security->encryptByPassword($user_pkey->privateKey, $password);
+        if($encrypted === null) {
+            Yii::error("encrypted failed");
+            return $this->asJson([
+                'success' => false,
+                'message' => 'Failed to register encrypted private key.',
+            ]);
+        }
+
+        $userKey = new UserKey();
+        $userKey->user_id = Yii::$app->user->id;
+        $userKey->secret_key = base64_encode($encrypted);
+
+        if ($userKey->save()) {
+            Yii::$app->response->statusCode = 200;
+            // return $this->asJson([
+            //     'success' => true,
+            //     'message' => 'User key registered and encrypted successfully.',
+            // ]);
+
+            return $this->redirect(['/mail/mail/index',['type' => 'secure']]);
+        } else {
+            Yii::$app->response->statusCode = 422; // Unprocessable Entity
+            return $this->asJson([
+                'success' => false,
+                'message' => 'Failed to register encrypted private key.',
+                'errors' => $userKey->getErrors(),
+            ]);
+        }
+    }
+
+    
+
+
+    private function fetchRegisterUserOnBC()
+    {
+        $client = new Client();
+        try {
+
+            $response = $client->createRequest()
+                ->setMethod('POST')
+                ->setUrl('http://localhost:3000/api/ca/register')
+                ->addHeaders([
+                    'content-type' => 'application/json',
+                ])
+                ->setContent(json_encode([
+                        'userId' => (string)Yii::$app->user->id,
+                        'affiliation' =>  "org1.department1",
+                        'admin-pkey' => '-----BEGIN PRIVATE KEY-----
+                        MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgl3pCeCO6sqQ/oFim
+                        QitDmNHth8hR3pCBBJ2U8JNTOkyhRANCAATffxSM7FnECn9gWlHquUrXq0QWFvk1
+                        QezSLt+EcTj9Kl+E4aomyu2tVO8jlBCJPNHFKk+0sC9s1PQByvtvERr2
+                        -----END PRIVATE KEY-----'
+                ]))
+                ->send();
+                
+
+                
+
+            if ($response->isOk) {
+                return json_decode($response->content);
+            }
+
+            Yii::error("Failed to register user on blockchain API: " . $response->content, __METHOD__);
+            return null;
+
+        } catch (\Exception $e) {
+            Yii::error("Error when calling Node.js API: " . $e->getMessage(), __METHOD__);
+            return null;
+        }
+    }
+
+    
+
+    //OK
+
+    private function fetchLoginUserOnBC($key)
+    {
+        $client = new Client();
+        try {
+            $response = $client->createRequest()
+                ->setMethod('POST')
+                ->setUrl('http://localhost:3000/api/auth/login')
+                ->addHeaders([
+                    'content-type' => 'application/json',
+                ])
+                ->setContent(json_encode([
+                    'userId' => (string)Yii::$app->user->id,
+                    'affiliation' =>  "org1.department1",
+                    'privateKey' => $key
+                ]))
+                ->send();
+
+            if ($response->isOk) {
+                return json_decode($response->content);
+            }
+
+            Yii::error("Failed to register user on blockchain API: " . $response->content, __METHOD__);
+            return null;
+
+        } catch (\Exception $e) {
+            Yii::error("Error when calling Node.js API: " . $e->getMessage(), __METHOD__);
+            return null;
+        }
     }
 
     private function executeSaveOnBC(SecureMessageEntry $reply, $op)
