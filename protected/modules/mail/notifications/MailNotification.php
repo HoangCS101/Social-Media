@@ -16,4 +16,5 @@ class MailNotification extends BaseNotification
     {
         return new MailNotificationCategory();
     }
+
 }

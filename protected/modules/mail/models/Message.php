@@ -96,80 +96,84 @@ class Message extends ActiveRecord
      */
     
     public function getEntryPage($from = null)
-    {
-        $type = $this->type;
-        if ($type === 'secure') {
+{
+    $type = $this->type;
+    if ($type === 'secure') {
 
-            $bcEntries = $this->fetchMessageFromBC();
+        $bcEntries = $this->fetchMessageFromBC();
 
-            $query = $this->getSecureEntries();
-            $query->addOrderBy(['created_at' => SORT_DESC]);
-            if ($from) {
-                $query->andWhere(['<', 'secure_message_entry.id', $from]);
-            }
+//         var_dump($bcEntries);
+// exit;
 
-            $module = Module::getModuleInstance();
-            $limit = $from ? $module->conversationUpdatePageSize : $module->conversationInitPageSize;
-            $query->limit($limit);
-
-            $dbEntries = $query->all();
-
-            $final = [];
-            $map = [];
-
-            foreach ($bcEntries as $bcEntry) {
-                $map[$bcEntry['id']] = $bcEntry;
-            }
-
-            foreach ($dbEntries as $dbEntry) {
-                if($dbEntry->status === 'pending') {
-                    $final[] = $dbEntry;
-                    continue;
-                }
-
-                if($dbEntry->status === 'failed') {
-                    if($dbEntry->user_id === Yii::$app->user->id) {
-                        $final[] = $dbEntry;
-                    }
-                    continue;
-                }
-
-                if (!isset($map[$dbEntry->id])) {
-                    $final[] = $dbEntry;
-                    continue;
-                }
-
-                $bcEntry = $map[$dbEntry->id];
-
-                if (
-                    $dbEntry->message_id != $bcEntry['messageId'] ||
-                    $dbEntry->user_id != $bcEntry['userId']||
-                    $dbEntry->created_at != $bcEntry['createdAt']
-                ) {
-                    throw new BadRequestHttpException("Data mismatch at message ID {$dbEntry->id}");
-                }
-                if(!$dbEntry->getDecryptedContent()) {
-                    $dbEntry->setDecryptedContent($dbEntry->decrypt($bcEntry['content'], $dbEntry->key));
-                }
-                $final[] = $dbEntry;
-            }
-
-            return array_reverse($final);
-
-        } else {
-            $query = $this->getEntries();
-            $query->addOrderBy(['created_at' => SORT_DESC]);
-            if ($from) {
-                $query->andWhere(['<', 'message_entry.id', $from]);
-            }
-
-            $module = Module::getModuleInstance();
-            $limit = $from ? $module->conversationUpdatePageSize : $module->conversationInitPageSize;
-            $query->limit($limit);
-
-            return array_reverse($query->all());
+        $query = $this->getSecureEntries();
+        $query->addOrderBy(['created_at' => SORT_DESC]);
+        if ($from) {
+            $query->andWhere(['<', 'secure_message_entry.id', $from]);
         }
+
+        $module = Module::getModuleInstance();
+        $limit = $from ? $module->conversationUpdatePageSize : $module->conversationInitPageSize;
+        $query->limit($limit);
+
+        $dbEntries = $query->all();
+
+        $final = [];
+        $map = [];
+
+        foreach ($bcEntries as $bcEntry) {
+            $map[$bcEntry['id']] = $bcEntry;
+        }
+
+        foreach ($dbEntries as $dbEntry) {
+            if($dbEntry->status === 'pending') {
+                $final[] = $dbEntry;
+                continue;
+            }
+
+            if($dbEntry->status === 'failed') {
+                if($dbEntry->user_id === Yii::$app->user->id) {
+                    $final[] = $dbEntry;
+                }
+                continue;
+            }
+
+            if (!isset($map[$dbEntry->id])) {
+                // throw new BadRequestHttpException("Not have this message in bc {$dbEntry->id}");
+                $final[] = $dbEntry;
+                continue;
+            }
+
+            $bcEntry = $map[$dbEntry->id];
+
+            if (
+                $dbEntry->message_id != $bcEntry['messageId'] ||
+                $dbEntry->user_id != $bcEntry['userId']||
+                $dbEntry->created_at != $bcEntry['createdAt']
+            ) {
+                throw new BadRequestHttpException("Data mismatch at message ID {$dbEntry->id}");
+            }
+            if(!$dbEntry->getDecryptedContent()) {
+                $dbEntry->setDecryptedContent($dbEntry->decrypt($bcEntry['content'], $dbEntry->key));
+            }
+            $final[] = $dbEntry;
+        }
+
+        return array_reverse($final);
+
+    } else {
+        $query = $this->getEntries();
+        $query->addOrderBy(['created_at' => SORT_DESC]);
+        if ($from) {
+            $query->andWhere(['<', 'message_entry.id', $from]);
+        }
+
+        $module = Module::getModuleInstance();
+        $limit = $from ? $module->conversationUpdatePageSize : $module->conversationInitPageSize;
+        $query->limit($limit);
+
+        return array_reverse($query->all());
     }
+}
 
 
 

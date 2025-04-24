@@ -1,7 +1,6 @@
 <?php
 
 use humhub\modules\notification\models\Notification;
-use humhub\modules\mail\notifications\NewRequest;
 use humhub\modules\space\models\Space;
 use humhub\widgets\TimeAgo;
 use yii\helpers\Html;
