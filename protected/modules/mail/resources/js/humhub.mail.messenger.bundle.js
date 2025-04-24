@@ -248,6 +248,9 @@ humhub.module("mail.ConversationView", function (module, require, $) {
                 this.options.messageType === "normal"
             ) {
                 this.loadMessage(this.getActiveMessageId());
+                var inbox = Widget.instance("#inbox");
+                inbox.updateActiveItem();
+                inbox.hide();
             }
         }
     };
@@ -318,9 +321,9 @@ humhub.module("mail.ConversationView", function (module, require, $) {
 
                 that.options.isLast = false;
 
-                var inbox = Widget.instance("#inbox");
+                // var inbox = Widget.instance("#inbox");
                 // inbox.updateActiveItem();
-                inbox.hide();
+                // inbox.hide();
 
                 // Replace history state only if triggered by message preview item
                 if (evt.$trigger && history && history.replaceState) {
@@ -675,15 +678,6 @@ humhub.module("mail.inbox", function (module, require, $) {
             $(this).addClass("selected");
         });
     };
-
-    // var switchType = function () {
-    //     var root = getRoot();
-    //     if (root && root.conversationList) {
-    //         root.conversationList.reload().then(function () {
-    //             root.conversationList.updateActiveItem();
-    //         });
-    //     }
-    // };
 
     ConversationList.prototype.initHeight = function () {
         const offsetTop = this.$.offset().top;
