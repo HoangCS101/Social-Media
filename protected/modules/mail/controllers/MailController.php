@@ -688,7 +688,6 @@ class MailController extends Controller
                 return $this->asJson([
                     'message' => 'Login successful',
                 ]);
-                // return $this->redirect(Url::to(['/mail/mail/index',['type' => 'secure']]));
 
             } else {
                 Yii::$app->response->statusCode = 401;
@@ -755,7 +754,7 @@ class MailController extends Controller
                 ]);
             }
 
-            return $this->redirect(Url::to(['/mail/mail/index', [ 'type' => 'secure']]));
+            return $this->redirect('/index.php?r=mail%2Fmail%2Findex&type=secure');
 
         }
         else {
@@ -854,10 +853,7 @@ class MailController extends Controller
     private function fetchLoginUserOnBC($key)
     {
         $client = new Client();
-        Yii::error("Decrypted private key: " . $key, __METHOD__);
         try {
-            
-
             $response = $client->createRequest()
                 ->setMethod('POST')
                 ->setUrl('http://localhost:3000/api/auth/login')

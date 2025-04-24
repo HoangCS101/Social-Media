@@ -35,8 +35,6 @@ humhub.module("mail.conversation", function (module, require, $) {
                         }, 300);
                     }
                 }
-
-                module.log.error(null, true);
             })
             .catch(function (e) {
                 module.log.error(e, true);

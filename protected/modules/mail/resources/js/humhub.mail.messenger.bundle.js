@@ -945,9 +945,9 @@ humhub.module("mail.conversation", function (module, require, $) {
                             entry.replace(response.content);
                         }, 300);
                     }
+                } else {
+                    module.log.error(null, true);
                 }
-
-                module.log.error(null, true);
             })
             .catch(function (e) {
                 module.log.error(e, true);
