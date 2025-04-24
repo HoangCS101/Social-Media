@@ -244,7 +244,7 @@ humhub.module("mail.ConversationView", function (module, require, $) {
     ConversationView.prototype.reload = function () {
         if (this.getActiveMessageId()) {
             if (
-                !this.options.isLoggedFabric ||
+                this.options.isLoggedFabric ||
                 this.options.messageType === "normal"
             ) {
                 this.loadMessage(this.getActiveMessageId());

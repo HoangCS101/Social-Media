@@ -25,7 +25,7 @@ use humhub\modules\mail\helpers\Url;
 
             <!-- Submit Button -->
             <div class='col-md-3'>
-                <?= Html::submitButton(Yii::t('MailModule.views_mail_create', 'Login'), ['data-ui-loader' => "",'class' => 'btn btn-primary w-100']) ?>
+                <?= Html::submitButton(Yii::t('MailModule.views_mail_create', 'Login'), ['class' => 'btn btn-primary w-100']) ?>
             </div>
 
         </div>
@@ -52,15 +52,12 @@ $(document).ready(function () {
             url: form.attr('action'),
             data: form.serialize(),
             success: function (response) {
-                
+                window.location.href = '/index.php?r=mail%2Fmail%2Findex&type=secure';
             },
             error: function (response) {
-                console.log([response]);
                 showError(response.responseJSON.message);
             },
             complete: function () {
-                // HumHub.ui.loader.reset(); // 👈 Tắt loading của data-ui-loader
-                button.prop('disabled', false);
             }
                 
         });

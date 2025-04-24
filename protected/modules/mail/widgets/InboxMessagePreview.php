@@ -100,7 +100,7 @@ class InboxMessagePreview extends Widget
 
     public function getMessagePreview(): string
     {
-        if($this->message->getType() === 'secure') return 'This message can\'t see';
+        if($this->message->getType() === 'secure') return 'message secure';
         switch ($this->getLastEntry()->type) {
             case AbstractMessageEntry::TYPE_USER_JOINED:
                 return $this->isOwnLastEntry()
@@ -120,8 +120,6 @@ class InboxMessagePreview extends Widget
                 return $this->isOwnLastEntry()
                     ? Yii::t('MailModule.base', 'You left the conversation.')
                     : Yii::t('MailModule.base', '{username} left the conversation.', ['username' => $this->getUsername()]);
-            // case AbstractSecureMessageEntry::TYPE_MESSAGE:
-            //     return 'This message can\'t see';
         }
 
         if ($this->isGroupChat()) {

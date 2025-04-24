@@ -33,15 +33,6 @@ use yii\helpers\Url;
     <?= $hForm->render($form); ?>
     <?php ActiveForm::end(); ?>
 
-
-    <?php $form = ActiveForm::begin([
-        'action' => Url::to(['identity/register-identity']),
-        'method' => 'post'
-    ]); ?>
-
-        <input type="hidden" name="userId" value="user123">
-        <?= Html::submitButton('Register Secure Chat', ['class' => 'btn btn-success']) ?>
-
-    <?php ActiveForm::end(); ?>
+<!--  -->
 
 </div>

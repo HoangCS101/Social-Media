@@ -34,7 +34,7 @@ class ConversationView extends JsWidget
      */
     public $messageId;
     public $messageType;
-    public $isLoggedFabric;
+    public $isLoggedFabric = false;
 
 
     public function getData()

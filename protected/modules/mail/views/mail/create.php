@@ -16,6 +16,7 @@ use humhub\widgets\ModalDialog;
 
 /* @var $model CreateMessage */
 /* @var $fileHandlers BaseFileHandler[] */
+$isLoggedFabric = Yii::$app->request->cookies->getValue('isLoggedFabric', false);
 ?>
 
 <?php ModalDialog::begin([

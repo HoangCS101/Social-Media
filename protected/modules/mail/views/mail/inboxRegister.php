@@ -55,22 +55,19 @@ $this->registerJs(<<<JS
             url: form.attr('action'),
             data: form.serialize(),
             success: function (response) {
-                
+                window.location.href = '/index.php?r=mail%2Fmail%2Findex&type=secure';
             },
             error: function (response) {
-                console.log([response]);
                 showError(response.responseJSON.message);
             },
             complete: function () {
-                // HumHub.ui.loader.reset(); // 👈 Tắt loading của data-ui-loader
-                button.prop('disabled', false);
             }
                 
         });
     });
     function showError(message) {
-        $('#secure-login-form .form-group.field-secure-password').addClass('has-error');
-        $('#secure-login-form .form-group.field-secure-password .help-block').text(message);
+        $('#secure-register-form .form-group.field-secure-password').addClass('has-error');
+        $('#secure-register-form .form-group.field-secure-password .help-block').text(message);
         $('#secure-password').val('');
         
     }
