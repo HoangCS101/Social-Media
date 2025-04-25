@@ -23,12 +23,13 @@ use yii\helpers\Html;
                 'displayName' => Html::encode($user->username)
             ]); ?>
         </h2>
-        <?php if ($model->status == 'accepted'): ?>
+        <?php if ($model->status === 'accepted'): ?>
             <div class="alert alert-success mt-2">
                 <strong><?= Yii::t('MailModule.base', 'Request Approved'); ?></strong>
             </div>
             <?= Button::defaultType(Yii::t('MailModule.base', 'Back'))->link(Url::to(['/'])) ?>
-        <?php elseif ($model->status == 'rejected'): ?>
+            
+        <?php elseif ($model->status === 'rejected'): ?>
             <div class="alert alert-danger mt-2">
                 <strong><?= Yii::t('MailModule.base', 'Request Rejected'); ?></strong>
             </div>
@@ -38,7 +39,7 @@ use yii\helpers\Html;
             <div class="pull-right mt-5">
                 <?= Html::beginForm(Url::to(['/admin/secure/accept', 'id' => $model->id]), 'post') ?>
                     <?= Html::submitButton(Yii::t('MailModule.base', 'Approve Request'), ['class' => 'btn btn-success']) ?>
-                    <?= Button::danger(Yii::t('MailModule.base', 'Reject'))->link(Url::to(['admin/secure/decline-register', 'id' => $model->id])); ?>
+                    <?= Button::danger(Yii::t('MailModule.base', 'Reject'))->link(Url::to(['/admin/secure/decline', 'id' => $model->id])); ?>
                     <?= Button::defaultType(Yii::t('MailModule.base', 'Back'))->link(Url::to(['/'])); ?>
                 <?= Html::endForm() ?>
             </div>
