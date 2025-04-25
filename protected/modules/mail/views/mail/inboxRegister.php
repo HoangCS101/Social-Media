@@ -9,7 +9,11 @@ use humhub\modules\mail\helpers\Url;
     <?php $form = ActiveForm::begin(['enableClientValidation' => false, 'action' => Url::toRegisterSecureChat()]) ?>
     <div class="modal-body">
         <div class="pb-4 flex flex-col align-items-center gap-4">
-            <?= Yii::t('MailModule.views_mail_create', 'You haven\'t register secure messaging, please register in advance.' ) ?>
+            <?php if ($requestStatus === 'not_sent'): ?>
+                <?= Yii::t('MailModule.views_mail_create', 'You have not sent request, please send request to admin' ) ?>
+            <?php elseif ($requestStatus === 'rejected'): ?>                
+                <?= Yii::t('MailModule.views_mail_create', 'Your request has been rejected, please contact admin' ) ?>
+            <?php endif; ?>
         </div>
         <div class="row">
         
@@ -55,7 +59,6 @@ $this->registerJs(<<<JS
             url: form.attr('action'),
             data: form.serialize(),
             success: function (response) {
-                window.location.href = '/index.php?r=mail%2Fmail%2Findex&type=secure';
             },
             error: function (response) {
                 showError(response.responseJSON.message);

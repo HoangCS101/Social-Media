@@ -5,11 +5,8 @@ use yii\db\Migration;
 /**
  * Handles the creation of table `{{%request}}`.
  */
-class m250424_145404_create_request_table extends Migration
+class m250425_041736_create_request_table extends Migration
 {
-    /**
-     * {@inheritdoc}
-     */
     public function safeUp()
     {
         $this->createTable('{{%request}}', [
@@ -17,10 +14,7 @@ class m250424_145404_create_request_table extends Migration
             'sender_id' => $this->integer()->notNull(),
             'receiver_id' => $this->integer()->notNull(),
             'content'  => $this->text()->notNull(),
-            'created_at' => 'datetime DEFAULT NULL',
-            'created_by' => 'int(11) DEFAULT NULL',
-            'updated_at' => 'datetime DEFAULT NULL',
-            'updated_by' => 'int(11) DEFAULT NULL',
+            'status' => $this->string()->notNull()->defaultValue('pending')
         ]);
         $this->addForeignKey('fk_request_sender', 'request', 'sender_id', 'user', 'id', 'CASCADE');
         $this->addForeignKey('fk_request_receiver', 'request', 'receiver_id', 'user', 'id', 'CASCADE');

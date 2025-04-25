@@ -35,11 +35,14 @@ $filterModel = new InboxFilterForm();
         <?= SecureChatMenu::widget([
             'filter' => $filterModel,
         ]); ?>
-        <?php if ($type === 'secure' && !$isRegisteredFabric): ?>
-            <?= $this->render('inboxRegister' ,['model' => $model]); ?>
-            
+        <?php if ($type === 'secure' && $requestStatus === 'pending'): ?>
+            <div class="pb-4 pt-4 flex flex-col align-items-center gap-4">
+                <?= Yii::t('MailModule.views_mail_create', 'You have sent request, please wait until admin approve' ) ?>
+            </div>
+        <?php elseif ($type === 'secure' && ($requestStatus === 'not_sent' || $requestStatus === 'rejected')): ?>
+            <?= $this->render('inboxRegister' ,['model' => $model, 'requestStatus' => $requestStatus]); ?>
         <?php elseif ($type === 'secure' && !$isLoggedFabric): ?>
-                <?= $this->render('inboxLogin' ,['model' => $model]); ?>
+            <?= $this->render('inboxLogin' ,['model' => $model]); ?>
         <?php else : ?>
             <div id="inbox-list-container">
                 <?= $this->render('_inboxList', ['type' => $type, 'filter' => $filterModel]); ?>
