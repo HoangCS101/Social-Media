@@ -1,5 +1,6 @@
 /dynamic.php
 /common.php
 /console.php
+/private.php
 /security.json
 /web.php

@@ -133,13 +133,15 @@ class SecureController extends Controller
     private function fetchEnrollAdminOnBC()
     {
         $client = new Client();
+        $config = require Yii::getAlias('@app/protected/config/private.php');
+        $adminApiKey = $config['adminApiKey'];
         try {
             $response = $client->createRequest()
                 ->setMethod('')
                 ->setUrl('http://localhost:3000/api/ca/enroll-admin')
                 ->addHeaders([
                     'content-type' => 'application/json',
-                    'X-Admin-Key' => $_ENV['ADMIN_API_KEY']
+                    'X-Admin-Key' => $adminApiKey
                 ])
                 ->send();
 
