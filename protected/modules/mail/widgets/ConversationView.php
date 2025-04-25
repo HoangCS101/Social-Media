@@ -17,7 +17,7 @@ class ConversationView extends JsWidget
      * @inheritdoc
      */
     public $jsWidget = 'mail.ConversationView';
-
+ 
     /**
      * @inheritdoc
      */
@@ -34,6 +34,7 @@ class ConversationView extends JsWidget
      */
     public $messageId;
     public $messageType;
+    public $isLoggedFabric = false;
 
 
     public function getData()
@@ -41,10 +42,14 @@ class ConversationView extends JsWidget
         return [
             'message-type' => $this->messageType,
             'message-id' => $this->messageId,
-            'load-message-url' => Url::toLoadMessage(),
+            'is-logged-fabric' => $this->isLoggedFabric,
+            'load-message-url' => Url::toLoadMessage($this->messageType),
             'load-update-url' => Url::toUpdateMessage(),
             'load-more-url' => Url::toLoadMoreMessages(),
             'mark-seen-url' => Url::toNotificationSeen(),
+            'handle-create-url' => Url::toHandleSave('create'),
+            'handle-update-url' => Url::toHandleSave('update'),
+            'handle-delete-url' => Url::toHandleSave('delete'),
         ];
     }
 }

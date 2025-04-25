@@ -173,8 +173,6 @@ $this->pageTitle = Yii::t('UserModule.auth', 'Login');
         </div>
       </div>
     </div>
-
-
 </div>
 
 

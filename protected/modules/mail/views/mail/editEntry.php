@@ -6,6 +6,7 @@ use humhub\modules\file\widgets\FilePreview;
 use humhub\modules\file\widgets\UploadButton;
 use humhub\modules\file\widgets\UploadProgress;
 use humhub\modules\mail\models\MessageEntry;
+use humhub\modules\mail\models\SecureMessageEntry;
 use humhub\modules\mail\widgets\MailRichtextEditor;
 use humhub\widgets\Button;
 use humhub\widgets\ModalButton;
@@ -24,7 +25,7 @@ use yii\bootstrap\ActiveForm;
 
 <?php $form = ActiveForm::begin() ?>
 <div class="modal-body mail-edit-message">
-    <?= $form->field($entry, 'content')->widget(
+    <?= $form->field($entry, 'decryptedContent')->widget(
         MailRichtextEditor::class, [
         'placeholder' => Yii::t('MailModule.base', 'Edit message...')])->label(false) ?>
 

@@ -12,7 +12,7 @@ use yii\helpers\Url;
         var $editableContent = $('#<?php echo $id; ?>_contenteditable');
 
         if(!$editableContent.length) {
-            $formInput.after('<div id="<?php echo $id; ?>_contenteditable" autocomplete="off" class="atwho-input form-control atwho-placeholder" data-query="0" contenteditable="true">' + placeholder + '</div>');
+            $formInput.after('<div id="<?php echo $id; ?>_contenteditable" autocomplete="off" class="atwho-input w-[40xp] h-[40px] form-control atwho-placeholder" data-query="0" contenteditable="true">' + placeholder + '</div>');
             $editableContent = $('#<?php echo $id; ?>_contenteditable');
         }
 

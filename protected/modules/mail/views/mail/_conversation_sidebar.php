@@ -6,15 +6,19 @@ use humhub\modules\mail\widgets\NewMessageButton;
 use humhub\modules\mail\widgets\InboxFilter;
 use humhub\modules\mail\widgets\SecureChatMenu;
 use humhub\modules\ui\icon\widgets\Icon;
+use humhub\modules\mail\helpers\Url;
+use humhub\widgets\ModalButton;
+
 
 
 $canStartConversation = Yii::$app->user->can(StartConversation::class);
 
-$filterModel = new InboxFilterForm();
+
 // $type = Yii::$app->request->get('type', 'normal');
+$filterModel = new InboxFilterForm();
 ?>
-<div id="mail-conversation-overview" class="panel panel-default mail-inbox-messages rounded-none">
-    <div class="panel-heading rounded-none">
+<div id="mail-conversation-overview h-inherit" class="panel panel-default mail-inbox-messages rounded-none">
+    <div class="panel-heading rounded-none h-[84px]">
         <a data-action-click="mail.inbox.toggleInbox" style="font-size:25px">
             <span class="visible-xs-inline"><?=Icon::get('bars')?></span> <?= Yii::t('MailModule.views_mail_index', 'Conversations') ?>
         </a>
@@ -23,20 +27,24 @@ $filterModel = new InboxFilterForm();
         <?php endif; ?>
 
         <div class="inbox-wrapper">
-         <?= InboxFilter::widget(['model' => $filterModel]) ?>
         </div>
-
+ 
     </div>
     <div class="w-full bg-white shadow-md rounded-lg h-[80vh]">
 
         <?= SecureChatMenu::widget([
             'filter' => $filterModel,
-            'options' => ['class' => '[&>ul]:pb-0 [&>li]:w-1/2']
         ]); ?>
-
-        <div id="inbox-list-container">
-            <?= $this->render('_inboxList', ['type' => $type, 'filter' => $filterModel]); ?>
-        </div>
+        <?php if ($type === 'secure' && !$isRegisteredFabric): ?>
+            <?= $this->render('inboxRegister' ,['model' => $model]); ?>
+            
+        <?php elseif ($type === 'secure' && !$isLoggedFabric): ?>
+                <?= $this->render('inboxLogin' ,['model' => $model]); ?>
+        <?php else : ?>
+            <div id="inbox-list-container">
+                <?= $this->render('_inboxList', ['type' => $type, 'filter' => $filterModel]); ?>
+            </div>
+        <?php endif ?>
     </div>
     
 </div>

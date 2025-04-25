@@ -7,10 +7,15 @@ use humhub\components\Controller;
 use humhub\modules\file\handler\FileHandlerCollection;
 use humhub\modules\mail\helpers\Url;
 use humhub\modules\mail\models\forms\CreateMessage;
+use humhub\modules\mail\models\forms\SecureCreateMessage;
+use app\jobs\CheckBlockchainStatusJob;
 use humhub\modules\mail\models\forms\InviteParticipantForm;
+use humhub\modules\mail\models\forms\PasswordSecureForm;
 use humhub\modules\mail\models\forms\ReplyForm;
+use humhub\modules\mail\models\forms\SecureReplyForm;
 use humhub\modules\mail\models\Message;
 use humhub\modules\mail\models\MessageEntry;
+use humhub\modules\mail\models\SecureMessageEntry;
 use humhub\modules\mail\models\UserMessage;
 use humhub\modules\mail\Module;
 use humhub\modules\mail\permissions\SendMail;
@@ -22,11 +27,13 @@ use humhub\modules\User\models\User;
 use humhub\modules\user\models\UserFilter;
 use humhub\modules\user\models\UserPicker;
 use humhub\modules\user\widgets\UserListBox;
+use humhub\modules\user\models\UserKey;
+use yii\httpclient\Client;
 use Yii;
 use yii\helpers\Html;
 use yii\web\ForbiddenHttpException;
 use yii\web\HttpException;
-use yii\web\NotFoundHttpException;
+use yii\web\NotFoundHttpException; 
 
 /**
  * MailController provides messaging actions.
@@ -61,28 +68,45 @@ class MailController extends Controller
      */
     public function actionIndex($id = null, $type = 'normal')
     {
+        
+        // if($type == 'normal') {
+        $isRegisteredFabric = false;
+        if($type == 'secure') {
+            $isRegisteredFabric = UserKey::find()->where(['user_id' => Yii::$app->user->id])->exists();
+        }
+
         return $this->render('index', [
             'messageId' => $id,
-            'messageType' => $type
+            'messageType' => $type,
+            'model' => $type == 'normal' ? null : new PasswordSecureForm(),
+            'isRegisteredFabric' => $isRegisteredFabric,
         ]);
+        // }
+        // else {
+        //     return $this->render('index', [
+        //         'messageId' => $id,
+        //         'messageType' => $type,
+                
+        //     ]);
+        // }
     }
 
     /**
      * Shows a Message Thread
      */
-    public function actionShow($id)
+    public function actionShow($id, $type)
     {
         $message = ($id instanceof Message) ? $id : $this->getMessage($id);
-
         $this->checkMessagePermissions($message);
 
         // Marks message as seen
         $message->seen(Yii::$app->user->id);
-
+        
         return $this->renderAjax('conversation', [
             'message' => $message,
+            'type' => $type,
             'messageCount' => UserMessage::getNewMessageCount(),
-            'replyForm' => new ReplyForm(['model' => $message]),
+            'replyForm' => $type === 'normal'? new ReplyForm(['model' => $message]) : new SecureReplyForm(['model' => $message]),
             'fileHandlers' => FileHandlerCollection::getByType([FileHandlerCollection::TYPE_IMPORT, FileHandlerCollection::TYPE_CREATE]),
         ]);
     }
@@ -115,7 +139,7 @@ class MailController extends Controller
         ]));
     }
 
-    public function actionLoadMore($id, $from)
+    public function actionLoadMore($id, $from = null)
     {
         $message = ($id instanceof Message) ? $id : $this->getMessage($id);
 
@@ -131,7 +155,7 @@ class MailController extends Controller
         ]);
     }
 
-    public function actionReply($id, $type)
+    public function actionReply($id, $type = 'normal')
     {
         $message = $this->getMessage($id, true);
 
@@ -141,11 +165,15 @@ class MailController extends Controller
         if($type === 'normal') {
             $replyForm = new ReplyForm(['model' => $message]);
             if ($replyForm->load(Yii::$app->request->post()) && $replyForm->save()) {
+                $reply = $replyForm->reply;
+                
                 return $this->asJson([
+                    'secure' => false,
                     'success' => true,
-                    'content' => ConversationEntry::widget(['entry' => $replyForm->reply, 'showDateBadge' => $replyForm->reply->isFirstToday()]),
+                    'content' => ConversationEntry::widget(['entry' => $reply, 'showDateBadge' => $reply->isFirstToday()]),
                 ]);
             }
+            
 
             return $this->asJson([
                 'success' => false,
@@ -155,10 +183,92 @@ class MailController extends Controller
             ]);
 
         }
-        else {}
-        
-        
+        else {
+            $replyForm = new SecureReplyForm(['model' => $message]);
+            if ($replyForm->load(Yii::$app->request->post()) && $replyForm->save()) {
+                $reply = $replyForm->reply;
+                return $this->asJson([
+                    'secure' => true,
+                    'success' => true,
+                    'entryId' => $reply->id,
+                    'content' => ConversationEntry::widget([ 'entry' => $reply, 'showDateBadge' => $reply->isFirstToday()]),
+                ]);
+            }
+
+            return $this->asJson([
+                'success' => false,
+                'error' => [
+                    'message' => $replyForm->getFirstError('message'),
+                ],
+            ]);
+        }
     }
+
+
+    public function actionHandleSave(string $op)
+    {
+        $id = Yii::$app->request->post('id');
+
+        $reply = SecureMessageEntry::findOne(['id' => $id]);
+
+        $success = $this->executeSaveOnBC($reply, $op);
+        if($success) {
+            return $this->asJson([
+                'success' => true,
+                'content' => ConversationEntry::widget([ 'entry' => $reply, 'showDateBadge' => $reply->isFirstToday()]),
+            ]);
+        }
+        else {
+            return $this->asJson([
+                'success' => true,
+                'content' => ConversationEntry::widget(['entry' => $reply, 'showDateBadge' => $reply->isFirstToday()]),
+            ]);
+        }   
+    }
+
+
+    public function actionResend($id, $type = 'secure')
+    {
+        $id = Yii::$app->request->post('id');
+
+        $reply = SecureMessageEntry::findOne(['id' => $id]);
+
+        $success = $this->executeSaveOnBC($reply, 'create');
+        if($success) {
+            return $this->asJson([
+                'success' => true,
+                'content' => ConversationEntry::widget([ 'entry' => $reply, 'showDateBadge' => $reply->isFirstToday()]),
+            ]);
+        }
+        else {
+            return $this->asJson([
+                'success' => true,
+                'content' => ConversationEntry::widget(['entry' => $reply, 'showDateBadge' => $reply->isFirstToday()]),
+            ]);
+        }   
+
+    }
+
+    public function actionDeleteFailure($id)
+    {
+        $entry = SecureMessageEntry::findOne(['id' => $id]);
+
+        if (!$entry) {
+            throw new HttpException(404);
+        }
+
+        // Check if message entry exists and it´s by this user
+        if (!$entry->canEdit()) {
+            throw new HttpException(403);
+        }
+
+        $entry->message->deleteEntry($entry);
+
+        return $this->asJson([
+            'success' => true,
+        ]);
+    }
+
 
     /**
      * @param $id
@@ -255,7 +365,7 @@ class MailController extends Controller
         return $this->asJson($result);
     }
 
-    private function checkMessagePermissions($message)
+    private function checkMessagePermissions($message ,)
     {
         if ($message == null) {
             throw new HttpException(404, 'Could not find message!');
@@ -322,7 +432,6 @@ class MailController extends Controller
     public function actionCreate($userGuid = null, ?string $title = null, ?string $message = null, ?bool $secure = false)
     {
         $model = new CreateMessage(['secure' => $secure, 'recipient' => [$userGuid], 'title' => $title, 'message' => $message]);
-
         // Preselect user if userGuid is given
         if ($userGuid) {
             /* @var User $user */
@@ -337,33 +446,22 @@ class MailController extends Controller
             }
         }
 
-        if ($model->load(Yii::$app->request->post())) {
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $entry = SecureMessageEntry::findOne(['message_id' => $model->messageInstance->id]);
             if($model->secure) {
-                $data = [
-                    'recipient' => $userGuid,
-                    'title' => $model->title,
-                    'message' => $model->message,
-                    'secure' => true
-                ];
-            
-                // Send data to another server
-                $response = Yii::$app->httpClient->post('https://external-server.com/api/storeMessage', $data)->send();
-            
-                if ($response->isOk) {
-                    return $this->htmlRedirect(['index']);
-                } else {
-                    Yii::$app->session->setFlash('error', 'Failed to store the secure message.');
-                }
+                $this->executeSaveOnBC($entry, 'create');
             }
-            else {
-                if($model->save()) {
-                    // return $this->htmlRedirect(['index', 'id' => $model->messageInstance->id]);
-                }
-            }
+
+            $type = $model->secure ? 'secure': 'normal';
+            return $this->htmlRedirect(['index', 'id' => $model->messageInstance->id, 'type' => $type]);
         }
+
+        $isRegisteredFabric = UserKey::find()->where(['user_id' => Yii::$app->user->id])->exists();
+
 
         return $this->renderAjax('create', [
             'model' => $model,
+            'isRegisteredFabric' => $isRegisteredFabric, 
             'fileHandlers' => FileHandlerCollection::getByType([FileHandlerCollection::TYPE_IMPORT, FileHandlerCollection::TYPE_CREATE]),
         ]);
     }
@@ -448,9 +546,9 @@ class MailController extends Controller
      * @return string|\yii\web\Response
      * @throws HttpException
      */
-    public function actionEditEntry($id)
+    public function actionEditEntry($id, $type)
     {
-        $entry = MessageEntry::findOne(['id' => $id]);
+        $entry = $type === 'normal' ? MessageEntry::findOne(['id' => $id]) : SecureMessageEntry::findOne(['id' => $id]);
 
         if (!$entry) {
             throw new HttpException(404);
@@ -460,7 +558,10 @@ class MailController extends Controller
             throw new HttpException(403);
         }
 
-        if ($entry->load(Yii::$app->request->post()) && $entry->save()) {
+        if ($entry->load(Yii::$app->request->post())) {
+            $entry->content = Yii::$app->request->post('SecureMessageEntry')['decryptedContent'];
+            $entry->status = 'pending';
+            $entry->save();
             $entry->fileManager->attach(Yii::$app->request->post('MessageEntry')['files'] ?? null);
             return $this->asJson([
                 'success' => true,
@@ -477,15 +578,16 @@ class MailController extends Controller
         ]);
     }
 
+
     /**
      * Delete Entry Id
      *
      * Users can delete the own message entries.
      */
-    public function actionDeleteEntry($id)
+    public function actionDeleteEntry($id, $type)
     {
         $this->forcePostRequest();
-        $entry = MessageEntry::findOne(['id' => $id]);
+        $entry = $type === 'normal' ? MessageEntry::findOne(['id' => $id]) : SecureMessageEntry::findOne(['id' => $id]);
 
         if (!$entry) {
             throw new HttpException(404);
@@ -497,7 +599,8 @@ class MailController extends Controller
         }
 
         $entry->message->deleteEntry($entry);
-
+        $this->executeSaveOnBC($entry, 'delete');
+        
         return $this->asJson([
             'success' => true,
         ]);
@@ -511,6 +614,7 @@ class MailController extends Controller
         $json = ['newMessages' => UserMessage::getNewMessageCount()];
         return $this->asJson($json);
     }
+
 
     /**
      * Returns the Message Model by given Id
@@ -538,6 +642,7 @@ class MailController extends Controller
         return null;
     }
 
+
     private function getNextReadMessage($id): ?Message
     {
         return Message::find()
@@ -551,4 +656,467 @@ class MailController extends Controller
             ])
             ->one();
     }
+    public function actionLogin()
+    {
+        $form = new PasswordSecureForm();
+        if ($form->load(Yii::$app->request->post()) && $form->validate()) {
+            $password = Yii::$app->request->post('PasswordSecureForm')['password'];
+            $id = Yii::$app->user->id;
+            $key = UserKey::findOne(['user_id' => $id])->secret_key;
+            if(!$key) {
+                Yii::$app->response->statusCode = 400;
+                return $this->asJson(['message' => 'You haven\'t registered secure chat']);
+            }
+            $decrypted = Yii::$app->security->decryptByPassword(base64_decode($key), $password);
+            $result = $this->fetchLoginUserOnBC($decrypted);
+
+            if ($result && isset($result->apiKey)) {
+                Yii::$app->response->cookies->add(new \yii\web\Cookie([
+                    'name' => 'apiKey',
+                    'value' => $result->apiKey,
+                    'httpOnly' => true,
+                    'expire' => time() + 3600 * 24 * 1, 
+                ]));
+
+                Yii::$app->response->cookies->add(new \yii\web\Cookie([
+                    'name' => 'isLoggedFabric',
+                    'value' => true,
+                    'expire' => time() + 3600 * 24 * 1,
+                ]));
+
+                Yii::$app->response->statusCode = 200;
+                return $this->asJson([
+                    'message' => 'Login successful',
+                ]);
+
+            } else {
+                Yii::$app->response->statusCode = 401;
+                return $this->asJson([
+                    'message' => 'Login failed, please check your password',
+                ]);
+            }
+        }
+        else {
+            Yii::$app->response->statusCode = 400;
+            return $this->asJson([
+                'message' => 'The password cannot be blank',
+            ]);
+        }
+        
+
+    }
+
+    //OK
+    public function actionRegister()
+    {
+        $form = new PasswordSecureForm();
+        if ($form->load(Yii::$app->request->post()) && $form->validate()) {
+            $password = Yii::$app->request->post('PasswordSecureForm')['password'];
+            $encodedKey = Yii::$app->request->cookies->getValue('adminPrivateKey');
+            if(!$encodedKey) {
+                $encodedKey = $this->actionEnrollAdmin();
+                if(!$encodedKey) {
+                    Yii::$app->response->statusCode = 500; 
+                    return $this->asJson([
+                        'message' => 'Failed to enroll admin on blockchain server',
+                    ]);
+                }
+            }
+            $key = base64_decode($encodedKey);
+            Yii::error("Admin private key: " . $key, __METHOD__);
+
+            $user_pkey = $this->fetchRegisterUserOnBC($key);
+            if(!$user_pkey) {
+                Yii::error("registered failed");
+                Yii::$app->response->statusCode = 500; 
+                return $this->asJson([
+                    'message' => 'Failed to register on blockchain server',
+                ]);
+            }
+            $encrypted = Yii::$app->security->encryptByPassword($user_pkey->privateKey, $password);
+            if($encrypted === null) {
+                Yii::error("encrypted failed");
+                Yii::$app->response->statusCode = 500; 
+                return $this->asJson([
+                    'message' => 'Failed to encrypt key',
+                ]);
+            }
+
+            $userKey = new UserKey();
+            $userKey->user_id = Yii::$app->user->id;
+            $userKey->secret_key = base64_encode($encrypted);
+
+            if (!$userKey->save()) {
+                Yii::$app->response->statusCode = 500; // Unprocessable Entity
+                return $this->asJson([
+                    'message' => 'Failed to save private key',
+                    'errors' => $userKey->getErrors(),
+                ]);
+            }
+
+            return $this->redirect('/index.php?r=mail%2Fmail%2Findex&type=secure');
+
+        }
+        else {
+            Yii::$app->response->statusCode = 400;
+            return $this->asJson([
+                'message' => 'The password cannot be blank',
+            ]);
+        }
+    }
+
+    private function actionEnrollAdmin()
+    {
+        $response = $this->fetchEnrollAdminOnBC();
+        if(!$response) {
+            Yii::error("enroll admin failed".$response->content, __METHOD__);
+            return null;
+        }
+        
+        $admin_pkey = $response->privateKey;
+        $encodedKey = base64_encode($admin_pkey);
+        Yii::$app->response->cookies->add(new \yii\web\Cookie([
+            'name' => 'adminPrivateKey',
+            'value' => $encodedKey,
+            'httpOnly' => true,
+            'expire' => time() + 3600 * 24 * 7, 
+        ]));
+
+        return $encodedKey;
+    }
+
+    private function fetchEnrollAdminOnBC()
+    {
+        $client = new Client();
+        try {
+            $response = $client->createRequest()
+                ->setMethod('')
+                ->setUrl('http://localhost:3000/api/ca/enroll-admin')
+                ->addHeaders([
+                    'content-type' => 'application/json',
+                    'X-Admin-Key' => $_ENV['ADMIN_API_KEY']
+                ])
+                ->send();
+
+            if ($response->isOk) {
+                return json_decode($response->content);
+            }
+
+            Yii::error("Failed to register user on blockchain API: " . $response->content, __METHOD__);
+            return null;
+
+        } catch (\Exception $e) {
+            Yii::error("Error when calling Node.js API: " . $e->getMessage(), __METHOD__);
+            return null;
+        }
+    }
+    
+
+
+    private function fetchRegisterUserOnBC($key = null)
+    {
+        $client = new Client();
+        try {
+            $response = $client->createRequest()
+                ->setMethod('POST')
+                ->setUrl('http://localhost:3000/api/ca/register')
+                ->addHeaders([
+                    'content-type' => 'application/json',
+                ])
+                ->setContent(json_encode([
+                        'userId' => (string)Yii::$app->user->id,
+                        'affiliation' =>  "org1.department1",
+                        'admin-pkey' => $key
+                ]))
+                ->send();
+                
+
+                
+
+            if ($response->isOk) {
+                return json_decode($response->content);
+            }
+
+            Yii::error("Failed to register user on blockchain API: " . $response->content, __METHOD__);
+            return null;
+
+        } catch (\Exception $e) {
+            Yii::error("Error when calling Node.js API: " . $e->getMessage(), __METHOD__);
+            return null;
+        }
+    }
+
+    
+
+    //OK
+
+    private function fetchLoginUserOnBC($key)
+    {
+        $client = new Client();
+        try {
+            $response = $client->createRequest()
+                ->setMethod('POST')
+                ->setUrl('http://localhost:3000/api/auth/login')
+                ->addHeaders([
+                    'content-type' => 'application/json',
+                ])
+                ->setContent(json_encode([
+                    'userId' => (string)Yii::$app->user->id,
+                    'affiliation' =>  "org1.department1",
+                    'privateKey' => $key
+                ]))
+                ->send();
+
+            if ($response->isOk) {
+                return json_decode($response->content);
+            }
+
+            Yii::error("Failed to register user on blockchain API: " . $response->content, __METHOD__);
+            return null;
+
+        } catch (\Exception $e) {
+            Yii::error("Error when calling Node.js API: " . $e->getMessage(), __METHOD__);
+            return null;
+        }
+    }
+
+    private function executeSaveOnBC(SecureMessageEntry $reply, $op)
+    {
+        $client = new Client();
+
+        // for ($k = 0; $k < 3; $k++) {
+        if($op === 'create') {
+            $response = $this->setMessageEntryToBC($client, $reply);
+        }
+
+        if($op === 'update') {
+            $response = $this->updateMessageEntryToBC($client, $reply);
+        }
+
+        if($op === 'delete') {
+            $response = $this->deleteMessageEntryToBC($client, $reply);
+        }
+
+        if ($response && isset($response->jobId)) {
+            $jobId = (int)$response->jobId;
+
+            sleep(3); 
+
+            $result = $this->getJobSavingInBC($client, $jobId);
+            if ($result && isset($result->transactionIds) && count($result->transactionIds) > 0) {
+                Yii::info("Blockchain save successful for jobId: $jobId, tx count: " . count($result->transactionIds), __METHOD__);
+                $lastTxId = end($result->transactionIds);
+                $success = $this->checkStatusSavingInBC($client, $lastTxId);
+                if($success) {
+                    $reply->content = null;
+                    $reply->status = 'saved';
+                    $reply->save();
+                    return true;
+                }
+            } 
+                
+            // Yii::warning("Job $jobId has no transactions yet (attempt $i)", __METHOD__);
+
+            // Yii::error("Job $jobId failed to send after 3 retries.", __METHOD__);
+        } 
+                
+            // Yii::warning("Blockchain API did not return jobId (attempt $k)", __METHOD__);
+        // }
+
+        Yii::error("Failed to save blockchain", __METHOD__);
+        $reply->status = 'failed';
+        $reply->save();
+        return false;
+    }
+
+
+    private function setMessageEntryToBC(Client $client, SecureMessageEntry $reply)
+    {
+        try {
+            $apiKey = Yii::$app->request->cookies->getValue('apiKey');
+        
+            // Kiểm tra nếu apiKey không tồn tại
+            if (!$apiKey) {
+                Yii::error("User haven't logged in secure chat yet", __METHOD__);
+                return null;
+            }
+
+            $response = $client->createRequest()
+                ->setMethod('POST')
+                ->setUrl('http://localhost:3000/api/messages')
+                ->addHeaders([
+                    'content-type' => 'application/json',
+                    'x-api-key' => $apiKey // Thay 'your-api-key-here' bằng giá trị thực tế của bạn
+                ])
+                ->setContent(json_encode([
+                    'id' => $reply->id,
+                    'messageId' => $reply->message->id,
+                    'userId' => $reply->user->id,
+                    'content' => $reply->content,
+                    'type' => $reply->type,
+                    'createdAt' => $reply->created_at
+                ]))
+                ->send();
+
+            if ($response->isOk) {
+                return json_decode($response->content);
+            }
+
+            Yii::error("Failed to post message to blockchain API: " . $response->content, __METHOD__);
+            return null;
+
+        } catch (\Exception $e) {
+            Yii::error("Error when calling Node.js API: " . $e->getMessage(), __METHOD__);
+            return null;
+        }
+    }
+
+    private function updateMessageEntryToBC(Client $client, SecureMessageEntry $reply, $modify = false)
+    {
+        try {
+            $apiKey = Yii::$app->request->cookies->getValue('apiKey');
+        
+            // Kiểm tra nếu apiKey không tồn tại
+            if (!$apiKey) {
+                Yii::error("User haven't logged in secure chat yet", __METHOD__);
+                return null;
+            }
+            
+            $response = $client->createRequest()
+                ->setMethod('PUT')
+                ->setUrl("http://localhost:3000/api/messages/{$reply->id}")
+                ->addHeaders([
+                    'content-type' => 'application/json',
+                    'x-api-key' => $apiKey // Thay 'your-api-key-here' bằng giá trị thực tế của bạn
+                ])
+                ->setContent(json_encode([
+                    'id' => $reply->id,
+                    'messageId' => $reply->message->id,
+                    'userId' => $reply->user->id,
+                    'content' => $reply->content,
+                    'type' => $reply->type,
+                    'createdAt' => $reply->created_at
+                ]))
+                ->send();
+                
+                
+
+            
+
+            if ($response->isOk) {
+                return json_decode($response->content);
+            } else {
+                Yii::error("Failed to update message to blockchain API: " . $response->content, __METHOD__);
+                return null;
+            }
+        } catch (\Exception $e) {
+            Yii::error("Error when calling Node.js API: " . $e->getMessage(), __METHOD__);
+            return null;
+        }
+    }
+
+    private function deleteMessageEntryToBC(Client $client, SecureMessageEntry $reply, $modify = false)
+    {
+        try {
+            $apiKey = Yii::$app->request->cookies->getValue('apiKey');
+        
+            // Kiểm tra nếu apiKey không tồn tại
+            if (!$apiKey) {
+                Yii::error("User haven't logged in secure chat yet", __METHOD__);
+                return null;
+            }
+
+            $response = $client->createRequest()
+                ->setMethod('DELETE')
+                ->setUrl("http://localhost:3000/api/messages/{$reply->id}")
+                ->addHeaders([
+                    'content-type' => 'application/json',
+                    'x-api-key' => $apiKey // Thay 'your-api-key-here' bằng giá trị thực tế của bạn
+                ])
+                ->send();
+
+            if ($response->isOk) {
+                return json_decode($response->content);
+            } else {
+                Yii::error("Failed to delete message on blockchain API: " . $response->content, __METHOD__);
+                return null;
+            }
+        } catch (\Exception $e) {
+            Yii::error("Error when calling Node.js API: " . $e->getMessage(), __METHOD__);
+            return null;
+        }
+    }
+
+    private function getJobSavingInBC(Client $client, int $jobId)
+    {
+        try {
+
+            $apiKey = Yii::$app->request->cookies->getValue('apiKey');
+        
+            // Kiểm tra nếu apiKey không tồn tại
+            if (!$apiKey) {
+                Yii::error("User haven't logged in secure chat yet", __METHOD__);
+                return null;
+            }
+
+            $response = $client->createRequest()
+                ->setMethod('GET')
+                ->addHeaders([
+                    'content-type' => 'application/json',
+                    'x-api-key' => $apiKey // Thay 'your-api-key-here' bằng giá trị thực tế của bạn
+                ])
+                ->setUrl("http://localhost:3000/api/jobs/{$jobId}")
+                ->send();
+
+            if ($response->isOk) {
+                return json_decode($response->content);
+
+            } 
+
+            Yii::warning("Status check failed for jobId $jobId: " . $response->content, __METHOD__);
+            return null;
+
+        } catch (\Exception $e) {
+            Yii::error("Error when checking status of job $jobId: " . $e->getMessage(), __METHOD__);
+            return null;
+        }
+    }
+
+    private function checkStatusSavingInBC(Client $client, string $transactionId)
+    {
+        try {
+            $apiKey = Yii::$app->request->cookies->getValue('apiKey');
+        
+            // Kiểm tra nếu apiKey không tồn tại
+            if (!$apiKey) {
+                Yii::error("User haven't logged in secure chat yet", __METHOD__);
+                return null;
+            }
+
+            $response = $client->createRequest()
+                ->setMethod('GET')
+                ->addHeaders([
+                    'content-type' => 'application/json',
+                    'x-api-key' => $apiKey// Thay 'your-api-key-here' bằng giá trị thực tế của bạn
+                ])
+                ->setUrl("http://localhost:3000/api/transactions/{$transactionId}")
+                ->send();
+
+            if ($response->isOk) {
+                $content = json_decode($response->content);
+                if($content && $content->validationCode && $content->validationCode === 'VALID') {
+                    return true;
+                }
+            } 
+
+            Yii::warning("Status check failed for jobId $transactionId: " . $response->content, __METHOD__);
+            return false;
+
+        } catch (\Exception $e) {
+            Yii::error("Error when checking status of job $transactionId: " . $e->getMessage(), __METHOD__);
+            return false;
+        }
+    }
+
+    
 }

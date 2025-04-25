@@ -4,6 +4,7 @@ namespace humhub\modules\mail\models\forms;
 
 use humhub\modules\mail\models\Config;
 use humhub\modules\mail\models\Message;
+use humhub\modules\mail\models\SecureMessageEntry;
 use humhub\modules\mail\models\MessageEntry;
 use humhub\modules\mail\models\MessageTag;
 use humhub\modules\mail\permissions\SendMail;
@@ -141,6 +142,11 @@ class CreateMessage extends Model
                 return false;
             }
 
+            if(!$this->saveMessageType()) {
+                $transaction->rollBack();
+                return false;
+            }
+
             if (!$this->saveRecipients()) {
                 $transaction->rollBack();
                 return false;
@@ -202,6 +208,13 @@ class CreateMessage extends Model
         return $this->messageInstance->save();
     }
 
+    private function saveMessageType()
+    {
+        $type = $this->secure ? 'secure': 'normal';
+
+        return $this->messageInstance->addType($type);
+    }
+
 
     /**
      * Returns an Array with selected recipients
@@ -213,13 +226,21 @@ class CreateMessage extends Model
 
     private function saveMessageEntry()
     {
-        $entry = MessageEntry::createForMessage($this->messageInstance, Yii::$app->user->getIdentity(), $this->message);
+        if($this->secure) {
+            $entry = SecureMessageEntry::createForMessage($this->messageInstance, Yii::$app->user->getIdentity(), $this->message);
+        }
+        else {
+            $entry = MessageEntry::createForMessage($this->messageInstance, Yii::$app->user->getIdentity(), $this->message);
+        }
+        
+            
+
         $result = $entry->save();
         if ($result) {
             $entry->fileManager->attach($this->files);
         }
-        $entry->notify(true);
-        return $result;
+        // $entry->notify(true);
+        return true; 
     }
 
     private function saveOriginatorUserMessage()

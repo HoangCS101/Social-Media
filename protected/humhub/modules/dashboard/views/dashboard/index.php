@@ -26,6 +26,38 @@ use humhub\modules\space\permissions\CreatePublicSpace;
 $manager = Yii::$app->user->permissionmanager;
 $canCreateSpace = $manager->can(new CreatePublicSpace()) || $manager->can(new CreatePrivateSpace());
 
+$apiKey = getenv('WEATHER_API_KEY'); // Lấy API key từ biến môi trường
+$city = 'Hanoi'; // Thành phố cần lấy thời tiết
+$url = "https://api.openweathermap.org/data/2.5/weather?q={$city}&units=metric&appid={$apiKey}";
+
+// Gọi API bằng cURL
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+$response = curl_exec($ch);
+curl_close($ch);
+
+$weatherData = json_decode($response, true); // Chuyển JSON thành mảng PHP
+
+// Kiểm tra nếu lấy được dữ liệu
+if ($weatherData && isset($weatherData['main'])) {
+    $temperature = round($weatherData['main']['temp']); // Nhiệt độ hiện tại
+    $feelsLike = round($weatherData['main']['feels_like']); // Cảm giác thực tế
+    $humidity = $weatherData['main']['humidity']; // Độ ẩm
+    $weatherDesc = ucfirst($weatherData['weather'][0]['description']); // Mô tả thời tiết
+    $windSpeed = $weatherData['wind']['speed']; // Tốc độ gió
+    $date = date("l, F jS"); // Hiển thị thứ, tháng, ngày
+} else {
+    $temperature = "N/A";
+    $feelsLike = "N/A";
+    $weatherDesc = "Unknown";
+    $humidity = "N/A";
+    $windSpeed = "N/A";
+    $date = "Unknown";
+}
+?>
+
+
 ?>
 
 <?= Html::beginContainer() ?>
@@ -53,6 +85,35 @@ $canCreateSpace = $manager->can(new CreatePublicSpace()) || $manager->can(new Cr
         <aside class="col col-xl-3 order-xl-1 col-lg-6 order-lg-2 col-md-6 col-sm-12 col-12">
             <div class="ui-block rounded-[20px]">
                 <!-- W-Weather -->
+                <!-- <div class="widget w-wethear rounded-[20px]">
+                    <a href="#" class="more">
+                        <svg class="olymp-three-dots-icon">
+                            <use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>
+                        </svg>
+                    </a>
+
+                    <div class="wethear-now inline-items">
+                        <div class="temperature-sensor"><?php echo $temperature; ?>°C</div>
+                        <div class="max-min-temperature">
+                            <span>H: <?php echo $humidity; ?>%</span>
+                            <span>W: <?php echo $windSpeed; ?>m/s</span>
+                        </div>
+                        <svg class="olymp-weather-partly-sunny-icon">
+                            <use xlink:href="svg-icons/sprites/icons-weather.svg#olymp-weather-partly-sunny-icon"></use>
+                        </svg>
+                    </div>
+
+                    <div class="wethear-now-description">
+                        <div class="climate"><?php echo $weatherDesc; ?></div>
+                        <span>Real Feel: <span><?php echo $feelsLike; ?>°C</span></span>
+                        <span>Humidity: <span><?php echo $humidity; ?>%</span></span>
+                    </div>
+
+                    <div class="date-and-place">
+                        <h5 class="date"><?php echo $date; ?></h5>
+                        <div class="place"><?php echo $city; ?></div>
+                    </div>
+                </div> -->
 
                 <div class="widget w-wethear rounded-[20px]">
                     <a href="#" class="more"><svg class="olymp-three-dots-icon">
@@ -161,7 +222,70 @@ $canCreateSpace = $manager->can(new CreatePublicSpace()) || $manager->can(new Cr
                 <!-- W-Calendar -->
 
                 <div class="w-calendar calendar-container">
+                <div class="w-calendar calendar-container">
                     <div class="calendar">
+                        <header>
+                            <h6 class="month"><?= date('F Y') ?></h6>
+                            <a class="calendar-btn-prev fas fa-angle-left" href="#"></a>
+                            <a class="calendar-btn-next fas fa-angle-right" href="#"></a>
+                        </header>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <td>Mon</td>
+                                    <td>Tue</td>
+                                    <td>Wed</td>
+                                    <td>Thu</td>
+                                    <td>Fri</td>
+                                    <td>Sat</td>
+                                    <td>Sun</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $daysInMonth = date('t'); // Số ngày trong tháng hiện tại
+                                $firstDayOfMonth = date('N', strtotime(date('Y-m-01'))); // Thứ đầu tháng
+
+                                $dayCounter = 1;
+                                for ($row = 0; $row < 6; $row++) {
+                                    echo '<tr>';
+                                    for ($col = 1; $col <= 7; $col++) {
+                                        if ($row === 0 && $col < $firstDayOfMonth) {
+                                            echo '<td></td>'; // Ô trống đầu tháng
+                                        } elseif ($dayCounter <= $daysInMonth) {
+                                            $class = '';
+                                            // if (isset($eventData[$dayCounter])) {
+                                            //     $status = $eventData[$dayCounter]['status'];
+                                            //     if ($status == 'completed') {
+                                            //         $class = 'event-complited';
+                                            //     } elseif ($status == 'pending') {
+                                            //         $class = 'event-complited-2';
+                                            //     } elseif ($status == 'uncompleted') {
+                                            //         $class = 'event-uncomplited';
+                                            //     }
+                                            // }
+                                            if($dayCounter == date('j')) {
+                                                echo '<td class="' . $class . 'text-red-400" data-day="' . $dayCounter . '"><b>' . $dayCounter . '</b></td>';
+                                            }
+                                            else {
+                                                echo '<td class="' . $class . '" data-day="' . $dayCounter . '">' . $dayCounter . '</td>';
+                                            }
+                                            $dayCounter++;
+
+                                            
+                                        } else {
+                                            echo '<td></td>'; // Ô trống cuối tháng
+                                        }
+                                    }
+                                    echo '</tr>';
+                                    if ($dayCounter > $daysInMonth) break;
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                        </div>
+                    </div>
+                    <!-- <div class="calendar">
                         <header>
                             <h6 class="month">March 2017</h6>
                             <a class="calendar-btn-prev fas fa-angle-left" href="#"></a>
@@ -677,7 +801,7 @@ $canCreateSpace = $manager->can(new CreatePublicSpace()) || $manager->can(new Cr
                             </div>
 
                         </div>
-                    </div>
+                    </div> -->
                 </div>
 
                 <!-- ... end W-Calendar -->

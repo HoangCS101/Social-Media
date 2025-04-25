@@ -43,7 +43,7 @@ use humhub\widgets\Label;
         <div class="panel-body" style="background-color: #f3f3f3 !important">
 
             <div class="media-list conversation-entry-list">
-                <?= Messages::widget(['message' => $message]) ?>
+                <?= Messages::widget(['message' => $message, 'type' => $type]) ?>
             </div>
 
         </div>

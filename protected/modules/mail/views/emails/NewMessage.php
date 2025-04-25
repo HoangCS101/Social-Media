@@ -3,6 +3,7 @@
 use humhub\modules\mail\helpers\Url;
 use humhub\modules\mail\models\Message;
 use humhub\modules\mail\models\MessageEntry;
+use humhub\modules\mail\models\SecureMessageEntry;
 use humhub\modules\user\models\User;
 
 /* @var $user User */

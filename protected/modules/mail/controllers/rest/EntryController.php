@@ -9,6 +9,7 @@ namespace humhub\modules\mail\controllers\rest;
 
 use humhub\modules\mail\models\forms\ReplyForm;
 use humhub\modules\mail\models\MessageEntry;
+use humhub\modules\mail\models\SecureMessageEntry;
 use humhub\modules\rest\components\BaseController;
 use humhub\modules\mail\helpers\RestDefinitions;
 use Yii;
@@ -32,7 +33,7 @@ class EntryController extends BaseController
         MessageController::getMessage($messageId);
 
         $results = [];
-        $entriesQuery = MessageEntry::find()->where(['message_id' => $messageId]);
+        $entriesQuery = MessageEntry::find()->where(['message_id' => $messageId]) ?? SecureMessageEntry::find()->where(['message_id' => $messageId]);
 
         $pagination = $this->handlePagination($entriesQuery);
         foreach ($entriesQuery->all() as $entry) {
@@ -148,6 +149,9 @@ class EntryController extends BaseController
         $message = MessageController::getMessage($messageId);
 
         $entry = MessageEntry::findOne([
+            'id' => $entryId,
+            'message_id' => $message->id,
+        ]) ?? SecureMessageEntry::findOne([
             'id' => $entryId,
             'message_id' => $message->id,
         ]);

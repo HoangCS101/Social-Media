@@ -13,9 +13,11 @@ use humhub\components\Controller;
 use humhub\modules\dashboard\components\actions\DashboardStreamAction;
 use humhub\modules\ui\view\components\View;
 use Yii;
+use yii\helpers\Json;
 use humhub\modules\user\components\PeopleQuery;
 use humhub\modules\user\models\User;
 use humhub\modules\space\models\Space;
+
 class DashboardController extends Controller
 {
     /**

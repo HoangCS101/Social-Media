@@ -24,7 +24,7 @@ class MessageNotification extends BaseObject
     public $message;
 
     /**
-     * @var MessageEntry
+     * @var SecureMessageEntry|MessageEntry
      */
     public $entry;
 
@@ -38,7 +38,7 @@ class MessageNotification extends BaseObject
      */
     public $isNewConversation = false;
 
-    public function __construct(Message $message, MessageEntry $entry = null)
+    public function __construct(Message $message, MessageEntry|SecureMessageEntry $entry = null)
     {
         $this->message = $message;
         $this->entry = $entry ?? $this->message->lastEntry;
@@ -189,6 +189,20 @@ class MessageNotification extends BaseObject
                 : Yii::t('MailModule.base', '{username} joined the conversation.', ['username' => $this->entry->user->displayName]);
         }
 
+        if ($this->entry->type === AbstractSecureMessageEntry::TYPE_USER_JOINED) {
+            return $this->entry->user->is($user)
+                ? Yii::t('MailModule.base', 'You joined the conversation.')
+                : Yii::t('MailModule.base', '{username} joined the conversation.', ['username' => $this->entry->user->displayName]);
+        }
+
+        if ($this->entry->type === AbstractSecureMessageEntry::TYPE_MESSAGE) {
+            return RichTextToEmailHtmlConverter::process('You receive new secure message', [
+                RichTextToEmailHtmlConverter::OPTION_RECEIVER_USER => $user,
+                RichTextToHtmlConverter::OPTION_LINK_AS_TEXT => true,
+                RichTextToHtmlConverter::OPTION_CACHE_KEY => 'mail_entry_message_' . $this->entry->id,
+            ]);
+        }
+
         return RichTextToEmailHtmlConverter::process($this->entry->content, [
             RichTextToEmailHtmlConverter::OPTION_RECEIVER_USER => $user,
             RichTextToHtmlConverter::OPTION_LINK_AS_TEXT => true,
@@ -242,6 +256,12 @@ class MessageNotification extends BaseObject
         $params = ['{senderName}' => $this->getEntrySender()->displayName];
 
         if ($this->entry->type === AbstractMessageEntry::TYPE_USER_JOINED) {
+            return $this->entry->user->is($user)
+                ? Yii::t('MailModule.base', 'You joined the conversation.')
+                : Yii::t('MailModule.base', '{username} joined the conversation.', ['username' => $this->entry->user->displayName]);
+        }
+
+        if ($this->entry->type === AbstractSecureMessageEntry::TYPE_USER_JOINED) {
             return $this->entry->user->is($user)
                 ? Yii::t('MailModule.base', 'You joined the conversation.')
                 : Yii::t('MailModule.base', '{username} joined the conversation.', ['username' => $this->entry->user->displayName]);

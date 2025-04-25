@@ -63,7 +63,7 @@ class ReplyForm extends Model
 
     public function getUrl()
     {
-        return Url::toReply($this->model);
+        return Url::toReply($this->model, 'normal');
     }
 
     public function save()

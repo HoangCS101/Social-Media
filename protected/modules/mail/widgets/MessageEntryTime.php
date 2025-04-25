@@ -10,11 +10,12 @@ namespace humhub\modules\mail\widgets;
 use humhub\components\Widget;
 use humhub\libs\Html;
 use humhub\modules\mail\models\MessageEntry;
+use humhub\modules\mail\models\SecureMessageEntry;
 use Yii;
 
 class MessageEntryTime extends Widget
 {
-    public MessageEntry $entry;
+    public MessageEntry|SecureMessageEntry $entry;
     public array $options = ['class' => 'conversation-entry-time'];
     public array $timeOptions = [];
     public array $statusOptions = [];

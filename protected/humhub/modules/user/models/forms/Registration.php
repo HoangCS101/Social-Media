@@ -44,6 +44,11 @@ class Registration extends HForm
     public $enableMustChangePassword = false;
 
     /**
+     * @var bool show checkbox to register secure chat account
+     */
+    // public $enableRegisterSecureChat = true;
+
+    /**
      * @var bool show e-mail field
      */
     public $enableEmailField = false;
@@ -108,6 +113,7 @@ class Registration extends HForm
         if ($this->enablePasswordForm) {
             $this->definition['elements']['Password'] = $this->getPasswordFormDefinition();
         }
+        
         $this->definition['elements']['Profile'] = array_merge(['type' => 'form'], $this->getProfile()->getFormDefinition());
         $this->definition['buttons'] = [
             'save' => [
@@ -140,6 +146,10 @@ class Registration extends HForm
             'type' => 'hidden',
             'maxlength' => 25,
         ];
+        // $form['elements']['enableRegisterSecureChat'] = [
+        //     'type' => 'checkbox',
+        //     'class' => 'form-control',
+        // ];
         if ($this->enableEmailField) {
             $form['elements']['email'] = [
                 'type' => 'text',
@@ -179,6 +189,7 @@ class Registration extends HForm
                 'class' => 'form-control',
             ];
         }
+        
 
         return $form;
     }

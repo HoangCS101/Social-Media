@@ -15,6 +15,11 @@ class Messages extends Widget
     public $message;
 
     /**
+     * @var string
+     */
+    public $type;
+
+    /**
      * @var
      */
     public $entries;

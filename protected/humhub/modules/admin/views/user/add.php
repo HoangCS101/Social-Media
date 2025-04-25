@@ -4,6 +4,8 @@ use humhub\compat\HForm;
 use humhub\widgets\Button;
 use humhub\widgets\ModalButton;
 use humhub\modules\ui\form\widgets\ActiveForm;
+use yii\helpers\Html;
+use yii\helpers\Url;
 
 /**
  * @var $hForm HForm
@@ -30,4 +32,7 @@ use humhub\modules\ui\form\widgets\ActiveForm;
     <?php $form = ActiveForm::begin(['options' => ['data-ui-widget' => 'ui.form.TabbedForm', 'data-ui-init' => ''], 'acknowledge' => true]); ?>
     <?= $hForm->render($form); ?>
     <?php ActiveForm::end(); ?>
+
+<!--  -->
+
 </div>

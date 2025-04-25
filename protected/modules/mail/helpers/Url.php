@@ -4,6 +4,7 @@ namespace humhub\modules\mail\helpers;
 
 use humhub\modules\mail\models\Message;
 use humhub\modules\mail\models\MessageEntry;
+use humhub\modules\mail\models\SecureMessageEntry;
 
 class Url extends \yii\helpers\Url
 {
@@ -15,14 +16,31 @@ class Url extends \yii\helpers\Url
         return static::to($route);
     }
 
-    public static function toDeleteMessageEntry(MessageEntry $entry)
+    public static function toDeleteMessageEntry(MessageEntry|SecureMessageEntry $entry)
     {
-        return static::to(['/mail/mail/delete-entry', 'id' => $entry->id]);
+        if($entry instanceof SecureMessageEntry) {
+
+            return static::to(['/mail/mail/delete-entry', 'id' => $entry->id, 'type' => 'secure']);
+        }
+        else {
+            return static::to(['/mail/mail/delete-entry', 'id' => $entry->id, 'type' => 'normal']);
+        }
     }
 
-    public static function toLoadMessage()
+    public static function toHandleDeleteMessageEntry(MessageEntry|SecureMessageEntry $entry)
     {
-        return static::to(['/mail/mail/show']);
+        if($entry instanceof SecureMessageEntry) {
+
+            return static::to(['/mail/mail/handle-delete', 'id' => $entry->id, 'type' => 'secure']);
+        }
+        else {
+            return static::to(['/mail/mail/handle-delete', 'id' => $entry->id, 'type' => 'normal']);
+        }
+    }
+
+    public static function toLoadMessage(string $type)
+    {
+        return static::to(['/mail/mail/show', 'type' => $type]);
     }
 
     public static function toUpdateMessage()
@@ -30,9 +48,15 @@ class Url extends \yii\helpers\Url
         return static::to(['/mail/mail/update']);
     }
 
-    public static function toEditMessageEntry(MessageEntry $entry)
+    public static function toEditMessageEntry(MessageEntry|SecureMessageEntry $entry)
     {
-        return static::to(['/mail/mail/edit-entry', 'id' => $entry->id]);
+        if($entry instanceof SecureMessageEntry) {
+
+            return static::to(['/mail/mail/edit-entry', 'id' => $entry->id, 'type' => 'secure']);
+        }
+        else {
+            return static::to(['/mail/mail/edit-entry', 'id' => $entry->id, 'type' => 'normal']);
+        }
     }
 
     public static function toEditConversationTags(Message $message)
@@ -92,7 +116,8 @@ class Url extends \yii\helpers\Url
 
     public static function toMessenger(Message $message = null, $scheme = false)
     {
-        $route = $message ? ['/mail/mail/index', 'id' => $message->id] : ['/mail/mail/index'];
+        $type = $message?->getType();
+        $route = $message ? ['/mail/mail/index', 'id' => $message->id, 'type' => $type] : ['/mail/mail/index', 'type' => $type];
         return static::to($route, $scheme);
     }
 
@@ -127,9 +152,14 @@ class Url extends \yii\helpers\Url
         return static::to(['/mail/mail/add-user', 'id' => $message->id]);
     }
 
-    public static function toReply(Message $message)
+    public static function toReply(Message $message, string $type)
     {
-        return static::to(['/mail/mail/reply', 'id' => $message->id]);
+        return static::to(['/mail/mail/reply', 'id' => $message->id, 'type' => $type]);
+    }
+
+    public static function toHandleSave(string $op)
+    {
+        return static::to(['/mail/mail/handle-save', 'op' => $op]);
     }
 
     public static function toInboxLoadMore()
@@ -146,4 +176,15 @@ class Url extends \yii\helpers\Url
     {
         return static::to(['/mail/mail/load-more']);
     }
+
+    public static function toLoginSecureChat()
+    {
+        return static::to(['/mail/mail/login']);
+    }
+
+    public static function toRegisterSecureChat()
+    {
+        return static::to(['/mail/mail/register']);
+    }
+
 }

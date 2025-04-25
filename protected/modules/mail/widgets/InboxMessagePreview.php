@@ -9,8 +9,10 @@ use humhub\libs\Html;
 use humhub\modules\content\widgets\richtext\RichText;
 use humhub\modules\mail\helpers\Url;
 use humhub\modules\mail\models\AbstractMessageEntry;
+use humhub\modules\mail\models\AbstractSecureMessageEntry;
 use humhub\modules\mail\models\Message;
 use humhub\modules\mail\models\MessageEntry;
+use humhub\modules\mail\models\SecureMessageEntry;
 use humhub\modules\mail\models\UserMessage;
 use humhub\modules\user\models\User;
 use Yii;
@@ -18,6 +20,7 @@ use Yii;
 class InboxMessagePreview extends Widget
 {
     public ?UserMessage $userMessage = null;
+    public string $type = 'normal';
     private ?Message $_message = null;
 
     public function run()
@@ -97,6 +100,7 @@ class InboxMessagePreview extends Widget
 
     public function getMessagePreview(): string
     {
+        if($this->message->getType() === 'secure') return 'message secure';
         switch ($this->getLastEntry()->type) {
             case AbstractMessageEntry::TYPE_USER_JOINED:
                 return $this->isOwnLastEntry()
@@ -104,6 +108,15 @@ class InboxMessagePreview extends Widget
                     : Yii::t('MailModule.base', '{username} joined the conversation.', ['username' => $this->getUsername()]);
 
             case AbstractMessageEntry::TYPE_USER_LEFT:
+                return $this->isOwnLastEntry()
+                    ? Yii::t('MailModule.base', 'You left the conversation.')
+                    : Yii::t('MailModule.base', '{username} left the conversation.', ['username' => $this->getUsername()]);
+            case AbstractSecureMessageEntry::TYPE_USER_JOINED:
+                return $this->isOwnLastEntry()
+                    ? Yii::t('MailModule.base', 'You joined the conversation.')
+                    : Yii::t('MailModule.base', '{username} joined the conversation.', ['username' => $this->getUsername()]);
+
+            case AbstractSecureMessageEntry::TYPE_USER_LEFT:
                 return $this->isOwnLastEntry()
                     ? Yii::t('MailModule.base', 'You left the conversation.')
                     : Yii::t('MailModule.base', '{username} left the conversation.', ['username' => $this->getUsername()]);
@@ -146,7 +159,7 @@ class InboxMessagePreview extends Widget
         return Yii::$app->formatter->asDate($datetime, 'short');
     }
 
-    public function getLastEntry(): ?MessageEntry
+    public function getLastEntry(): MessageEntry|SecureMessageEntry|null
     {
         return $this->getMessage()->getLastEntry();
     }

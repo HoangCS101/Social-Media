@@ -14,7 +14,7 @@ use humhub\modules\ui\view\components\View;
 <?= Html::beginTag('div', $options) ?>
 <ul class="nav nav-tabs">
     <?php foreach ($entries as $entry): ?>
-        <li <?php if ($entry->getIsActive()): ?>class="active"<?php endif; ?>>
+        <li class=`<?php if ($entry->getIsActive()): ?>class="active"<?php endif; ?> >
             <?= $entry->render() ?>
         </li>
     <?php endforeach; ?>

@@ -38,7 +38,7 @@ AppAsset::register($this);
             display: none;
         }
 
-        . .more-photos span,
+        .more-photos span,
         .post .more-photos span,
         .post .post__author-name {
             font-weight: 200;
@@ -74,6 +74,7 @@ AppAsset::register($this);
             font-size: 14px;
         }
 
+
         button.btn . {
             padding: 0px;
         }
@@ -91,15 +92,15 @@ AppAsset::register($this);
                     class="w-[70px] h-auto">
                 <?= SiteLogo::widget() ?>
             </div>
-            <div class="header-content-wrapper min-h-[70px] flex justify-between">
-                <div class="control-block flex min-h-[70px]">
-                    <ul class="nav w-[400px] min-h-[70px]" id="search-menu-nav" style="">
+            <div class="header-content-wrapper min-h-[70px] flex md:justify-between lg:row sm:justify-end">
+                <div class="control-block flex min-h-[70px] search-container md:block sm:hidden">
+                    <ul class="nav min-h-[70px] xl:w-[500px] lg:w-[450px] md:w-[400px]" id="search-menu-nav" >
                         <?= TopMenuRightStack::widget() ?>
                     </ul>
 
 
                 </div>
-                <div class="control-block flex">
+                <div class="control-block flex notify-container">
                     <div class="control-icon more has-items z-[9999]">
                         <?= NotificationArea::widget() ?>
                     </div>

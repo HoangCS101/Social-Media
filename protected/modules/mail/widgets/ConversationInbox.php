@@ -5,7 +5,7 @@ namespace humhub\modules\mail\widgets;
 use humhub\modules\mail\helpers\Url;
 use humhub\modules\mail\models\forms\InboxFilterForm;
 use humhub\modules\mail\models\UserMessage;
-use humhub\modules\mail\Module;
+use humhub\modules\mail\Module; 
 use humhub\widgets\JsWidget;
 
 class ConversationInbox extends JsWidget
@@ -26,6 +26,11 @@ class ConversationInbox extends JsWidget
     public $filter;
 
     /**
+     * @var string
+     */
+    public $type;
+
+    /**
      * @inheritDoc
      */
     public $init = true;
@@ -43,7 +48,14 @@ class ConversationInbox extends JsWidget
     public function init()
     {
         parent::init();
-        $this->result = $this->filter->getPage();
+        if($this->type == 'normal') {
+            $this->result = $this->filter->getPage($this->type);
+        }
+        if($this->type == 'secure') {
+            $this->result = $this->filter->getPage($this->type);
+        }
+
+        
     }
 
     /**
@@ -54,6 +66,7 @@ class ConversationInbox extends JsWidget
         return $this->render('inbox', [
             'options' => $this->getOptions(),
             'userMessages' =>  $this->result,
+            'type' => $this->type,
         ]);
     }
 

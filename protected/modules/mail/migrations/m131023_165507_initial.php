@@ -30,12 +30,28 @@ class m131023_165507_initial extends Migration
             'updated_by' => 'int(11) DEFAULT NULL',
         ], '');
 
+        $this->createTable('message_type', [
+            'id' => 'pk',
+            'message_id' => 'int(11) int(11) NOT NULL',
+            'type' => 'string(255) NOT NULL'
+        ], '');
+
         $this->createTable('message_entry', [
             'id' => 'pk',
             'message_id' => 'int(11) NOT NULL',
             'user_id' => 'int(11) NOT NULL',
             'file_id' => 'int(11) DEFAULT NULL',
             'content' => 'text NOT NULL',
+            'created_at' => 'datetime DEFAULT NULL',
+            'created_by' => 'int(11) DEFAULT NULL',
+            'updated_at' => 'datetime DEFAULT NULL',
+            'updated_by' => 'int(11) DEFAULT NULL',
+        ], '');
+        $this->createTable('secure_message_entry', [
+            'id' => 'pk',
+            'message_id' => 'int(11) NOT NULL',
+            'user_id' => 'int(11) NOT NULL',
+            'file_id' => 'int(11) DEFAULT NULL',
             'created_at' => 'datetime DEFAULT NULL',
             'created_by' => 'int(11) DEFAULT NULL',
             'updated_at' => 'datetime DEFAULT NULL',

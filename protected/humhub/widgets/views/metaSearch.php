@@ -34,25 +34,24 @@ $isAllHiddenEmpty = empty($providers) || array_reduce($providers, function ($car
         ->options(['data-toggle' => 'dropdown'])
         ->cssClass('dropdown-toggle') ?>
     
-    <div id="dropdown-search" class="dropdown-menu shadow-none" 
+    <div id="dropdown-search" class="dropdown-menu shadow-none xl:w-[500px] lg:w-[450px] md:w-[400px]" 
         style="display: flex; 
             top: 17%; left: 0; 
             right: auto; 
-            width: 400px;
             flex-direction: column">
         <div class="dropdown-header " style="display: none">
             <div class="arrow"></div>
             <?= Yii::t('base', 'Search') ?>
             <?= Icon::get('close', ['id' => 'dropdown-search-close']) ?>
         </div>
-        <div class="dropdown-search-form p-0 w-[500px] z-[9999]">
+        <div class="dropdown-search-form p-0 w-inherit z-[9999]">
             <?= Button::defaultType()
                 ->icon('search')
                 ->action('search')
                 ->cssClass('dropdown-search-button bg-red')
                 ->loader(false) ?>
             <?= Html::input('text', 'keyword', '', [
-                'class' => 'dropdown-search-keyword form-control',
+                'class' => 'dropdown-search-keyword form-control xl:w-[500px] lg:w-[450px] md:w-[400px]',
                 'autocomplete' => 'off',
                 'placeholder' => 'Search here ...'
             ]) ?>

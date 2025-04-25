@@ -11,7 +11,9 @@ namespace humhub\modules\mail\widgets;
 use humhub\libs\Html;
 use humhub\modules\mail\helpers\Url;
 use humhub\modules\mail\models\MessageEntry;
+use humhub\modules\mail\models\SecureMessageEntry;
 use humhub\widgets\JsWidget;
+use yii\base\Security;
 use Yii;
 
 class ConversationEntry extends JsWidget
@@ -22,19 +24,21 @@ class ConversationEntry extends JsWidget
     public $jsWidget = 'mail.ConversationEntry';
 
     /**
-     * @var MessageEntry
+     * @var MessageEntry|SecureMessageEntry
      */
     public $entry;
 
     /**
-     * @var MessageEntry
+     * @var MessageEntry|SecureMessageEntry
      */
     public $prevEntry;
 
     /**
-     * @var MessageEntry
+     * @var MessageEntry|SecureMessageEntry
      */
     public $nextEntry;
+
+    public $secure = false;
 
     public bool $showDateBadge = true;
 
@@ -47,6 +51,15 @@ class ConversationEntry extends JsWidget
      */
     public function run()
     {
+        // echo "<pre>";
+
+        // $this->entry;
+        // echo "</pre>";
+        // // exit; 
+        if ($this->entry instanceof SecureMessageEntry) {
+            $this->secure = true;
+        }
+
         if ($this->entry->type === MessageEntry::type()) {
             return $this->runMessage();
         }
@@ -56,19 +69,35 @@ class ConversationEntry extends JsWidget
 
     public function runMessage(): string
     {
+        
+        
         $showUser = $this->showUser();
 
         return $this->render('conversationEntry', [
+            'secure' => $this->secure,
             'entry' => $this->entry,
             'contentClass' => $this->getContentClass(),
             'showUser' => $showUser,
             'userColor' => $showUser ? $this->getUserColor() : null,
             'showDateBadge' => $this->showDateBadge(),
             'options' => $this->getOptions(),
-            'isOwnMessage' => $this->isOwnMessage()
+            'isOwnMessage' => $this->isOwnMessage(),
+            'content' => $this->getMessageContent(),
         ]);
     }
 
+    public function getMessageContent() {
+        if($this->secure) {
+            if($this->entry->getDecryptedContent()) return $this->entry->getDecryptedContent();
+            if($this->entry->content) {
+                return $this->entry->decrypt($this->entry->content, $this->entry->key);
+            }
+            return 'ERROR';
+        }
+        else {
+            return $this->entry->content;
+        }
+    }
     public function runState(): string
     {
         return $this->render('conversationState', [
@@ -98,6 +127,7 @@ class ConversationEntry extends JsWidget
         return [
             'entry-id' => $this->entry->id,
             'delete-url' => Url::toDeleteMessageEntry($this->entry),
+            'handle-delete-url' => Url::toHandleDeleteMessageEntry($this->entry)
         ];
     }
 

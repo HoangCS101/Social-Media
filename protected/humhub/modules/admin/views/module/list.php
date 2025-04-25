@@ -38,7 +38,39 @@ use humhub\modules\marketplace\widgets\MarketplaceLink;
 
         <?= AvailableModuleUpdatesInfo::widget() ?>
         <?= InstalledModuleList::widget() ?>
-        <?= MarketplaceLink::primary(Yii::t('AdminModule.base', 'Visit Marketplace'))
-            ->icon('external-link') ?>
+
+        <div class="flex gap-3">
+            <?= MarketplaceLink::primary(Yii::t('AdminModule.base', 'Visit Marketplace'))
+                ->icon('external-link') ?>
+            <button id="enroll-admin-btn" class="btn btn-success">
+                <i class="fa fa-user-plus"></i> <?= Yii::t('AdminModule.base', 'Enroll Fabric Admin') ?>
+            </button>
+        </div>
+        
     </div>
 </div>
+
+<?php
+$enrollUrl = \yii\helpers\Url::to(['/admin/secure/enroll-admin']);
+$csrfToken = Yii::$app->request->getCsrfToken();
+$js = <<<JS
+    $('#enroll-admin-btn').on('click', function() {
+
+        $.ajax({
+            url: $enrollUrl,
+            type: 'POST',
+            // data: {
+            //     _csrf: $csrfToken
+            // },
+            success: function(response) {
+                alert('Successfully enrolled as admin!');
+                location.reload(); 
+            },
+            error: function(xhr) {
+                alert('Error: ' + (xhr.responseJSON?.message || 'Unknown error'));
+            }
+        });
+    });
+JS;
+
+$this->registerJs($js);
