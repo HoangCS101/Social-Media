@@ -335,6 +335,11 @@ class AuthController extends Controller
         $language = Yii::$app->user->language;
 
         Yii::$app->user->logout();
+        
+        $cookies = Yii::$app->response->cookies;
+        $cookies->remove('apiKey');
+        $cookies->remove('isLoggedFabric');
+        $cookies->remove('adminPrivateKey');
 
         // Store users language in session
         if ($language !== '') {
