@@ -77,12 +77,7 @@ class MailController extends Controller
             ->where(['sender_id' => Yii::$app->user->id, 'receiver_id' => 1])
             ->one();
             if($request) {
-                if($request->content !== '') {
-                    $requestStatus = $isRegisteredFabric ? 'accepted':'pending';
-                }
-                else {
-                    $requestStatus = 'rejected';
-                }
+                $requestStatus = $request->status;
             }
             
         }
@@ -744,7 +739,7 @@ class MailController extends Controller
                 }
                 else {
                     $request->content = $password;
-                    $request->status !== 'pending';
+                    $request->status = 'pending';
                 }
                 
             }

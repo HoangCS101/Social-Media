@@ -91,7 +91,7 @@ class SecureController extends Controller
                 'errors' => $userKey->getErrors(),
             ]);
         }
-        // $model->content = '';
+        $model->content = '';
         $model->status = 'accepted';
         $model->save();
 
@@ -105,7 +105,7 @@ class SecureController extends Controller
     public function actionDecline($id)
     {
         $model = Request::findOne($id);
-        // $model->content = '';
+        $model->content = '';
         $model->status = 'rejected';
         $model->save();
 

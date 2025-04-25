@@ -27,11 +27,9 @@ class Request extends ActiveRecord
     public function rules()
     {
         return [
-            [['sender_id', 'receiver_id', 'content'], 'required'],
+            [['sender_id', 'receiver_id'], 'required'],
             [['sender_id', 'receiver_id'], 'integer'],
             [['content'], 'string'],
-            // [['sender_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['sender_id' => 'id']],
-            // [['receiver_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['receiver_id' => 'id']],
         ];
     }
 
