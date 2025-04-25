@@ -38,7 +38,7 @@ use yii\helpers\Html;
             <div class="pull-right mt-5">
                 <?= Html::beginForm(Url::to(['/admin/secure/accept', 'id' => $model->id]), 'post') ?>
                     <?= Html::submitButton(Yii::t('MailModule.base', 'Approve Request'), ['class' => 'btn btn-success']) ?>
-                    <?= Button::danger(Yii::t('MailModule.base', 'Reject'))->link(Url::to(['admin/secure/decline-register', 'id' => $model->id])); ?>
+                    <?= Button::danger(Yii::t('MailModule.base', 'Reject'))->link(Url::to(['/admin/secure/decline', 'id' => $model->id])); ?>
                     <?= Button::defaultType(Yii::t('MailModule.base', 'Back'))->link(Url::to(['/'])); ?>
                 <?= Html::endForm() ?>
             </div>
