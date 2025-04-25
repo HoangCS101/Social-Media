@@ -142,7 +142,6 @@ class MailController extends Controller
     public function actionUpdate($id, $from = null)
     {
         $message = ($id instanceof Message) ? $id : $this->getMessage($id);
-
         $this->checkMessagePermissions($message);
 
         return $this->renderAjaxContent(Messages::widget([
@@ -719,72 +718,18 @@ class MailController extends Controller
 
     }
 
-    //OK
-    // public function actionRegister()
-    // {
-        
-    //     $form = new PasswordSecureForm();
-    //     if ($form->load(Yii::$app->request->post()) && $form->validate()) {
-    //         $password = Yii::$app->request->post('PasswordSecureForm')['password'];
-    //         $encodedKey = Yii::$app->request->cookies->getValue('adminPrivateKey');
-    //         if(!$encodedKey) {
-    //             $encodedKey = $this->actionEnrollAdmin();
-    //             if(!$encodedKey) {
-    //                 Yii::$app->response->statusCode = 500; 
-    //                 return $this->asJson([
-    //                     'message' => 'Failed to enroll admin on blockchain server',
-    //                 ]);
-    //             }
-    //         }
-    //         $key = base64_decode($encodedKey);
-    //         Yii::error("Admin private key: " . $key, __METHOD__);
-
-    //         $user_pkey = $this->fetchRegisterUserOnBC($key);
-    //         if(!$user_pkey) {
-    //             Yii::error("registered failed");
-    //             Yii::$app->response->statusCode = 500; 
-    //             return $this->asJson([
-    //                 'message' => 'Failed to register on blockchain server',
-    //             ]);
-    //         }
-    //         $encrypted = Yii::$app->security->encryptByPassword($user_pkey->privateKey, $password);
-    //         if($encrypted === null) {
-    //             Yii::error("encrypted failed");
-    //             Yii::$app->response->statusCode = 500; 
-    //             return $this->asJson([
-    //                 'message' => 'Failed to encrypt key',
-    //             ]);
-    //         }
-
-    //         $userKey = new UserKey();
-    //         $userKey->user_id = Yii::$app->user->id;
-    //         $userKey->secret_key = base64_encode($encrypted);
-
-    //         if (!$userKey->save()) {
-    //             Yii::$app->response->statusCode = 500; // Unprocessable Entity
-    //             return $this->asJson([
-    //                 'message' => 'Failed to save private key',
-    //                 'errors' => $userKey->getErrors(),
-    //             ]);
-    //         }
-
-    //         return $this->redirect('/index.php?r=mail%2Fmail%2Findex&type=secure');
-
-    //     }
-    //     else {
-    //         Yii::$app->response->statusCode = 400;
-    //         return $this->asJson([
-    //             'message' => 'The password cannot be blank',
-    //         ]);
-    //     }
-    // }
 
     public function actionRegister()
     {
         
+        
         $form = new PasswordSecureForm();
         if ($form->load(Yii::$app->request->post()) && $form->validate()) {
             $password = Yii::$app->request->post('PasswordSecureForm')['password'];
+
+            if(Yii::$app->user->id === 1) {
+                $this->registerAdminSecureChat();         
+            }
             $request = Request::find()
             ->where(['sender_id' => Yii::$app->user->id, 'receiver_id' => 1])
             ->one();
@@ -830,6 +775,49 @@ class MailController extends Controller
             Yii::$app->response->statusCode = 400;
             return $this->asJson([
                 'message' => 'The password cannot be blank',
+            ]);
+        }
+    }
+
+    private function registerAdminSecureChat()
+    {
+        $encodedKey = Yii::$app->request->cookies->getValue('adminPrivateKey');
+        if(!$encodedKey) {
+            $controller = new \humhub\modules\admin\controllers\SecureController('secure', Yii::$app->getModule('admin'));
+            $encodedKey = $controller->actionEnrollAdmin();
+            if(!$encodedKey) {
+                Yii::$app->response->statusCode = 500;
+                return $this->asJson([
+                    'message' => 'Failed to enroll admin on blockchain server'
+                ]);
+            }
+        }
+        $key = base64_decode($encodedKey);
+        $result = $this->fetchLoginUserOnBC($key);
+
+        if ($result && isset($result->apiKey)) {
+            Yii::$app->response->cookies->add(new \yii\web\Cookie([
+                'name' => 'apiKey',
+                'value' => $result->apiKey,
+                'httpOnly' => true,
+                'expire' => time() + 3600 * 24 * 1, 
+            ]));
+
+            Yii::$app->response->cookies->add(new \yii\web\Cookie([
+                'name' => 'isLoggedFabric',
+                'value' => true,
+                'expire' => time() + 3600 * 24 * 1,
+            ]));
+
+            Yii::$app->response->statusCode = 200;
+            return $this->asJson([
+                'message' => 'Login successful',
+            ]);
+
+        } else {
+            Yii::$app->response->statusCode = 401;
+            return $this->asJson([
+                'message' => 'Login failed',
             ]);
         }
     }

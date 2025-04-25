@@ -103,6 +103,10 @@ humhub.module("mail.ConversationView", function (module, require, $) {
                 }
                 return that.appendEntry(response.content).then(function () {
                     that.$.find(".time").timeago(); // somehow this is not triggered after reply
+                    var string =
+                        "Message sent from " + that.getActiveMessageId();
+                    conn.send(string);
+                    console.log(string);
                     var richtext = that.getReplyRichtext();
                     if (richtext) {
                         richtext.$.trigger("clear");

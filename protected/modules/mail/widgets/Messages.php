@@ -4,7 +4,7 @@ namespace humhub\modules\mail\widgets;
 
 use humhub\components\Widget;
 use humhub\modules\mail\models\Message;
-use humhub\modules\mail\models\MessageEntry;
+use humhub\modules\mail\models\MessageEntry; 
 use Yii;
 
 class Messages extends Widget

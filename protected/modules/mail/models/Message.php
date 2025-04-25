@@ -84,7 +84,11 @@ class Message extends ActiveRecord
         $query->addOrderBy(['created_at' => SORT_ASC]);
 
         if ($from) {
-            $query->andWhere(['>', 'message_entry.id', $from]);
+            if($this->type === 'secure') {
+                $query->andWhere(['>', 'secure_message_entry.id', $from]);
+            } else {
+                $query->andWhere(['>', 'message_entry.id', $from]);
+            }
         }
 
         return $query;
