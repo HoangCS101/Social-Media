@@ -1,3 +1,4 @@
+
 assets/*
 !assets/.gitignore
 
@@ -43,4 +44,5 @@ favicon.ico
 /.php_cs.cache
 
 .env
+
 .DS_Store

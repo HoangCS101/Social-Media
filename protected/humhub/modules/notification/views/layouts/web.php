@@ -1,3 +1,4 @@
+
 <?php
 
 use humhub\modules\notification\models\Notification;
