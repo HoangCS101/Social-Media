@@ -43,14 +43,15 @@ $isLoggedFabric = Yii::$app->request->cookies->getValue('isLoggedFabric', false)
             ]) ?>
             <?php else : ?>
                 <div class="alert alert-warning">
-                    <?= Yii::t('MailModule.views_mail_create', 'If you want to use secure messaging, please <a href="{url}" target="_blank">login here</a> first.', [
+                    <?= Yii::t('MailModule.views_mail_create', 'If you want to use secure messaging, please <a href="{url}">login here</a> first.', [
                         'url' => Url::to(['/mail/mail/index','type' => 'secure']) 
                     ]) ?>
                 </div>
+
             <?php endif ?>
         <?php else : ?>
             <div class="alert alert-warning">
-                <?= Yii::t('MailModule.views_mail_create', 'If you want to use secure messaging, please <a href="{url}" target="_blank">register here</a> first.', [
+                <?= Yii::t('MailModule.views_mail_create', 'If you want to use secure messaging, please <a href="{url}">register here</a> first.', [
                     'url' => Url::to(['/mail/mail/index','type' => 'secure']) 
                 ]) ?>
             </div>

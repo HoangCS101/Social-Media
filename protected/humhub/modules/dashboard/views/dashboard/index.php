@@ -57,9 +57,6 @@ if ($weatherData && isset($weatherData['main'])) {
 }
 ?>
 
-
-?>
-
 <?= Html::beginContainer() ?>
 <div class="container">
     <div class="row">
@@ -224,12 +221,12 @@ if ($weatherData && isset($weatherData['main'])) {
                 <div class="w-calendar calendar-container">
                 <div class="w-calendar calendar-container">
                     <div class="calendar">
-                        <header>
-                            <h6 class="month"><?= date('F Y') ?></h6>
+                        <header class="p-2 bold">
+                            <h4 class="month"><?= date('F Y') ?></h4>
                             <a class="calendar-btn-prev fas fa-angle-left" href="#"></a>
                             <a class="calendar-btn-next fas fa-angle-right" href="#"></a>
                         </header>
-                        <table>
+                        <table class="mt-0">
                             <thead>
                                 <tr>
                                     <td>Mon</td>

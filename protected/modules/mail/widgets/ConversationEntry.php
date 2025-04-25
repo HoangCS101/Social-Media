@@ -95,6 +95,10 @@ class ConversationEntry extends JsWidget
             return 'ERROR';
         }
         else {
+            // $content = $message->content;
+            // // Loại bỏ đoạn ảnh markdown (giống ![...](...))
+            // $cleanContent = preg_replace('/!\[.*?\]\(.*?\)/', '', $content);
+            // $cleanContent = trim($cleanContent);
             return $this->entry->content;
         }
     }
