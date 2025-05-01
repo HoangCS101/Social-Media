@@ -24,11 +24,11 @@ use humhub\widgets\Label;
 /* @var $fileHandlers BaseFileHandler[] */
 
 ?>
-<div class="panel panel-default rounded-none">
+<div class="panel panel-default rounded-none h-[calc(100vh-70px)] mb-0">
 
     <?php if ($message === null) : ?>
 
-        <div class="panel-body">
+        <div class="panel-body h-auto">
             <?= Yii::t('MailModule.views_mail_show', 'There are no messages yet.'); ?>
         </div>
 
@@ -40,7 +40,7 @@ use humhub\widgets\Label;
 
         <?= ConversationTags::widget(['message' => $message]) ?>
 
-        <div class="panel-body" style="background-color: #f3f3f3 !important">
+        <div class="panel-body" style="background-color: #f3f3f3 !important;">
 
             <div class="media-list conversation-entry-list">
                 <?= Messages::widget(['message' => $message, 'type' => $type]) ?>
@@ -48,7 +48,7 @@ use humhub\widgets\Label;
 
         </div>
 
-        <div id="'mail-create-form-<?= $message->id ?>" class="mail-message-form content_create">
+        <div id="'mail-create-form-<?= $message->id ?>" class="mail-message-form content_create bg-white" style="border-top: 1px solid var(--background3);">
             <?php if ($message->isBlocked()) : ?>
                 <div class="alert alert-danger">
                     <?= Yii::t('MailModule.views_mail_show', 'You are not allowed to participate in this conversation. You have been blocked by: {userNames}.', [
@@ -56,16 +56,21 @@ use humhub\widgets\Label;
                     ]); ?>
                 </div>
             <?php else : ?>
+
                 <?php $form = ActiveForm::begin(['enableClientValidation' => false, 'acknowledge' => true]) ?>
-
+                <?= FilePreview::widget([
+                    'id' => 'mail-create-upload-preview-' . $message->id,
+                    'options' => ['style' => 'margin-top:10px; background-color: #f3f3f3 !important;'],
+                    'edit' => true,
+                ]) ?>
                 <div class="content-create-input-group">
-
+                
                     <?= $form->field($replyForm, 'message')->widget(MailRichtextEditor::class, [
                         'id' => 'reply-' . time(),
                         'layout' => AbstractRichTextEditor::LAYOUT_INLINE,
                     ])->label(false) ?>
 
-                    <div class="upload-buttons">
+                    <div class="absolute !bottom-[18px] pt-0 upload-buttons">
                         <?php $uploadButton = UploadButton::widget([
                             'id' => 'mail-create-upload-' . $message->id,
                             'tooltip' => Yii::t('ContentModule.base', 'Attach Files'),
@@ -74,7 +79,7 @@ use humhub\widgets\Label;
                             'preview' => '#mail-create-upload-preview-' . $message->id,
                             'dropZone' => '#mail-create-form-' . $message->id,
                             'max' => Yii::$app->getModule('content')->maxAttachedFiles,
-                            'cssButtonClass' => 'btn-sm btn-info pl-[10px] pr-0',
+                            'cssButtonClass' => 'btn-sm btn-info',
                         ]) ?>
                         <?= FileHandlerButtonDropdown::widget([
                             'primaryButton' => $uploadButton,
@@ -93,11 +98,7 @@ use humhub\widgets\Label;
 
                 <div id="mail-create-upload-progress-<?= $message->id ?>" style="display:none;margin:10px 0;"></div>
 
-                <?= FilePreview::widget([
-                    'id' => 'mail-create-upload-preview-' . $message->id,
-                    'options' => ['style' => 'margin-top:10px;'],
-                    'edit' => true,
-                ]) ?>
+                
 
                 <?php ActiveForm::end(); ?>
             <?php endif; ?>
@@ -108,3 +109,4 @@ use humhub\widgets\Label;
         humhub.modules.mail.notification.setMailMessageCount(<?= $messageCount ?>);
     </script>
 </div>
+

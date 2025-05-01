@@ -214,7 +214,7 @@ if ($weatherData && isset($weatherData['main'])) {
                 <!-- W-Weather -->
             </div>
 
-            <div class=" rounded-[20px]">
+            <div class="ui-block rounded-[20px]">
 
                 <!-- W-Calendar -->
 

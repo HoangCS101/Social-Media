@@ -29,7 +29,7 @@ class UploadButton extends UploadInput
      * Tooltip position.
      * @var string
      */
-    public $tooltipPosition = 'bottom';
+    public $tooltipPosition = 'top';
 
     /**
      * Defines the button color class like btn-default, btn-primary

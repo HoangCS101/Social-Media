@@ -54,4 +54,11 @@ class SecureChatMenu extends TabMenu
         parent::init();
     }
 
+    public function getAttributes()
+    {
+        return [
+            'class' => 'tab-menu pt-0',
+        ];
+    }
+
 }

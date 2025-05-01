@@ -66,7 +66,7 @@ use humhub\modules\user\widgets\Image;
             <?php if ($isOwnMessage) : ?>
                 <?php if ($secure) : ?>
                     <?php if ($entry->status === 'pending') : ?>
-                        <p style="color: blue; font-size: 12px; width: auto"><?= Html::encode('Pending') ?></p>
+                        <p style="text-align: right; color: blue; font-size: 12px; width: auto"><?= Html::encode('Pending') ?></p>
                     <?php elseif ($entry->status === 'failed') : ?>
                         <?= MessageEntryTime::widget(['entry' => $entry, 'options' => ['class' => 'ml-auto text-[12px]']]) ?>
                         <p style="color: red; font-size: 12px; width: auto; margin: 0px 4px"><?= Html::encode('- Failed') ?></p>

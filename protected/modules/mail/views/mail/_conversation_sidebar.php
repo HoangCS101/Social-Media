@@ -30,7 +30,7 @@ $filterModel = new InboxFilterForm();
         </div>
  
     </div>
-    <div class="w-full bg-white shadow-md rounded-lg h-[80vh]">
+    <div class="w-full bg-white shadow-md rounded-lg h-[calc(100vh-154px)]">
 
         <?= SecureChatMenu::widget([
             'filter' => $filterModel,

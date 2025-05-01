@@ -78,8 +78,8 @@ $placeholder = ($isNestedComment)
             ]);
             echo Button::info()
                 ->icon('send')
-                ->cssClass('btn-comment-submit ')->sm()
-                ->style('padding: 8px 16px !important;')
+                ->cssClass('btn-comment-submit')->sm()
+                // ->style('padding: 8px 16px !important;')
                 ->action('submit', $submitUrl)->submit();
             ?></div>
     </div>
