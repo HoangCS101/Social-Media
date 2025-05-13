@@ -168,7 +168,7 @@ $this->pageTitle = Yii::t('UserModule.auth', 'Login');
           </div>
 
           <div class="bg-[#000842] rounded-xl lg:p-8 p-8">
-            <img src="https://hcmut.edu.vn/img/carouselItem/36986508.jpeg?t=36986508" class="w-[80%] h-[80%] object-contain" alt="login-image" />
+            <img src="https://hcmut.edu.vn/img/carouselItem/36986508.jpeg?t=36986508" class="w-full h-[80%] object-contain" alt="login-image" />
           </div>
         </div>
       </div>
