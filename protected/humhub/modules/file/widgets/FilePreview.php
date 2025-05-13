@@ -100,7 +100,7 @@ class FilePreview extends JsWidget
     public function getAttributes()
     {
         return [
-            'class' => 'well post-file-list hidden',
+            'class' => 'well post-file-list',
         ];
     }
 
